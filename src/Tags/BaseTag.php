@@ -11,12 +11,12 @@ class BaseTag implements Tag
 {
     use Expressions;
 
-    protected \DOMnode $node;
+    protected \DOMNode $node;
     protected CacheContract $cache;
     protected string $prefix;
     protected int $ttl;
 
-    public function __construct(\DOMnode $node, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function __construct(\DOMNode $node, CacheContract $cache, string $prefix, ?int $ttl = null)
     {
         $this->node = $node;
         $this->cache = $cache;
