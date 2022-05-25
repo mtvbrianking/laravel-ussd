@@ -30,7 +30,7 @@ class ActionTag implements Tag
         $actionName = $node->attributes->getNamedItem('name')->nodeValue;
 
         $className = Str::studly($actionName);
-        $action = $this->createAction("Ussd\\Ussd\\Actions\\{$className}Action", [$this->cache, $this->prefix, $this->ttl]);
+        $action = $this->createAction("Bmatovu\\Ussd\\Actions\\{$className}Action", [$this->cache, $this->prefix, $this->ttl]);
         $action($node);
 
         // throw new \Exception($this->cache->get("{$this->prefix}_amount"));
