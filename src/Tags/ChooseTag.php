@@ -78,6 +78,5 @@ class ChooseTag implements Tag
 
     public function process(\DOMNode $node, ?string $answer): void
     {
-
     }
 }

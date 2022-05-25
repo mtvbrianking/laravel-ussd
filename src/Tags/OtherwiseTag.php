@@ -50,6 +50,5 @@ class OtherwiseTag implements Tag
 
     public function process(\DOMNode $node, ?string $answer): void
     {
-
     }
 }
