@@ -20,7 +20,7 @@ $versions = GitVersionCollection::create($dir)
     ->add('master', 'Master branch');
 
 $repo = new GitHubRemoteRepository(
-    'mtvbrianking/laravel-package-boilerplate',
+    'mtvbrianking/laravel-ussd',
     dirname($dir),
     'https://github.com/'
 );
@@ -28,7 +28,7 @@ $repo = new GitHubRemoteRepository(
 $options = [
     'theme' => 'default',
     'versions' => $versions,
-    'title' => 'Laravel Package Boilerplate',
+    'title' => 'Laravel USSD',
     'build_dir' => __DIR__.'/docs',
     'cache_dir' => __DIR__.'/docs/cache',
     'remote_repository' => $repo,

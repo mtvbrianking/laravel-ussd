@@ -1,7 +1,8 @@
 <?php
-namespace Bmatovu\HelloWorld\Tests;
 
-use Bmatovu\HelloWorld\HelloWorldServiceProvider;
+namespace Bmatovu\Ussd\Tests;
+
+use Bmatovu\Ussd\UssdServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -16,7 +17,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            HelloWorldServiceProvider::class,
+            UssdServiceProvider::class,
         ];
     }
 
@@ -30,7 +31,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageAliases($app)
     {
         return [
-            'HelloWorld' => 'Bmatovu\HelloWorld\HelloWorldFacade',
+            // ...
         ];
     }
 }

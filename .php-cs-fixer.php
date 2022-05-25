@@ -1,6 +1,22 @@
 <?php
 
-// https://mlocati.github.io/php-cs-fixer-configurator/
+// https://mlocati.github.io/php-cs-fixer-configurator/#version:3.0
+
+$excludes = [
+    'build',
+    'coverage',
+    'docs',
+    'vendor',
+];
+
+$finder = PhpCsFixer\Finder::create()
+    ->exclude($excludes)
+    ->in(__DIR__.'/config')
+    ->in(__DIR__.'/src')
+    ->in(__DIR__.'/tests')
+    ->name('*.php')
+    ->ignoreDotFiles(true)
+    ->ignoreVCS(true);
 
 $rules = [
     '@PSR2' => true,
@@ -13,7 +29,7 @@ $rules = [
     'no_whitespace_before_comma_in_array' => true,
     'whitespace_after_comma_in_array' => true,
     'no_trailing_comma_in_singleline_array' => true,
-    'trailing_comma_in_multiline_array' => true,
+    // 'trailing_comma_in_multiline_array' => true, // deprecated
     'not_operator_with_successor_space' => true,
 
     // General
@@ -50,12 +66,14 @@ $rules = [
     'phpdoc_indent' => true,
     'phpdoc_to_comment' => true,
     'phpdoc_trim' => true,
-    'phpdoc_align' => true,
+    'phpdoc_align' => [
+        'align' => 'left',
+    ],
     'phpdoc_summary' => true,
     'phpdoc_separation' => true,
     'phpdoc_scalar' => true,
     'phpdoc_order' => true,
-    'phpdoc_inline_tag' => true,
+    // 'phpdoc_inline_tag' => true, // deprecated
     'phpdoc_return_self_reference' => true,
     'phpdoc_var_without_name' => true,
     'phpdoc_var_annotation_correct_order' => true,
@@ -63,22 +81,21 @@ $rules = [
     'phpdoc_add_missing_param_annotation' => [
         'only_untyped' => false,
     ],
+    'php_unit_internal_class' => false,
+    'final_internal_class' => false,
+    'php_unit_test_class_requires_covers' => false,
 ];
 
-$excludes = [
-    'coverage',
-    'docs',
-    'vendor',
-];
+$config = new PhpCsFixer\Config();
+$config
+    ->setRiskyAllowed(true)
+    ->setRules(array_merge([
+        '@PHP71Migration:risky' => false,
+        '@PHPUnit75Migration:risky' => true,
+        '@PhpCsFixer' => true,
+        '@PhpCsFixer:risky' => true,
+        'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']],
+    ], $rules))
+    ->setFinder($finder);
 
-return PhpCsFixer\Config::create()
-    ->setRules($rules)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->exclude($excludes)
-            ->in(__DIR__.'/config')
-            ->in(__DIR__.'/src')
-            ->in(__DIR__.'/tests')
-            ->ignoreDotFiles(true)
-            ->ignoreVCS(true)
-    );
+return $config;
