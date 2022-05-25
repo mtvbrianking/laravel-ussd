@@ -2,32 +2,14 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Contracts\Tag;
-use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\Facades\Log;
 
-class VariableTag implements Tag
+class VariableTag extends BaseTag
 {
-    use Expressions;
-
-    protected \DOMXPath $xpath;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
-
-    public function __construct(\DOMXPath $xpath, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function handle(): ?string
     {
-        $this->xpath = $xpath;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
-    }
-
-    public function handle(\DOMNode $node): ?string
-    {
-        $name = $node->attributes->getNamedItem('name')->nodeValue;
-        $value = $node->attributes->getNamedItem('value')->nodeValue;
+        $name = $this->node->attributes->getNamedItem('name')->nodeValue;
+        $value = $this->node->attributes->getNamedItem('value')->nodeValue;
 
         $this->cache->put("{$this->prefix}_{$name}", $value, $this->ttl);
 
@@ -44,7 +26,7 @@ class VariableTag implements Tag
         return '';
     }
 
-    public function process(\DOMNode $node, ?string $answer): void
+    public function process(?string $answer): void
     {
     }
 }

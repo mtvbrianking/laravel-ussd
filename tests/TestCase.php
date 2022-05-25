@@ -52,4 +52,24 @@ abstract class TestCase extends Orchestra
             // ...
         ];
     }
+
+    protected function getNodeByTagName(string $xml, string $tagName): \DOMNode
+    {
+        $doc = new \DOMDocument();
+
+        $doc->loadXML($xml);
+
+        return $doc->getElementsByTagName($tagName)->item(0);
+    }
+
+    protected function getNodeByPathExp(string $xml, string $exp = '/*[1]'): \DOMNode
+    {
+        $doc = new \DOMDocument();
+
+        $doc->loadXML($xml);
+
+        $xpath = new \DOMXPath($doc);
+
+        return $xpath->query('/*[1]')->item(0);
+    }
 }

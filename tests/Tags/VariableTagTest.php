@@ -9,17 +9,11 @@ class VariableTagTest extends TestCase
 {
     public function test_handle_variable()
     {
-        $doc = new \DOMDocument();
+        $node = $this->getNodeByTagName('<variable name="color" value="blue"/>', 'variable');
 
-        $doc->loadXML('<variable name="color" value="blue"/>');
+        $tag = new VariableTag($node, $this->cache, 'prefix', 120);
 
-        $xpath = new \DOMXPath($doc);
-
-        $tag = new VariableTag($xpath, $this->cache, 'prefix', 120);
-
-        $node = $xpath->query('/*[1]')->item(0);
-
-        $output = $tag->handle($node);
+        $output = $tag->handle();
 
         $color = $this->cache->get('prefix_color');
 
@@ -29,17 +23,11 @@ class VariableTagTest extends TestCase
 
     public function test_proccess_variable()
     {
-        $doc = new \DOMDocument();
+        $node = $this->getNodeByTagName('<variable name="color" value="blue"/>', 'variable');
 
-        $doc->loadXML('<variable name="color" value="blue"/>');
+        $tag = new VariableTag($node, $this->cache, 'prefix', 120);
 
-        $xpath = new \DOMXPath($doc);
-
-        $tag = new VariableTag($xpath, $this->cache, 'prefix', 120);
-
-        $node = $xpath->query('/*[1]')->item(0);
-
-        $nothing = $tag->process($node, '');
+        $nothing = $tag->process('');
 
         $this->assertNull($nothing);
     }

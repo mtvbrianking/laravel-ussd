@@ -4,7 +4,7 @@ namespace Bmatovu\Ussd\Contracts;
 
 interface Tag
 {
-    public function handle(\DOMNode $node): ?string;
+    public function handle(): ?string;
 
-    public function process(\DOMNode $node, ?string $answer): void;
+    public function process(?string $answer): void;
 }
