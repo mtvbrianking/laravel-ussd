@@ -50,7 +50,6 @@ class ActionTag implements Tag
 
     public function process(\DOMNode $node, ?string $answer): void
     {
-
     }
 
     protected function createAction(string $fqcn, array $args = []): callable

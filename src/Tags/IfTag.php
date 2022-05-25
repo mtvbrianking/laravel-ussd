@@ -54,6 +54,5 @@ class IfTag implements Tag
 
     public function process(\DOMNode $node, ?string $answer): void
     {
-
     }
 }

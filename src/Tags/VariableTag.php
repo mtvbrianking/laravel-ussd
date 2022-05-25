@@ -46,6 +46,5 @@ class VariableTag implements Tag
 
     public function process(\DOMNode $node, ?string $answer): void
     {
-
     }
 }
