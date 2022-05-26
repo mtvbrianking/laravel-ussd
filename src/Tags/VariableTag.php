@@ -14,7 +14,7 @@ class VariableTag extends BaseTag
         $this->cache->put("{$this->prefix}_{$name}", $value, $this->ttl);
 
         $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp");
+        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 

@@ -13,8 +13,6 @@ abstract class TestCase extends Orchestra
 
     /**
      * Setup the test environment.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
