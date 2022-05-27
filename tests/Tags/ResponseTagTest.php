@@ -19,13 +19,4 @@ class ResponseTagTest extends TestCase
 
         $tag->handle();
     }
-
-    public function testProccessResponse()
-    {
-        $node = $this->getNodeByTagName('<response text="Thank you."/>', 'response');
-
-        $tag = new ResponseTag($node, $this->cache, 'prefix', 30);
-
-        static::assertNull($tag->process(''));
-    }
 }

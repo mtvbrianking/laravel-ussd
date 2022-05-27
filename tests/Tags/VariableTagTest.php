@@ -22,13 +22,4 @@ class VariableTagTest extends TestCase
         static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
         static::assertSame('/*[2]', $this->cache->get('prefix_exp'));
     }
-
-    public function testProccessVariable()
-    {
-        $node = $this->getNodeByTagName('<variable name="color" value="blue"/>', 'variable');
-
-        $tag = new VariableTag($node, $this->cache, 'prefix', 30);
-
-        static::assertNull($tag->process(''));
-    }
 }
