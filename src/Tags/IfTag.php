@@ -3,7 +3,6 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Support\Helper;
-use Illuminate\Support\Facades\Log;
 
 class IfTag extends BaseTag
 {

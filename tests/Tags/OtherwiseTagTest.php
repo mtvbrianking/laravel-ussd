@@ -2,28 +2,28 @@
 
 namespace Bmatovu\Ussd\Tests\Tags;
 
-use Bmatovu\Ussd\Tags\OptionTag;
+use Bmatovu\Ussd\Tags\OtherwiseTag;
 use Bmatovu\Ussd\Tests\TestCase;
 
-class OptionTagTest extends TestCase
+class OtherwiseTagTest extends TestCase
 {
-    public function testHandleOption()
+    public function testHandleOtherwise()
     {
         $this->cache->put('prefix_pre', '/*[1]');
         $this->cache->put('prefix_exp', '/*[1]/*[1]');
         $this->cache->put('prefix_breakpoints', '[{"break":"resume"}]');
 
         $xml = <<<'XML'
-<options header="Choose Gender: ">
-    <option text="Male">
+<choice>
+    <otherwise>
         <response text="Lorem ipsum"/>
-    </option>
-</options>
+    </otherwise>
+</choice>
 XML;
 
         $node = $this->getNodeByPathExp($xml, '/*[1]/*[1]');
 
-        $tag = new OptionTag($node, $this->cache, 'prefix', 30);
+        $tag = new OtherwiseTag($node, $this->cache, 'prefix', 30);
 
         $output = $tag->handle();
 

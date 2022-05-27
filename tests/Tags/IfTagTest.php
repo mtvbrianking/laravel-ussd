@@ -14,7 +14,7 @@ class IfTagTest extends TestCase
 
         $this->cache->put('prefix_gender', 'Male');
 
-        $xml = <<<XML
+        $xml = <<<'XML'
     <if key="gender" value="Male">
         <dummy/>
     </if>

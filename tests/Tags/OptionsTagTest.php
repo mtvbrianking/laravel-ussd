@@ -11,7 +11,7 @@ class OptionsTagTest extends TestCase
     {
         $this->cache->put('prefix_exp', '/*[1]');
 
-        $xml = <<<XML
+        $xml = <<<'XML'
 <options header="Choose Gender: ">
     <option text="Male"/>
     <option text="Female"/>
@@ -31,7 +31,7 @@ XML;
 
     public function testHandleOptionsNoBack()
     {
-        $xml = <<<XML
+        $xml = <<<'XML'
 <options header="Choose Gender: " noback="no">
     <option text="Male"/>
     <option text="Female"/>
@@ -51,7 +51,7 @@ XML;
     {
         $this->cache->put('prefix_pre', '/*[1]');
 
-        $xml = <<<XML
+        $xml = <<<'XML'
 <options header="Choose Gender: " noback="no">
     <option text="Male"/>
     <option text="Female"/>

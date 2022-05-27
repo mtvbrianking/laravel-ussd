@@ -13,7 +13,7 @@ class ChooseTagTest extends TestCase
 
         $this->cache->put('prefix_gender', 'F');
 
-        $xml = <<<XML
+        $xml = <<<'XML'
 <choose>
     <when key="gender" value="M">
         <question name="club" text="Football club? "/>
@@ -44,7 +44,7 @@ XML;
 
         $this->cache->put('prefix_gender', 'X');
 
-        $xml = <<<XML
+        $xml = <<<'XML'
 <choose>
     <when key="gender" value="M">
         <question name="club" text="Football club? "/>
@@ -75,7 +75,7 @@ XML;
 
         $this->cache->put('prefix_gender', 'X');
 
-        $xml = <<<XML
+        $xml = <<<'XML'
 <choose>
     <when key="gender" value="M">
         <question name="club" text="Football club? "/>

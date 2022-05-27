@@ -55,6 +55,7 @@ class ChooseTag extends BaseTag
 
         if (! isset($otherwiseEls[0])) {
             $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
+
             return '';
         }
 

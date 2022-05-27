@@ -5,7 +5,7 @@ namespace Bmatovu\Ussd\Tags;
 use Bmatovu\Ussd\Support\Helper;
 use Illuminate\Support\Facades\Log;
 
-class WhenTag implements Tag
+class WhenTag extends BaseTag
 {
     public function handle(): ?string
     {

@@ -2,28 +2,30 @@
 
 namespace Bmatovu\Ussd\Tests\Tags;
 
-use Bmatovu\Ussd\Tags\OptionTag;
+use Bmatovu\Ussd\Tags\WhenTag;
 use Bmatovu\Ussd\Tests\TestCase;
 
-class OptionTagTest extends TestCase
+class WhenTagTest extends TestCase
 {
-    public function testHandleOption()
+    public function testHandleWhen()
     {
         $this->cache->put('prefix_pre', '/*[1]');
         $this->cache->put('prefix_exp', '/*[1]/*[1]');
         $this->cache->put('prefix_breakpoints', '[{"break":"resume"}]');
 
+        $this->cache->put('prefix_gender', 'Male');
+
         $xml = <<<'XML'
-<options header="Choose Gender: ">
-    <option text="Male">
+<choice>
+    <when key="gender" value="Male">
         <response text="Lorem ipsum"/>
-    </option>
-</options>
+    </when>
+</choice>
 XML;
 
         $node = $this->getNodeByPathExp($xml, '/*[1]/*[1]');
 
-        $tag = new OptionTag($node, $this->cache, 'prefix', 30);
+        $tag = new WhenTag($node, $this->cache, 'prefix', 30);
 
         $output = $tag->handle();
 
