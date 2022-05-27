@@ -2,32 +2,13 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Contracts\Tag;
-use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
-class ActionTag implements Tag
+class ActionTag extends BaseTag
 {
-    use Expressions;
-
-    protected \DOMXPath $xpath;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
-
-    public function __construct(\DOMXPath $xpath, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function handle(): ?string
     {
-        $this->xpath = $xpath;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
-    }
-
-    public function handle(\DOMNode $node): ?string
-    {
-        $actionName = $node->attributes->getNamedItem('name')->nodeValue;
+        $actionName = $this->node->attributes->getNamedItem('name')->nodeValue;
 
         $className = Str::studly($actionName);
         $action = $this->createAction("Bmatovu\\Ussd\\Actions\\{$className}Action", [$this->cache, $this->prefix, $this->ttl]);
@@ -36,7 +17,7 @@ class ActionTag implements Tag
         // throw new \Exception($this->cache->get("{$this->prefix}_amount"));
 
         $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp");
+        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
@@ -48,7 +29,7 @@ class ActionTag implements Tag
         return '';
     }
 
-    public function process(\DOMNode $node, ?string $answer): void
+    public function process(?string $answer): void
     {
     }
 

@@ -2,36 +2,23 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Contracts\Tag;
-use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
+use Bmatovu\Ussd\Support\Helper;
 use Illuminate\Support\Facades\Log;
 
-class ChooseTag implements Tag
+class ChooseTag extends BaseTag
 {
-    use Expressions;
-
-    protected \DOMXPath $xpath;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
-
-    public function __construct(\DOMXPath $xpath, CacheContract $cache, string $prefix, ?int $ttl = null)
-    {
-        $this->xpath = $xpath;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
-    }
-
-    public function handle(\DOMNode $node): ?string
+    public function handle(): ?string
     {
         $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp");
+        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
-        $whenEls = $this->xpath->query('when', $node);
+        // $children = Helper::getDomElements($this->node->childNodes, null);
+        // $no_of_tags = \count($children);
+
+        // $whenEls = $this->xpath->query('when', $this->node);
+        $whenEls = Helper::getDomElements($this->node->childNodes, 'when');
 
         $pos = 0;
 
@@ -60,9 +47,10 @@ class ChooseTag implements Tag
             return '';
         }
 
-        $otherwiseEl = $this->xpath->query('otherwise', $node)->item(0);
+        $otherwiseEls = Helper::getDomElements($this->node->childNodes, 'otherwise');
+        // $otherwiseEl = $this->xpath->query('otherwise', $this->node)->item(0);
 
-        if (! $otherwiseEl) {
+        if (! isset($otherwiseEls[0])) {
             return '';
         }
 
@@ -76,7 +64,7 @@ class ChooseTag implements Tag
         return '';
     }
 
-    public function process(\DOMNode $node, ?string $answer): void
+    public function process(?string $answer): void
     {
     }
 }

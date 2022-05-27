@@ -13,7 +13,7 @@ class IfTag extends BaseTag
         $value = $this->node->attributes->getNamedItem('value')->nodeValue;
 
         if ($this->cache->get("{$this->prefix}_{$key}") !== $value) {
-            $exp = $this->cache->get("{$this->prefix}_exp");
+            $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
             $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
             $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
@@ -22,15 +22,15 @@ class IfTag extends BaseTag
         }
 
         $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp");
+        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
         $breakpoints = (array) json_decode((string) $this->cache->get("{$this->prefix}_breakpoints"), true);
 
         $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
         $this->cache->put("{$this->prefix}_exp", "{$exp}/*[1]", $this->ttl);
 
         $children = Helper::getDomElements($this->node->childNodes, null);
-
         $no_of_tags = \count($children);
+
         $break = $this->incExp("{$exp}/*[1]", $no_of_tags);
         array_unshift($breakpoints, [$break => $this->incExp($exp)]);
         $this->cache->put("{$this->prefix}_breakpoints", json_encode($breakpoints), $this->ttl);
