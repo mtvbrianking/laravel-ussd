@@ -2,48 +2,30 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Contracts\Tag;
 use Bmatovu\Ussd\Support\Helper;
-use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\Facades\Log;
 
-class OptionsTag implements Tag
+class OptionsTag extends BaseTag
 {
-    use Expressions;
-
-    protected \DOMXPath $xpath;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
-
-    public function __construct(\DOMXPath $xpath, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function handle(): ?string
     {
-        $this->xpath = $xpath;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
-    }
-
-    public function handle(\DOMNode $node): ?string
-    {
-        $header = $node->attributes->getNamedItem('header')->nodeValue;
+        $header = $this->node->attributes->getNamedItem('header')->nodeValue;
 
         $body = '';
 
         $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp");
+        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
-        // $children = $this->xpath->query('option', $node);
+        // $children = $this->xpath->query('option', $this->node);
 
         // foreach ($children as $idx => $child) {
         //     $pos = $idx + 1;
         //     $body .= "\n{$pos}) " . $child->attributes->getNamedItem("text")->nodeValue;
         // }
 
-        $children = Helper::getDomElements($node->childNodes, 'option');
+        $children = Helper::getDomElements($this->node->childNodes, 'option');
 
         $pos = 0;
         foreach ($children as $child) {
@@ -51,7 +33,7 @@ class OptionsTag implements Tag
             $body .= "\n{$pos}) ".$child->attributes->getNamedItem('text')->nodeValue;
         }
 
-        if (! $node->attributes->getNamedItem('noback')) {
+        if (! $this->node->attributes->getNamedItem('noback')) {
             $body .= "\n0) Back";
         }
 
@@ -62,20 +44,20 @@ class OptionsTag implements Tag
         return "{$header}{$body}";
     }
 
-    public function process(\DOMNode $node, ?string $answer): void
+    public function process(?string $answer): void
     {
         if ('' === $answer) {
-            throw new \Exception('Invalid answer.');
+            throw new \Exception('Make a choice.');
         }
 
         $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp");
+        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
         if (0 === $answer) {
-            if ($node->attributes->getNamedItem('noback')) {
-                throw new \Exception('Invalid option.');
+            if ($this->node->attributes->getNamedItem('noback')) {
+                throw new \Exception('Invalid choice.');
             }
 
             $exp = $this->goBack($pre, 2);
@@ -87,12 +69,12 @@ class OptionsTag implements Tag
             return;
         }
 
-        // if((int) $answer > $this->xpath->query('option', $node)->length) {}
+        // if((int) $answer > $this->xpath->query('option', $this->node)->length) {}
 
-        $children = Helper::getDomElements($node->childNodes, 'option');
+        $children = Helper::getDomElements($this->node->childNodes, 'option');
 
         if ((int) $answer > \count($children)) {
-            throw new \Exception('Invalid option.');
+            throw new \Exception('Invalid choice.');
         }
 
         $this->cache->put("{$this->prefix}_exp", "{$pre}/*[{$answer}]", $this->ttl);

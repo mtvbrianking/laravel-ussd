@@ -24,9 +24,6 @@ class QuestionTagTest extends TestCase
 
     public function testProccessQuestion()
     {
-        $this->cache->put('prefix_pre', '');
-        $this->cache->put('prefix_exp', '/*[1]');
-
         $node = $this->getNodeByTagName('<question name="alias" text="Enter Username: "/>', 'question');
 
         $tag = new QuestionTag($node, $this->cache, 'prefix', 30);
@@ -34,8 +31,6 @@ class QuestionTagTest extends TestCase
         $tag->process('jdoe');
 
         static::assertSame('jdoe', $this->cache->get('prefix_alias'));
-        static::assertSame('', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[1]', $this->cache->get('prefix_exp'));
     }
 
     public function testProccessQuestionValidation()
