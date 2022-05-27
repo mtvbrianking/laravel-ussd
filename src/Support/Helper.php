@@ -6,7 +6,7 @@ class Helper
 {
     public static function getDomElements(\DOMNodeList $nodeList, ?string $nodeName): array
     {
-        return array_filter(iterator_to_array($nodeList), function ($node) use ($nodeName) {
+        $els = array_filter(iterator_to_array($nodeList), function ($node) use ($nodeName) {
             // return $node instanceof \DOMElement && ($nodeName && $node->nodeName === $nodeName);
 
             if(! $node instanceof \DOMElement) {
@@ -19,5 +19,7 @@ class Helper
 
             return $node->nodeName === $nodeName;
         });
+
+        return array_values($els);
     }
 }
