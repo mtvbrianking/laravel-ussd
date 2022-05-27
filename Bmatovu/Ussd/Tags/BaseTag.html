@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Tags\ResponseTag | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Tags\BaseTag | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Tags_ResponseTag" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Tags_BaseTag" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -75,18 +75,18 @@
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
                 <li><span class="label label-default">class</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Tags.html">Tags</a></li><li class="backslash">\</li><li>ResponseTag</li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Tags.html">Tags</a></li><li class="backslash">\</li><li>BaseTag</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>ResponseTag    
+        <h1>BaseTag    
             </h1>
     </div>
 
     
     <p>        class
-    <strong>ResponseTag</strong>        extends <a href="../../../Bmatovu/Ussd/Tags/BaseTag.html"><abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/ResponseTag.php">View source</a>)
+    <strong>BaseTag</strong>        implements        <a href="../../../Bmatovu/Ussd/Contracts/Tag.html"><abbr title="Bmatovu\Ussd\Contracts\Tag">Tag</abbr></a>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php">View source</a>)
 </p>
 
         
@@ -116,8 +116,7 @@
                                     </td>
                 <td>$node</td>
                 <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_node">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
+                <td></td>
             </tr>
                     <tr>
                 <td class="type" id="property_cache">
@@ -126,8 +125,7 @@
                                     </td>
                 <td>$cache</td>
                 <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_cache">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
+                <td></td>
             </tr>
                     <tr>
                 <td class="type" id="property_prefix">
@@ -136,8 +134,7 @@
                                     </td>
                 <td>$prefix</td>
                 <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_prefix">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
+                <td></td>
             </tr>
                     <tr>
                 <td class="type" id="property_ttl">
@@ -146,8 +143,7 @@
                                     </td>
                 <td>$ttl</td>
                 <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_ttl">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
+                <td></td>
             </tr>
             </table>
 
@@ -188,8 +184,7 @@
         
                                             <p class="no-description">No description</p>
                                     </div>
-                <div class="col-md-2"><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#method___construct">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></div>
+                <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
@@ -336,8 +331,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___construct">
-        <div class="location">in <a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#method___construct">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a> <a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php#L18">at line 18</a></div>
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php#L18">at line 18</a></div>
         <code>                    
     <strong>__construct</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node, <abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, int|null $ttl = null)
         </code>
@@ -386,7 +380,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_handle">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/ResponseTag.php#L9">at line 9</a></div>
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php#L26">at line 26</a></div>
         <code>                    string|null
     <strong>handle</strong>()
         </code>
@@ -419,7 +413,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_process">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/ResponseTag.php#L28">at line 28</a></div>
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php#L31">at line 31</a></div>
         <code>                    void
     <strong>process</strong>(string|null $answer)
         </code>
