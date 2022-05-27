@@ -2,31 +2,15 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Contracts\Tag;
-use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
+use Bmatovu\Ussd\Support\Helper;
+use Illuminate\Support\Facades\Log;
 
-class IfTag implements Tag
+class IfTag extends BaseTag
 {
-    use Expressions;
-
-    protected \DOMXPath $xpath;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
-
-    public function __construct(\DOMXPath $xpath, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function handle(): ?string
     {
-        $this->xpath = $xpath;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
-    }
-
-    public function handle(\DOMNode $node): ?string
-    {
-        $key = $node->attributes->getNamedItem('key')->nodeValue;
-        $value = $node->attributes->getNamedItem('value')->nodeValue;
+        $key = $this->node->attributes->getNamedItem('key')->nodeValue;
+        $value = $this->node->attributes->getNamedItem('value')->nodeValue;
 
         if ($this->cache->get("{$this->prefix}_{$key}") !== $value) {
             $exp = $this->cache->get("{$this->prefix}_exp");
@@ -44,7 +28,9 @@ class IfTag implements Tag
         $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
         $this->cache->put("{$this->prefix}_exp", "{$exp}/*[1]", $this->ttl);
 
-        $no_of_tags = $this->xpath->query('*', $node)->length;
+        $children = Helper::getDomElements($this->node->childNodes, null);
+
+        $no_of_tags = \count($children);
         $break = $this->incExp("{$exp}/*[1]", $no_of_tags);
         array_unshift($breakpoints, [$break => $this->incExp($exp)]);
         $this->cache->put("{$this->prefix}_breakpoints", json_encode($breakpoints), $this->ttl);
@@ -52,7 +38,7 @@ class IfTag implements Tag
         return '';
     }
 
-    public function process(\DOMNode $node, ?string $answer): void
+    public function process(?string $answer): void
     {
     }
 }
