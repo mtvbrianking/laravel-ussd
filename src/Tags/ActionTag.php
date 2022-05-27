@@ -3,6 +3,7 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ActionTag extends BaseTag
 {
@@ -12,7 +13,7 @@ class ActionTag extends BaseTag
 
         $className = Str::studly($actionName);
         $action = $this->createAction("Bmatovu\\Ussd\\Actions\\{$className}Action", [$this->cache, $this->prefix, $this->ttl]);
-        $action($node);
+        $action($this->node);
 
         // throw new \Exception($this->cache->get("{$this->prefix}_amount"));
 
