@@ -20,12 +20,13 @@ class ChooseTag extends BaseTag
         // $whenEls = $this->xpath->query('when', $this->node);
         $whenEls = Helper::getDomElements($this->node->childNodes, 'when');
 
-        $pos = 0;
+        // $whenEls = array_values($whenEls);
 
+        $pos = 0;
         $isMatched = false;
 
-        foreach ($whenEls as $idx => $whenEl) {
-            $pos = $idx + 1;
+        foreach ($whenEls as $whenEl) {
+            ++$pos;
             $key = $whenEl->attributes->getNamedItem('key')->nodeValue;
             $val = $whenEl->attributes->getNamedItem('value')->nodeValue;
 
@@ -47,16 +48,18 @@ class ChooseTag extends BaseTag
             return '';
         }
 
+        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
+
         $otherwiseEls = Helper::getDomElements($this->node->childNodes, 'otherwise');
         // $otherwiseEl = $this->xpath->query('otherwise', $this->node)->item(0);
 
         if (! isset($otherwiseEls[0])) {
+            $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
             return '';
         }
 
         ++$pos;
 
-        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
         $this->cache->put("{$this->prefix}_exp", "{$exp}/*[{$pos}]", $this->ttl);
 
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => "{$exp}/*[{$pos}]"]);
