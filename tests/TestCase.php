@@ -68,6 +68,6 @@ abstract class TestCase extends Orchestra
 
         $xpath = new \DOMXPath($doc);
 
-        return $xpath->query('/*[1]')->item(0);
+        return $xpath->query($exp)->item(0);
     }
 }
