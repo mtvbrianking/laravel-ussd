@@ -123,4 +123,17 @@ XML;
 
         $tag->process('2');
     }
+
+    public function testProccessOptionsValidationNoBack()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Invalid choice.');
+
+        $node = $this->getNodeByTagName('<options header="Gender" noback="no"><option text="Male"/></options>', 'options');
+
+        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+
+        $tag->process('0');
+    }
 }

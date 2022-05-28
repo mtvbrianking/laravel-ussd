@@ -2,6 +2,9 @@
 
 namespace Bmatovu\Ussd\Support;
 
+use Illuminate\Contracts\Cache\Repository as CacheContract;
+use Illuminate\Support\Str;
+
 class Helper
 {
     public static function getDomElements(\DOMNodeList $nodeList, ?string $nodeName): array
@@ -27,7 +30,7 @@ class Helper
      * @see https://stackoverflow.com/q/413071/2732184
      * @see https://www.regextester.com/97707
      */
-    public static function translate(string $text, string $pattern = '/[^{\}]+(?=})/'): string
+    public static function translate(CacheContract $cache, string $prefix, string $text, string $pattern = '/[^{\}]+(?=})/'): string
     {
         preg_match_all($pattern, $text, $matches);
 
@@ -39,7 +42,7 @@ class Helper
 
         foreach ($matches[0] as $match) {
             $var = Str::slug($match, '_');
-            $replace_vars["{{$match}}"] = $this->cache->get("{$this->prefix}_{$var}", "{{$var}}");
+            $replace_vars["{{$match}}"] = $cache->get("{$prefix}_{$var}", "{{$var}}");
         }
 
         return strtr($text, $replace_vars);

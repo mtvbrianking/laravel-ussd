@@ -25,7 +25,6 @@ class BaseTag implements Tag
 
     public function handle(): ?string
     {
-        return '';
     }
 
     public function process(?string $answer): void
