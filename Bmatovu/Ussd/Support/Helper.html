@@ -116,7 +116,7 @@
                     static&nbsp;string
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_translate">translate</a>(string $text, string $pattern = &#039;/[^{\\}]+(?=})/&#039;)
+                    <a href="#method_translate">translate</a>(<abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, string $text, string $pattern = &#039;/[^{\\}]+(?=})/&#039;)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -130,7 +130,7 @@
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method_getDomElements">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L7">at line 7</a></div>
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L10">at line 10</a></div>
         <code>        static            array
     <strong>getDomElements</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
         </code>
@@ -178,9 +178,9 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_translate">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L30">at line 30</a></div>
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L33">at line 33</a></div>
         <code>        static            string
-    <strong>translate</strong>(string $text, string $pattern = &#039;/[^{\\}]+(?=})/&#039;)
+    <strong>translate</strong>(<abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, string $text, string $pattern = &#039;/[^{\\}]+(?=})/&#039;)
         </code>
     </h3>
     <div class="details">    
@@ -195,6 +195,16 @@
                             <h4>Parameters</h4>
 
                     <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr></td>
+                <td>$cache</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$prefix</td>
+                <td></td>
+            </tr>
                     <tr>
                 <td>string</td>
                 <td>$text</td>
