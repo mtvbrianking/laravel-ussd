@@ -68,6 +68,36 @@ XML;
         static::assertSame('/*[1]/*[2]', $this->cache->get('prefix_exp'));
     }
 
+    public function testProcessOptionsBack()
+    {
+        $this->cache->put('prefix_pre', '/*[1]/*[2]/*[1]');
+        // $this->cache->put('prefix_exp', '');
+
+        $xml = <<<'XML'
+<options header="Send Money" noback="no">
+    <option text="Americas">
+        <response text="ComingSoon"/>
+    </option>
+    <option text="Europe">
+        <options header="Europe">
+            <option text="Turkey">
+                <response text="ComingSoon"/>
+            </option>
+        </options>
+    </option>
+</options>
+XML;
+
+        $node = $this->getNodeByPathExp($xml, '/*[1]/*[2]/*[1]');
+
+        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+
+        $tag->process(0);
+
+        static::assertSame('/*[1]/*[2]/*[1]', $this->cache->get('prefix_pre'));
+        static::assertSame('/*[1]', $this->cache->get('prefix_exp'));
+    }
+
     public function testProccessOptionsValidationNoAnswer()
     {
         $this->expectException(\Exception::class);

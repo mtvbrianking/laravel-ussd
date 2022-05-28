@@ -55,7 +55,7 @@ class OptionsTag extends BaseTag
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
-        if (0 === $answer) {
+        if ('0' === $answer) {
             if ($this->node->attributes->getNamedItem('noback')) {
                 throw new \Exception('Invalid choice.');
             }
