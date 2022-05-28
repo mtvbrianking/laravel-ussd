@@ -3,6 +3,7 @@
 namespace Bmatovu\Ussd;
 
 use Bmatovu\Ussd\Contracts\Tag;
+use Bmatovu\Ussd\Support\Arr;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -14,14 +15,13 @@ class Parser
     protected string $prefix;
     protected int $ttl;
 
-    public function __construct(\DOMXPath $xpath, string $exp, CacheContract $cache, string $prefix, string $session_id, ?int $ttl = null)
+    public function __construct(\DOMXPath $xpath, array $options, CacheContract $cache, ?int $ttl = null)
     {
         $this->xpath = $xpath;
         $this->cache = $cache;
-        $this->prefix = $prefix;
         $this->ttl = $ttl;
 
-        $this->prepareCache($session_id, $exp);
+        $this->bootstrap($options);
     }
 
     public function parse(?string $answer): string
@@ -45,21 +45,50 @@ class Parser
         return $output;
     }
 
-    protected function prepareCache(string $session_id, string $exp)
+    protected function sessionExists(string $sessionId): bool
     {
-        $preSessionId = $this->cache->get("{$this->prefix}_session_id");
+        $preSessionId = $this->cache->get("{$this->prefix}_session_id", '');
 
-        if ($preSessionId === $session_id) {
+        return $preSessionId === $sessionId;
+    }
+
+    protected function bootstrap(array $options)
+    {
+        $required = ['session_id', 'phone_number', 'service_code', 'expression'];
+
+        if ($missing = Arr::keysDiff($required, $options)) {
+            $msg = array_pop($missing);
+
+            if ($missing) {
+                $msg = implode(', ', $missing).', and '.$msg;
+            }
+
+            throw new \Exception('Missing parser options: '.$msg);
+        }
+
+        [
+            'session_id' => $session_id,
+            'phone_number' => $phone_number,
+            'service_code' => $service_code,
+            'expression' => $expression,
+        ] = $options;
+
+        $this->prefix = "{$phone_number}{$service_code}";
+
+        // ...
+
+        $preSessionId = $this->cache->get("{$this->prefix}_session_id", '');
+
+        if ($this->sessionExists($session_id)) {
             return;
         }
 
-        if ('' !== $preSessionId) {
-            // $this->cache->tag($this->prefix)->flush();
-        }
-
         $this->cache->put("{$this->prefix}_session_id", $session_id, $this->ttl);
+        $this->cache->put("{$this->prefix}_service_code", $service_code, $this->ttl);
+        $this->cache->put("{$this->prefix}_phone_number", $phone_number, $this->ttl);
+
         $this->cache->put("{$this->prefix}_pre", '', $this->ttl);
-        $this->cache->put("{$this->prefix}_exp", $exp, $this->ttl);
+        $this->cache->put("{$this->prefix}_exp", $expression, $this->ttl);
         $this->cache->put("{$this->prefix}_breakpoints", '[]', $this->ttl);
     }
 
