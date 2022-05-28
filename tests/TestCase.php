@@ -51,6 +51,15 @@ abstract class TestCase extends Orchestra
         ];
     }
 
+    protected function xmlToXpath(string $xml): \DOMXPath
+    {
+        $doc = new \DOMDocument();
+
+        $doc->loadXML($xml);
+
+        return new \DOMXPath($doc);
+    }
+
     protected function getNodeByTagName(string $xml, string $tagName): \DOMNode
     {
         $doc = new \DOMDocument();

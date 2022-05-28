@@ -76,8 +76,8 @@ class Parser
         // Log::debug("Process  -->", ['tag' => $preNode->tagName, 'pre' => $pre]);
 
         $tagName = Str::studly($preNode->tagName);
-        $tag = $this->createTag(__NAMESPACE__."\\Tags\\{$tagName}Tag", [$this->xpath, $this->cache, $this->prefix, $this->ttl]);
-        $tag->process($preNode, $answer);
+        $tag = $this->createTag(__NAMESPACE__."\\Tags\\{$tagName}Tag", [$preNode, $this->cache, $this->prefix, $this->ttl]);
+        $tag->process($answer);
     }
 
     protected function setBreakpoint(): void
@@ -106,8 +106,8 @@ class Parser
         $node = $this->xpath->query($exp)->item(0);
 
         $tagName = Str::studly($node->tagName);
-        $tag = $this->createTag(__NAMESPACE__."\\Tags\\{$tagName}Tag", [$this->xpath, $this->cache, $this->prefix, $this->ttl]);
-        $output = $tag->handle($node);
+        $tag = $this->createTag(__NAMESPACE__."\\Tags\\{$tagName}Tag", [$node, $this->cache, $this->prefix, $this->ttl]);
+        $output = $tag->handle();
 
         $exp = $this->cache->get("{$this->prefix}_exp");
         $breakpoints = (array) json_decode((string) $this->cache->get("{$this->prefix}_breakpoints"), true);
