@@ -25,7 +25,7 @@ class ParserTest extends TestCase
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Missing class: Bmatovu\\Ussd\\Tags\\DummyTag');
+        $this->expectExceptionMessage('Missing class: DummyTag');
 
         $xpath = $this->xmlToXpath('<dummy/>');
 

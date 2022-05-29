@@ -46,7 +46,7 @@ class ActionTagTest extends TestCase
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Missing class: Bmatovu\\Ussd\\Actions\\ToUppercaseAction');
+        $this->expectExceptionMessage('Missing class: ToUppercaseAction');
 
         $this->cache->put('prefix_exp', '/*[1]');
 

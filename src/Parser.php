@@ -4,6 +4,7 @@ namespace Bmatovu\Ussd;
 
 use Bmatovu\Ussd\Contracts\Tag;
 use Bmatovu\Ussd\Support\Arr;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -105,7 +106,7 @@ class Parser
         // Log::debug("Process  -->", ['tag' => $preNode->tagName, 'pre' => $pre]);
 
         $tagName = Str::studly($preNode->tagName);
-        $tag = $this->createTag(__NAMESPACE__."\\Tags\\{$tagName}Tag", [$preNode, $this->cache, $this->prefix, $this->ttl]);
+        $tag = $this->createTag("{$tagName}Tag", [$preNode, $this->cache, $this->prefix, $this->ttl]);
         $tag->process($answer);
     }
 
@@ -135,7 +136,7 @@ class Parser
         $node = $this->xpath->query($exp)->item(0);
 
         $tagName = Str::studly($node->tagName);
-        $tag = $this->createTag(__NAMESPACE__."\\Tags\\{$tagName}Tag", [$node, $this->cache, $this->prefix, $this->ttl]);
+        $tag = $this->createTag("{$tagName}Tag", [$node, $this->cache, $this->prefix, $this->ttl]);
         $output = $tag->handle();
 
         $exp = $this->cache->get("{$this->prefix}_exp");
@@ -150,11 +151,27 @@ class Parser
         return $output;
     }
 
-    protected function createTag(string $fqcn, array $args = []): Tag
+    protected function resolveTagClass(string $tagName): string
     {
-        if (! class_exists($fqcn)) {
-            throw new \Exception("Missing class: {$fqcn}");
+        $config = Container::getInstance()->make('config');
+
+        $actionNs = config('ussd.tag-ns');
+
+        $fqcn = $tagName;
+
+        foreach ($actionNs as $ns) {
+            $fqcn = "{$ns}\\{$tagName}";
+            if (class_exists($fqcn)) {
+                return $fqcn;
+            }
         }
+
+        throw new \Exception("Missing class: {$tagName}");
+    }
+
+    protected function createTag(string $tagName, array $args = []): Tag
+    {
+        $fqcn = $this->resolveTagClass($tagName);
 
         return \call_user_func_array([new \ReflectionClass($fqcn), 'newInstance'], $args);
     }
