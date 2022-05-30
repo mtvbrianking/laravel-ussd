@@ -17,3 +17,10 @@ Install the package via the Composer package manager:
 ```bash
 composer require bmatovu/laravel-ussd
 ```
+### Configurations
+
+Public the package configuration file.
+
+```bash
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="config"
+```

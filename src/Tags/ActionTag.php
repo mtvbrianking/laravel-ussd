@@ -10,14 +10,6 @@ class ActionTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $actionName = $this->node->attributes->getNamedItem('name')->nodeValue;
-
-        $className = Str::studly($actionName);
-        $action = $this->createAction("{$className}Action", [$this->cache, $this->prefix, $this->ttl]);
-        $action($this->node);
-
-        // throw new \Exception($this->cache->get("{$this->prefix}_amount"));
-
         $pre = $this->cache->get("{$this->prefix}_pre");
         $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
 
@@ -28,11 +20,21 @@ class ActionTag extends BaseTag
 
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => $this->incExp($exp)]);
 
-        return '';
+        $actionName = $this->node->attributes->getNamedItem('name')->nodeValue;
+
+        $className = Str::studly($actionName);
+        $action = $this->createAction("{$className}Action", [$this->node, $this->cache, $this->prefix, $this->ttl]);
+
+        return $action->handle();
     }
 
     public function process(?string $answer): void
     {
+        $actionName = $this->node->attributes->getNamedItem('name')->nodeValue;
+
+        $className = Str::studly($actionName);
+        $action = $this->createAction("{$className}Action", [$this->node, $this->cache, $this->prefix, $this->ttl]);
+        $action->process($answer);
     }
 
     protected function resolveActionClass(string $actionName): string
@@ -53,7 +55,7 @@ class ActionTag extends BaseTag
         throw new \Exception("Missing class: {$actionName}");
     }
 
-    protected function createAction(string $actionName, array $args = []): callable
+    protected function createAction(string $actionName, array $args = []): object
     {
         $fqcn = $this->resolveActionClass($actionName);
 

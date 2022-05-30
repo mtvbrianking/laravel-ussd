@@ -6,6 +6,7 @@ use Illuminate\Contracts\Cache\Repository as CacheContract;
 
 class FormatMoneyAction
 {
+    protected \DOMNode $node;
     protected CacheContract $cache;
     protected string $prefix;
     protected int $ttl;
@@ -13,20 +14,27 @@ class FormatMoneyAction
     protected float $amount;
     protected string $currency;
 
-    public function __construct(CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function __construct(\DOMNode $node, CacheContract $cache, string $prefix, ?int $ttl = null)
     {
+        $this->node = $node;
         $this->cache = $cache;
         $this->prefix = $prefix;
         $this->ttl = $ttl;
     }
 
-    public function __invoke(\DOMNode $node): void
+    public function handle(): ?string
     {
-        $this->extractParameters($node);
+        $this->extractParameters($this->node);
 
         $formattedAmount = number_format($this->amount);
 
         $this->cache->put("{$this->prefix}_amount", "{$this->currency} {$formattedAmount}", $this->ttl);
+
+        return '';
+    }
+
+    public function process(?string $answer): void
+    {
     }
 
     protected function extractParameters(\DOMNode $node): void
