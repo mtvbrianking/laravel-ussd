@@ -3,7 +3,6 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Support\Helper;
-use Illuminate\Support\Facades\Log;
 
 class OptionsTag extends BaseTag
 {
@@ -15,15 +14,6 @@ class OptionsTag extends BaseTag
 
         $pre = $this->fromCache('pre');
         $exp = $this->fromCache('exp', $this->node->getNodePath());
-
-        // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
-
-        // $children = $this->xpath->query('option', $this->node);
-
-        // foreach ($children as $idx => $child) {
-        //     $pos = $idx + 1;
-        //     $body .= "\n{$pos}) " . $child->attributes->getNamedItem("text")->nodeValue;
-        // }
 
         $children = Helper::getDomElements($this->node->childNodes, 'option');
 
@@ -39,7 +29,6 @@ class OptionsTag extends BaseTag
 
         $this->toCache('pre', $exp);
         $this->toCache('exp', $this->incExp($exp));
-        // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => $this->incExp($exp)]);
 
         return "{$header}{$body}";
     }
@@ -53,8 +42,6 @@ class OptionsTag extends BaseTag
         $pre = $this->fromCache('pre');
         $exp = $this->fromCache('exp', $this->node->getNodePath());
 
-        // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
-
         if ('0' === $answer) {
             if ($this->node->attributes->getNamedItem('noback')) {
                 throw new \Exception('Invalid choice.');
@@ -62,14 +49,10 @@ class OptionsTag extends BaseTag
 
             $exp = $this->goBack($pre, 2);
 
-            // Log::debug("GoBack   -->", ['exp' => $exp]);
-
             $this->cache->put("{$this->prefix}_exp", $exp, $this->ttl);
 
             return;
         }
-
-        // if((int) $answer > $this->xpath->query('option', $this->node)->length) {}
 
         $children = Helper::getDomElements($this->node->childNodes, 'option');
 
@@ -78,7 +61,6 @@ class OptionsTag extends BaseTag
         }
 
         $this->cache->put("{$this->prefix}_exp", "{$pre}/*[{$answer}]", $this->ttl);
-        // Log::debug("CheckOut -->", ['pre' => $pre, 'exp' => "{$pre}/*[{$answer}]"]);
     }
 
     protected function goBack(string $exp, int $steps = 1): string

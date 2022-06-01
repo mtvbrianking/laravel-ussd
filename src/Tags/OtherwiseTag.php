@@ -3,7 +3,6 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Support\Helper;
-use Illuminate\Support\Facades\Log;
 
 class OtherwiseTag extends BaseTag
 {
@@ -13,9 +12,6 @@ class OtherwiseTag extends BaseTag
         $exp = $this->fromCache('exp', $this->node->getNodePath());
         $breakpoints = (array) json_decode((string) $this->fromCache('breakpoints'), true);
 
-        // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
-
-        // $no_of_tags = $this->xpath->query('*', $node)->length;
         $children = Helper::getDomElements($this->node->childNodes, null);
         $no_of_tags = \count($children);
 
@@ -24,12 +20,8 @@ class OtherwiseTag extends BaseTag
         array_unshift($breakpoints, [$break => $this->incExp($pre)]);
         $this->toCache('breakpoints', json_encode($breakpoints));
 
-        // Log::debug("BP       -->", ['break' => $break, 'resume' => $this->incExp($pre)]);
-
         $this->toCache('pre', $exp);
         $this->toCache('exp', "{$exp}/*[1]");
-
-        // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => "{$exp}/*[1]"]);
 
         return '';
     }

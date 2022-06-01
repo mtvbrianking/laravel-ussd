@@ -3,7 +3,6 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Support\Helper;
-use Illuminate\Support\Facades\Log;
 
 class ChooseTag extends BaseTag
 {
@@ -12,15 +11,7 @@ class ChooseTag extends BaseTag
         $pre = $this->fromCache('pre');
         $exp = $this->fromCache('exp', $this->node->getNodePath());
 
-        // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
-
-        // $children = Helper::getDomElements($this->node->childNodes, null);
-        // $no_of_tags = \count($children);
-
-        // $whenEls = $this->xpath->query('when', $this->node);
         $whenEls = Helper::getDomElements($this->node->childNodes, 'when');
-
-        // $whenEls = array_values($whenEls);
 
         $pos = 0;
         $isMatched = false;
@@ -30,7 +21,7 @@ class ChooseTag extends BaseTag
             $key = $whenEl->attributes->getNamedItem('key')->nodeValue;
             $val = $whenEl->attributes->getNamedItem('value')->nodeValue;
 
-            $var = $this->fromCache($key);;
+            $var = $this->fromCache($key);
 
             if ($var !== $val) {
                 continue;
@@ -51,7 +42,6 @@ class ChooseTag extends BaseTag
         $this->toCache('pre', $exp);
 
         $otherwiseEls = Helper::getDomElements($this->node->childNodes, 'otherwise');
-        // $otherwiseEl = $this->xpath->query('otherwise', $this->node)->item(0);
 
         if (! isset($otherwiseEls[0])) {
             $this->toCache('exp', $this->incExp($exp));
@@ -62,8 +52,6 @@ class ChooseTag extends BaseTag
         ++$pos;
 
         $this->toCache('exp', "{$exp}/*[{$pos}]");
-
-        // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => "{$exp}/*[{$pos}]"]);
 
         return '';
     }

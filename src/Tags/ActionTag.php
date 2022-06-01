@@ -3,7 +3,6 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ActionTag extends BaseTag
@@ -13,12 +12,8 @@ class ActionTag extends BaseTag
         $pre = $this->fromCache('pre');
         $exp = $this->fromCache('exp', $this->node->getNodePath());
 
-        // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
-
         $this->toCache('pre', $exp);
         $this->toCache('exp', $this->incExp($exp));
-
-        // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => $this->incExp($exp)]);
 
         $actionName = $this->readAttr('name');
 

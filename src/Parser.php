@@ -6,7 +6,6 @@ use Bmatovu\Ussd\Contracts\Tag;
 use Bmatovu\Ussd\Support\Arr;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Parser
@@ -103,8 +102,6 @@ class Parser
 
         $preNode = $this->xpath->query($pre)->item(0);
 
-        // Log::debug("Process  -->", ['tag' => $preNode->tagName, 'pre' => $pre]);
-
         $tagName = Str::studly($preNode->tagName);
         $tag = $this->createTag("{$tagName}Tag", [$preNode, $this->cache, $this->prefix, $this->ttl]);
         $tag->process($answer);
@@ -112,8 +109,6 @@ class Parser
 
     protected function setBreakpoint(): void
     {
-        // Log::debug("Error    -->", ['tag' => '', 'exp' => $exp]);
-
         $exp = $this->cache->get("{$this->prefix}_exp");
 
         $breakpoints = (array) json_decode((string) $this->cache->get("{$this->prefix}_breakpoints"), true);
@@ -129,8 +124,6 @@ class Parser
 
     protected function renderNext(): ?string
     {
-        // Log::debug("Handle   -->", ['tag' => $node->tagName, 'exp' => $exp]);
-
         $exp = $this->cache->get("{$this->prefix}_exp");
 
         $node = $this->xpath->query($exp)->item(0);
