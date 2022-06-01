@@ -28,7 +28,7 @@ trait Attributes
         return strtr($text, $replace_vars);
     }
 
-    public function readAttr(string $name, mixed $default = null): mixed
+    public function readAttr(string $name, $default = null)
     {
         $value = $this->node->attributes->getNamedItem($name)->nodeValue ?? $default;
 
