@@ -28,4 +28,13 @@ class HelperTest extends TestCase
 
         static::assertSame('Username: {alias}', $text);
     }
+
+    public function testNodeToStr()
+    {
+        $tag = '<variable name="color" value="blue"/>';
+
+        $node = $this->getNodeByTagName($tag, 'variable');
+
+        static::assertSame($tag, Helper::renderNode($node));
+    }
 }

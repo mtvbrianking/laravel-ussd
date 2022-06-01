@@ -7,6 +7,17 @@ use Illuminate\Support\Str;
 
 class Helper
 {
+    public static function renderNode(\DOMNode $node): string
+    {
+        $attrs = '';
+
+        foreach ($node->attributes as $attr) {
+            $attrs .= " {$attr->name}=\"{$attr->value}\"";
+        }
+
+        return "<{$node->tagName}{$attrs}/>";
+    }
+
     public static function getDomElements(\DOMNodeList $nodeList, ?string $nodeName): array
     {
         $els = array_filter(iterator_to_array($nodeList), function ($node) use ($nodeName) {
