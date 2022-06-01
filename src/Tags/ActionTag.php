@@ -10,17 +10,17 @@ class ActionTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
+        $pre = $this->fromCache('pre');
+        $exp = $this->fromCache('exp', $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
-        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
-        $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
+        $this->toCache('pre', $exp);
+        $this->toCache('exp', $this->incExp($exp));
 
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => $this->incExp($exp)]);
 
-        $actionName = $this->node->attributes->getNamedItem('name')->nodeValue;
+        $actionName = $this->readAttr('name');
 
         $className = Str::studly($actionName);
         $action = $this->createAction("{$className}Action", [$this->node, $this->cache, $this->prefix, $this->ttl]);
@@ -30,7 +30,7 @@ class ActionTag extends BaseTag
 
     public function process(?string $answer): void
     {
-        $actionName = $this->node->attributes->getNamedItem('name')->nodeValue;
+        $actionName = $this->readAttr('name');
 
         $className = Str::studly($actionName);
         $action = $this->createAction("{$className}Action", [$this->node, $this->cache, $this->prefix, $this->ttl]);

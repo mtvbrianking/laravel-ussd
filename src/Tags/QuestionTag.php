@@ -8,17 +8,17 @@ class QuestionTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
+        $pre = $this->fromCache('pre');
+        $exp = $this->fromCache('exp', $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
-        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
-        $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
+        $this->toCache('pre', $exp);
+        $this->toCache('exp', $this->incExp($exp));
 
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => $this->incExp($exp)]);
 
-        return $this->node->attributes->getNamedItem('text')->nodeValue;
+        return $this->readAttr('text');
     }
 
     public function process(?string $answer): void
@@ -27,7 +27,7 @@ class QuestionTag extends BaseTag
             throw new \Exception('Question requires an answer.');
         }
 
-        $name = $this->node->attributes->getNamedItem('name')->nodeValue;
+        $name = $this->readAttr('name');
 
         $this->cache->put("{$this->prefix}_{$name}", $answer, $this->ttl);
     }

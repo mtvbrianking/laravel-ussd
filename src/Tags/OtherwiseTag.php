@@ -9,9 +9,9 @@ class OtherwiseTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
-        $breakpoints = (array) json_decode((string) $this->cache->get("{$this->prefix}_breakpoints"), true);
+        $pre = $this->fromCache('pre');
+        $exp = $this->fromCache('exp', $this->node->getNodePath());
+        $breakpoints = (array) json_decode((string) $this->fromCache('breakpoints'), true);
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
@@ -22,12 +22,12 @@ class OtherwiseTag extends BaseTag
         $break = $this->incExp("{$exp}/*[1]", $no_of_tags);
 
         array_unshift($breakpoints, [$break => $this->incExp($pre)]);
-        $this->cache->put("{$this->prefix}_breakpoints", json_encode($breakpoints), $this->ttl);
+        $this->toCache('breakpoints', json_encode($breakpoints));
 
         // Log::debug("BP       -->", ['break' => $break, 'resume' => $this->incExp($pre)]);
 
-        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
-        $this->cache->put("{$this->prefix}_exp", "{$exp}/*[1]", $this->ttl);
+        $this->toCache('pre', $exp);
+        $this->toCache('exp', "{$exp}/*[1]");
 
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => "{$exp}/*[1]"]);
 

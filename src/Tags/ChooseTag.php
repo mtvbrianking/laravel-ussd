@@ -9,8 +9,8 @@ class ChooseTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
+        $pre = $this->fromCache('pre');
+        $exp = $this->fromCache('exp', $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
@@ -30,7 +30,7 @@ class ChooseTag extends BaseTag
             $key = $whenEl->attributes->getNamedItem('key')->nodeValue;
             $val = $whenEl->attributes->getNamedItem('value')->nodeValue;
 
-            $var = $this->cache->get("{$this->prefix}_{$key}");
+            $var = $this->fromCache($key);;
 
             if ($var !== $val) {
                 continue;
@@ -38,8 +38,8 @@ class ChooseTag extends BaseTag
 
             $isMatched = true;
 
-            $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
-            $this->cache->put("{$this->prefix}_exp", "{$exp}/*[{$pos}]", $this->ttl);
+            $this->toCache('pre', $exp);
+            $this->toCache('exp', "{$exp}/*[{$pos}]");
 
             break;
         }
@@ -48,20 +48,20 @@ class ChooseTag extends BaseTag
             return '';
         }
 
-        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
+        $this->toCache('pre', $exp);
 
         $otherwiseEls = Helper::getDomElements($this->node->childNodes, 'otherwise');
         // $otherwiseEl = $this->xpath->query('otherwise', $this->node)->item(0);
 
         if (! isset($otherwiseEls[0])) {
-            $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
+            $this->toCache('exp', $this->incExp($exp));
 
             return '';
         }
 
         ++$pos;
 
-        $this->cache->put("{$this->prefix}_exp", "{$exp}/*[{$pos}]", $this->ttl);
+        $this->toCache('exp', "{$exp}/*[{$pos}]");
 
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => "{$exp}/*[{$pos}]"]);
 

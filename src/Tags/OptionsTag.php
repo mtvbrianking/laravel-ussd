@@ -13,8 +13,8 @@ class OptionsTag extends BaseTag
 
         $body = '';
 
-        $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
+        $pre = $this->fromCache('pre');
+        $exp = $this->fromCache('exp', $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
@@ -37,8 +37,8 @@ class OptionsTag extends BaseTag
             $body .= "\n0) Back";
         }
 
-        $this->cache->put("{$this->prefix}_pre", $exp, $this->ttl);
-        $this->cache->put("{$this->prefix}_exp", $this->incExp($exp), $this->ttl);
+        $this->toCache('pre', $exp);
+        $this->toCache('exp', $this->incExp($exp));
         // Log::debug("CheckOut -->", ['pre' => $exp, 'exp' => $this->incExp($exp)]);
 
         return "{$header}{$body}";
@@ -50,8 +50,8 @@ class OptionsTag extends BaseTag
             throw new \Exception('Make a choice.');
         }
 
-        $pre = $this->cache->get("{$this->prefix}_pre");
-        $exp = $this->cache->get("{$this->prefix}_exp", $this->node->getNodePath());
+        $pre = $this->fromCache('pre');
+        $exp = $this->fromCache('exp', $this->node->getNodePath());
 
         // Log::debug("CheckIn  -->", ['pre' => $pre, 'exp' => $exp]);
 
