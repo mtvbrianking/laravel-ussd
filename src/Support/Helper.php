@@ -41,7 +41,7 @@ class Helper
      * @see https://stackoverflow.com/q/413071/2732184
      * @see https://www.regextester.com/97707
      */
-    public static function translate(CacheContract $cache, string $prefix, string $text, string $pattern = '/[^{\}]+(?=})/'): string
+    public static function translate(CacheContract $cache, string $prefix, string $text, string $pattern = '/[^{{\}\}]+(?=}})/'): string
     {
         preg_match_all($pattern, $text, $matches);
 
@@ -53,7 +53,7 @@ class Helper
 
         foreach ($matches[0] as $match) {
             $var = Str::slug($match, '_');
-            $replace_vars["{{$match}}"] = $cache->get("{$prefix}_{$var}", "{{$var}}");
+            $replace_vars["{{{$match}}}"] = $cache->get("{$prefix}_{$var}", "{{$var}}");
         }
 
         return strtr($text, $replace_vars);

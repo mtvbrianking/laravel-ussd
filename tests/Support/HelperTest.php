@@ -11,7 +11,7 @@ class HelperTest extends TestCase
     {
         $this->cache->put('prefix_alias', 'jdoe');
 
-        $text = Helper::translate($this->cache, 'prefix', 'Username: {alias}');
+        $text = Helper::translate($this->cache, 'prefix', 'Username: {{alias}}');
 
         static::assertSame('Username: jdoe', $text);
     }

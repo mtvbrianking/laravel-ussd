@@ -3,11 +3,15 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Contracts\Tag;
+use Bmatovu\Ussd\Traits\Attributes;
+use Bmatovu\Ussd\Traits\CacheStore;
 use Bmatovu\Ussd\Traits\Expressions;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 
 class BaseTag implements Tag
 {
+    use Attributes;
+    use CacheStore;
     use Expressions;
 
     protected \DOMNode $node;
