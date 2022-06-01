@@ -102,8 +102,8 @@ class Parser
 
         $preNode = $this->xpath->query($pre)->item(0);
 
-        $tagName = Str::studly($preNode->tagName);
-        $tag = $this->createTag("{$tagName}Tag", [$preNode, $this->cache, $this->prefix, $this->ttl]);
+        $tagName = $this->resolveTagName($preNode);
+        $tag = $this->createTag($tagName, [$preNode, $this->cache, $this->prefix, $this->ttl]);
         $tag->process($answer);
     }
 
@@ -128,8 +128,8 @@ class Parser
 
         $node = $this->xpath->query($exp)->item(0);
 
-        $tagName = Str::studly($node->tagName);
-        $tag = $this->createTag("{$tagName}Tag", [$node, $this->cache, $this->prefix, $this->ttl]);
+        $tagName = $this->resolveTagName($node);
+        $tag = $this->createTag($tagName, [$node, $this->cache, $this->prefix, $this->ttl]);
         $output = $tag->handle();
 
         $exp = $this->cache->get("{$this->prefix}_exp");
@@ -144,15 +144,31 @@ class Parser
         return $output;
     }
 
+    protected function resolveTagName(\DOMNode $node): string
+    {
+        $tagName = $node->tagName;
+
+        if ('action' !== strtolower($tagName)) {
+            return Str::studly("{$tagName}Tag");
+        }
+
+        $tagName = $this->node->attributes->getNamedItem($name)->nodeValue;
+
+        return Str::studly("{$tagName}Action");
+    }
+
     protected function resolveTagClass(string $tagName): string
     {
         $config = Container::getInstance()->make('config');
 
-        $actionNs = config('ussd.tag-ns');
+        $tagNs = config('ussd.tag-ns', []);
+        $actionNs = config('ussd.action-ns', []);
+
+        $namespaces = array_merge($tagNs, $actionNs);
 
         $fqcn = $tagName;
 
-        foreach ($actionNs as $ns) {
+        foreach ($namespaces as $ns) {
             $fqcn = "{$ns}\\{$tagName}";
             if (class_exists($fqcn)) {
                 return $fqcn;
