@@ -12,6 +12,7 @@ $dir = __DIR__.'/src';
 $iterator = Finder::create()
     ->files()
     ->name('*.php')
+    ->exclude('bin')
     ->exclude('tests')
     ->exclude('vendor')
     ->in($dir);

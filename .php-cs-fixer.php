@@ -3,6 +3,7 @@
 // https://mlocati.github.io/php-cs-fixer-configurator/#version:3.0
 
 $excludes = [
+    'bin',
     'build',
     'coverage',
     'docs',
