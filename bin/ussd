@@ -1,8 +1,25 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
 
-require __DIR__.'/vendor/autoload.php';
+declare(strict_types=1);
 
-echo "ussd simulator";
+$dir = __DIR__ . '/..';
+
+if (!file_exists($dir.'/autoload.php')) {
+    $dir = __DIR__ . '/../vendor';
+}
+
+if (!file_exists($dir.'/autoload.php')) {
+    $dir = __DIR__ . '/../../..';
+}
+
+if (!file_exists($dir.'/autoload.php')) {
+    echo 'Autoload not found.';
+    exit(1);
+}
+
+require $dir . '/autoload.php';
+
+echo "USSD Simulator" . PHP_EOL;
 
 exit(0);
