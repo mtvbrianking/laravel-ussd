@@ -152,7 +152,7 @@ class Parser
             return Str::studly("{$tagName}Tag");
         }
 
-        $tagName = $this->node->attributes->getNamedItem($name)->nodeValue;
+        $tagName = $node->attributes->getNamedItem('name')->nodeValue;
 
         return Str::studly("{$tagName}Action");
     }

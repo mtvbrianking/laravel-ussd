@@ -129,7 +129,7 @@ The parser takes in an array of the following options...
 | session_id   | yes         | Unique per session, not request. |
 | phone_number | yes         | MSISDN format. Alphanumeric including country code. |
 | service_code | yes         | USSD shortcode for the service being request. |
-| expression   | yes         | Query to 1st executable tag in your XML menu. [Playground](https://xpather.com) |
+| expression   | yes         | Query to 1st executable tag in your XML menu. [Playground](http://xpather.com) |
 
 **Prefix** is a concatenation of the phone_number and the service_code.
 
