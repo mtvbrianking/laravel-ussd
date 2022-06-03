@@ -2,7 +2,7 @@
   "name": "bmatovu/laravel-ussd",
   "description": "Laravel USSD Builder",
   "homepage": "https://github.com/mtvbrianking/laravel-ussd",
-  "type": "project",
+  "type": "library",
   "license": "MIT",
   "keywords": [
     "laravel",
@@ -30,6 +30,7 @@
   "require-dev": {
     "code-lts/doctum": "^5.5",
     "friendsofphp/php-cs-fixer": "^3.0",
+    "guzzlehttp/guzzle": "^6.3|^7.0",
     "orchestra/testbench": "^4.0|^5.0|^6.0",
     "phpunit/phpunit": "^8.0|^9.0",
     "symfony/console": "^4.3.4|^5.0|^6.0"
