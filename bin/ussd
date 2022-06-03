@@ -16,6 +16,9 @@ if (! file_exists($dir.'/autoload.php')) {
 
 require $dir.'/autoload.php';
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,6 +26,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class Simulator extends Command
 {
@@ -48,16 +52,84 @@ class Simulator extends Command
         $session = $input->getOption('session') ?? uniqid();
         $phone = $input->getArgument('phone');
         $service = $input->getOption('service');
+        $network = $input->getOption('network');
         $dail = $input->getOption('dail') ?? $service;
 
-        $output->writeln("Dail {$dail} on {$phone}");
+        $service = $this->clean($service);
 
-        // dd([
-        //     'arguments' => $input->getArguments(),
-        //     'options' => $input->getOptions()
-        // ]);
+        $dail = $this->clean($dail) ?? $service;
+
+        $answer = $this->clean(str_replace($service, '', $dail));
+
+        $body = [
+            'session_id' => $session,
+            'network_code' => $network,
+            'phone_number' => $phone,
+            'input' => $dail,
+            'service_code' => $service,
+            'answer' => $answer
+        ];
+
+        $data = $this->call($api, $body, $output);
+
+        $helper = $this->getHelper('question');
+        $answer = $helper->ask($input, $output, new Question("{$data}\n"));
+
+        while(true) {
+            $dail .= "*" . $answer;
+
+            $body['input'] = $dail;
+            $body['answer'] = $answer;
+
+            $data = $this->call($api, $body, $output);
+
+            $helper = $this->getHelper('question');
+            $answer = $helper->ask($input, $output, new Question("\n{$data}\n"));
+        }
 
         return Command::SUCCESS;
+    }
+
+    protected function call(string $apiUri, array $data, OutputInterface $output): ?string
+    {
+        try {
+            $response = (new Client)->request('POST', $apiUri, [
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+                'json' => $data
+            ]);
+
+            $body = json_decode((string) $response->getBody());
+
+            if($body->flow == 'break') {
+                $output->writeln("\n<options=bold>{$body->data}</>");
+                exit(Command::SUCCESS);
+            }
+
+            return $body->data;
+        } catch (RequestException $ex) {
+            $response = $ex->getResponse();
+            $body = json_decode((string) $response->getBody());
+
+            $msg = $body->message ?? $response->getReasonPhrase();
+            $output->writeln("\n<error>{$response->getStatusCode()} . {$msg}</error>");
+
+            exit(Command::FAILURE);
+        } catch (TransferException $ex) {
+            $output->writeln("\n<error>{$response->getCode()} . {$ex->getMessage()}</error>");
+
+            exit(Command::FAILURE);
+        }
+    }
+
+    protected function clean(?string $code): ?string
+    {
+        if(! $code) {
+            return $code;
+        }
+
+        return rtrim(ltrim($code, '*'), '#');
     }
 }
 
@@ -66,15 +138,15 @@ class Simulator extends Command
  */
 $app = new Application('USSD Simulator', '1.0.0');
 
-$Simulator = new Simulator();
+$simulator = new Simulator();
 
-$app->add($Simulator);
+$app->add($simulator);
 
 $app->setDefinition(new InputDefinition([
     new InputOption('--help', '-h', InputOption::VALUE_NONE, "Display usage information"),
     new InputOption('--version', '-V', InputOption::VALUE_NONE, "Display application version"),
 ]));
 
-$app->setDefaultCommand($Simulator->getName(), true);
+$app->setDefaultCommand($simulator->getName(), true);
 
 $app->run();
