@@ -24,7 +24,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Ussd extends Command
+class Simulator extends Command
 {
     protected function configure(): void
     {
@@ -64,17 +64,17 @@ class Ussd extends Command
 /**
  * @see https://symfony.com/doc/current/components/console/single_command_tool.html
  */
-$app = new Application('Ussd', '1.0.0');
+$app = new Application('USSD Simulator', '1.0.0');
 
-$ussd = new Ussd();
+$Simulator = new Simulator();
 
-$app->add($ussd);
+$app->add($Simulator);
 
 $app->setDefinition(new InputDefinition([
     new InputOption('--help', '-h', InputOption::VALUE_NONE, "Display usage information"),
     new InputOption('--version', '-V', InputOption::VALUE_NONE, "Display application version"),
 ]));
 
-$app->setDefaultCommand($ussd->getName(), true);
+$app->setDefaultCommand($Simulator->getName(), true);
 
 $app->run();

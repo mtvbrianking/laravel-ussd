@@ -1,16 +1,12 @@
 # Laravel USSD
 
+![](./art/banner.png)
+
 [![License](https://poser.pugx.org/bmatovu/laravel-ussd/license)](https://packagist.org/packages/bmatovu/laravel-ussd)
 [![Unit Tests](https://github.com/mtvbrianking/laravel-ussd/workflows/run-tests/badge.svg)](https://github.com/mtvbrianking/laravel-ussd/actions?query=workflow:run-tests)
 [![Code Quality](https://scrutinizer-ci.com/g/mtvbrianking/laravel-ussd/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mtvbrianking/laravel-ussd/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/mtvbrianking/laravel-ussd/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/mtvbrianking/laravel-ussd/?branch=master)
 [![Documentation](https://github.com/mtvbrianking/laravel-ussd/workflows/gen-docs/badge.svg)](https://mtvbrianking.github.io/laravel-ussd)
-
-A minimalist package to help you build XML based USSD menus.
-
-**Life-cycle**
-
-The package uses cache to keep track of variables during an ongoing USSD session.
 
 ## Table of Contents
 
@@ -20,9 +16,10 @@ The package uses cache to keep track of variables during an ongoing USSD session
 - [Usage](#usage)
     - [Cache](#cache)
     - [Example](#example)
+    - [Parser](#parser)
     - [Simulator](#simulator)
 - [Flow](#flow)
-- [Constucts](#constucts)
+- [Constructs](#constructs)
     - [Variable](#variable)
     - [Question](#question)
     - [Response](#response)
@@ -30,14 +27,25 @@ The package uses cache to keep track of variables during an ongoing USSD session
     - [If](#if)
     - [Choose](#choose)
     - [Action](#action)
+- [Advanced](#advanced)
+    - [Cache](#cache)
+- [Testing](#testing)
+- [Security](#security)
+- [Contribution](#contribution)
+- [Alternatives](#alternatives)
+- [License](#license)
 
 ## Overview
 
-Build USSD menus with ease in XML.
+Build USSD menus with ease. 
+
+Instead of having tonnes of nested, complex PHP files, this package give you the ability to construct your menus in XML and execute them as though they were plain PHP files.
+
+This approach greatly shrinks the code footprint as well as increase readability.
 
 ## Installation
 
-Install the package via the Composer package manager:
+Install the package via the Composer.
 
 ```bash
 composer require bmatovu/laravel-ussd
@@ -58,26 +66,17 @@ This package persists USSD session data in cache. Each key is prefixed with the 
 
 **Expiry**
 
-The package does not do any garabge collection for you, i.e the cache entries will expire automatically when the set TTL (Time To Live) elapses.
+The package does not do any garbage collection, i.e the cache entries will expire automatically when the set TTL (Time To Live) elapses.
+
 If need be, clear the session data on 'flow break'.
 
 ### Example
-
-> storage/ussd/example.xml
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<menu>
-    <response text="Hello World."/>
-</menu>
-```
 
 ```php
 use Bmatovu\Ussd\Menus\Parser;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 
 class UssdController extends Controller
 {
@@ -96,8 +95,14 @@ class UssdController extends Controller
         try {
             $doc = new \DOMDocument();
 
-            $doc->load(Storage::disk('local')->path('ussd/example.xml'));
-
+            $menu = <<<XML
+<?xml version="1.0" encoding="UTF-8" ?>
+<menu>
+    <response text="Hello World."/>
+</menu>
+XML;
+            $doc->loadXml($menu);
+            
             $xpath = new \DOMXPath($doc);
 
             $options = $request->only(['session_id', 'phone_number', 'service_code']);
@@ -115,6 +120,21 @@ class UssdController extends Controller
 }
 ```
 
+### Parser
+
+### **Options**
+
+The parser takes in an array of the following options...
+
+| Option       | Is Required | Description |
+| ------------ | :---------: | ---- |
+| session_id   | yes         | Unique per session, not request. |
+| phone_number | yes         | MSISDN format. Alphanumeric including country code. |
+| service_code | yes         | USSD shortcode for the service being request. |
+| expression   | yes         | Query to 1st executable tag in your XML menu. [Playground](xpather.com) |
+
+**Prefix** is a concatenation of the phone_number and the service_code.
+
 ### Simulator
 
 \* to be developed
@@ -130,7 +150,7 @@ USSD has basically 2 flow types namely; `continue` (default) and `break`.
 
 Always assume the flow to be continuing unless you get an exception.
 
-## Constucts
+## Constructs
 
 ### Variable
 
@@ -317,3 +337,61 @@ $user = getUser($phone);
 ```
 
 Note: Actions have no output. But they can manipulate (get/set) variables in cache.
+
+## Advanced
+
+### Cache
+
+**Prefix**
+
+```php
+$prefix = "{$phone_number}{$service_code}";
+```
+
+**Accessing variables**
+
+```php
+<variable name="color" value="blue"/>
+
+$this->cache->get("{$this->prefix}_color"); // blue
+```
+
+**Reusing existing variables**
+
+```xml
+<variable name="msg" value="Bye bye."/>
+
+<response text="{{msg}}"/> <!-- Bye bye -->
+```
+
+**Manual injection**
+
+```php
+$this->cache->put("{$this->prefix}_color", 'pink');
+```
+
+## Testing
+
+To run the package's unit tests, run the following command:
+
+``` bash
+composer test
+```
+
+## Security
+
+If you find any security related issues, please contact me directly at [mtvbrianking@gmail.com](mailto:mtvbrianking@gmail.com) to report it.
+
+## Contribution
+
+If you wish to make any changes or improvements to the package, feel free to make a pull request.
+
+Note: A contribution guide will be added soon.
+
+## Alternatives
+
+- [sparors/laravel-ussd](https://github.com/sparors/laravel-ussd) takes a completely different approach on building USSD menus.
+
+## License
+
+The MIT License (MIT). Please see [License file](license.txt) for more information.
