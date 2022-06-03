@@ -32,6 +32,10 @@ trait Attributes
     {
         $value = $this->node->attributes->getNamedItem($name)->nodeValue ?? $default;
 
+        if (! $value) {
+            return $value;
+        }
+
         return $this->translate($value);
     }
 }
