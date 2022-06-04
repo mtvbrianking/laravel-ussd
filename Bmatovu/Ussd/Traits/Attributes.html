@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Support\Helper | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Traits\Attributes | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Support_Helper" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Traits_Attributes" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -74,19 +74,19 @@
 
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
-                <li><span class="label label-default">class</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Support.html">Support</a></li><li class="backslash">\</li><li>Helper</li>
+                <li><span class="label label-default">trait</span></li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Traits.html">Traits</a></li><li class="backslash">\</li><li>Attributes</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>Helper    
+        <h1>Attributes    
             </h1>
     </div>
 
     
-    <p>        class
-    <strong>Helper</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php">View source</a>)
+    <p>        trait
+    <strong>Attributes</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/Attributes.php">View source</a>)
 </p>
 
         
@@ -102,10 +102,10 @@
             <div class="container-fluid underlined">
                     <div class="row">
                 <div class="col-md-2 type">
-                    static&nbsp;string
+                    string
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_renderNode">renderNode</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node)
+                    <a href="#method_translate">translate</a>(string $text, string $pattern = &#039;/[^{{\\}\\}]+(?=}})/&#039;)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -113,21 +113,10 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    static&nbsp;array
+                    
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_getDomElements">getDomElements</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
-        
-                                            <p class="no-description">No description</p>
-                                    </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    static&nbsp;string
-                </div>
-                <div class="col-md-8">
-                    <a href="#method_translate">translate</a>(<abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, string $text, string $pattern = &#039;/[^{{\\}\\}]+(?=}})/&#039;)
+                    <a href="#method_readAttr">readAttr</a>(string $name, $default = null)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -140,101 +129,10 @@
 
             <div id="method-details">
                     <div class="method-item">
-                    <h3 id="method_renderNode">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L10">at line 10</a></div>
-        <code>        static            string
-    <strong>renderNode</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a></td>
-                <td>$node</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>string</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_getDomElements">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L21">at line 21</a></div>
-        <code>        static            array
-    <strong>getDomElements</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a></td>
-                <td>$nodeList</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string|null</td>
-                <td>$nodeName</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>array</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_translate">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L42">at line 42</a></div>
-        <code>        static            string
-    <strong>translate</strong>(<abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, string $text, string $pattern = &#039;/[^{{\\}\\}]+(?=}})/&#039;)
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/Attributes.php#L13">at line 13</a></div>
+        <code>                    string
+    <strong>translate</strong>(string $text, string $pattern = &#039;/[^{{\\}\\}]+(?=}})/&#039;)
         </code>
     </h3>
     <div class="details">    
@@ -249,16 +147,6 @@
                             <h4>Parameters</h4>
 
                     <table class="table table-condensed">
-                    <tr>
-                <td><abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr></td>
-                <td>$cache</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$prefix</td>
-                <td></td>
-            </tr>
                     <tr>
                 <td>string</td>
                 <td>$text</td>
@@ -300,6 +188,45 @@
             </tr>
             </table>
 
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_readAttr">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/Attributes.php#L31">at line 31</a></div>
+        <code>                    
+    <strong>readAttr</strong>(string $name, $default = null)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p class="no-description">No description</p>
+                    
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$default</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
             
                     </div>
     </div>
