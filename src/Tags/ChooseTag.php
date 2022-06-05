@@ -55,8 +55,4 @@ class ChooseTag extends BaseTag
 
         return '';
     }
-
-    public function process(?string $answer): void
-    {
-    }
 }

@@ -19,8 +19,4 @@ class VariableTag extends BaseTag
 
         return '';
     }
-
-    public function process(?string $answer): void
-    {
-    }
 }

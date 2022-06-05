@@ -10,8 +10,4 @@ class ResponseTag extends BaseTag
 
         throw new \Exception($text);
     }
-
-    public function process(?string $answer): void
-    {
-    }
 }

@@ -111,7 +111,8 @@ class Simulator extends Command
             $response = $ex->getResponse();
             $body = (string) $response->getBody();
 
-            $msg = substr($body, 4) ?? $response->getReasonPhrase();
+            // $msg = substr($body, 4) ?? $response->getReasonPhrase();
+            $msg = $body ?? $response->getReasonPhrase();
             $output->writeln("\n<error>{$response->getStatusCode()} . {$msg}</error>");
 
             exit(Command::FAILURE);

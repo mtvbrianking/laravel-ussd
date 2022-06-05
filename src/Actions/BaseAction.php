@@ -2,13 +2,13 @@
 
 namespace Bmatovu\Ussd\Actions;
 
-use Bmatovu\Ussd\Contracts\Tag;
+use Bmatovu\Ussd\Contracts\RenderableTag;
 use Bmatovu\Ussd\Traits\Attributes;
 use Bmatovu\Ussd\Traits\CacheStore;
 use Bmatovu\Ussd\Traits\Expressions;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 
-class BaseAction implements Tag
+class BaseAction implements RenderableTag
 {
     use Attributes;
     use CacheStore;
@@ -18,6 +18,7 @@ class BaseAction implements Tag
     protected CacheContract $cache;
     protected string $prefix;
     protected int $ttl;
+    protected bool $isAnswerable = false;
 
     public function __construct(\DOMNode $node, CacheContract $cache, string $prefix, ?int $ttl = null)
     {
@@ -32,10 +33,6 @@ class BaseAction implements Tag
         $this->shiftCursor();
 
         return '';
-    }
-
-    public function process(?string $answer): void
-    {
     }
 
     protected function shiftCursor(): void

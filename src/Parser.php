@@ -2,7 +2,8 @@
 
 namespace Bmatovu\Ussd;
 
-use Bmatovu\Ussd\Contracts\Tag;
+use Bmatovu\Ussd\Contracts\AnswerableTag;
+use Bmatovu\Ussd\Contracts\RenderableTag;
 use Bmatovu\Ussd\Support\Arr;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
@@ -24,9 +25,9 @@ class Parser
         $this->bootstrap($options);
     }
 
-    public function parse(?string $answer): string
+    public function parse(?string $userInput): string
     {
-        $this->processResponse($answer);
+        $this->processResponse($userInput);
 
         $exp = $this->cache->get("{$this->prefix}_exp");
 
@@ -39,10 +40,19 @@ class Parser
         $output = $this->renderNext();
 
         if (! $output) {
-            return $this->parse($answer);
+            return $this->parse($userInput);
         }
 
         return $output;
+    }
+
+    protected function clean(string $code = ''): string
+    {
+        if(! $code) {
+            return $code;
+        }
+
+        return rtrim(ltrim($code, '*'), '#');
     }
 
     protected function sessionExists(string $sessionId): bool
@@ -85,6 +95,7 @@ class Parser
 
         $this->cache->put("{$this->prefix}_session_id", $session_id, $this->ttl);
         $this->cache->put("{$this->prefix}_service_code", $service_code, $this->ttl);
+        $this->cache->put("{$this->prefix}_answer", $this->clean($service_code), $this->ttl);
         $this->cache->put("{$this->prefix}_phone_number", $phone_number, $this->ttl);
 
         $this->cache->put("{$this->prefix}_pre", '', $this->ttl);
@@ -92,7 +103,7 @@ class Parser
         $this->cache->put("{$this->prefix}_breakpoints", '[]', $this->ttl);
     }
 
-    protected function processResponse(?string $answer): void
+    protected function processResponse(?string $userInput): void
     {
         $pre = $this->cache->get("{$this->prefix}_pre");
 
@@ -104,7 +115,24 @@ class Parser
 
         $tagName = $this->resolveTagName($preNode);
         $tag = $this->createTag($tagName, [$preNode, $this->cache, $this->prefix, $this->ttl]);
-        $tag->process($answer);
+
+        if(! $tag instanceof AnswerableTag) {
+            return;
+        }
+
+        // if('userInput'.contains('serviceCode')) {
+        //     $answer = userInput - serviceCode
+        // }
+
+        // // multiple answer
+        // if('answer'.contains('*')) {
+        //     answers = explode('*', answer)
+        // }
+
+        // // single answer
+        // $answer = userInput;
+
+        $tag->process($userInput);
     }
 
     protected function setBreakpoint(): void
@@ -178,7 +206,7 @@ class Parser
         throw new \Exception("Missing class: {$tagName}");
     }
 
-    protected function createTag(string $tagName, array $args = []): Tag
+    protected function createTag(string $tagName, array $args = []): RenderableTag
     {
         $fqcn = $this->resolveTagClass($tagName);
 

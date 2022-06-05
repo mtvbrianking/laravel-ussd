@@ -2,13 +2,13 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Contracts\Tag;
+use Bmatovu\Ussd\Contracts\RenderableTag;
 use Bmatovu\Ussd\Traits\Attributes;
 use Bmatovu\Ussd\Traits\CacheStore;
 use Bmatovu\Ussd\Traits\Expressions;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 
-class BaseTag implements Tag
+class BaseTag implements RenderableTag
 {
     use Attributes;
     use CacheStore;
@@ -29,9 +29,6 @@ class BaseTag implements Tag
 
     public function handle(): ?string
     {
-    }
-
-    public function process(?string $answer): void
-    {
+        return '';
     }
 }

@@ -2,9 +2,8 @@
 
 namespace Bmatovu\Ussd\Contracts;
 
-interface Tag
+interface RenderableTag
 {
+    // public function render(): ?string;
     public function handle(): ?string;
-
-    public function process(?string $answer): void;
 }

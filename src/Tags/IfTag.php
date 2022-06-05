@@ -36,8 +36,4 @@ class IfTag extends BaseTag
 
         return '';
     }
-
-    public function process(?string $answer): void
-    {
-    }
 }

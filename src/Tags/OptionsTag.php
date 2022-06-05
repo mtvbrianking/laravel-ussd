@@ -2,9 +2,10 @@
 
 namespace Bmatovu\Ussd\Tags;
 
+use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Support\Helper;
 
-class OptionsTag extends BaseTag
+class OptionsTag extends BaseTag implements AnswerableTag
 {
     public function handle(): ?string
     {

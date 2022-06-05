@@ -25,8 +25,4 @@ class OptionTag extends BaseTag
 
         return '';
     }
-
-    public function process(?string $answer): void
-    {
-    }
 }
