@@ -7,6 +7,7 @@ use Bmatovu\Ussd\Contracts\RenderableTag;
 use Bmatovu\Ussd\Support\Arr;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Parser
@@ -15,6 +16,7 @@ class Parser
     protected CacheContract $cache;
     protected string $prefix;
     protected int $ttl;
+    // protected array $answers = [''];
 
     public function __construct(\DOMXPath $xpath, array $options, CacheContract $cache, ?int $ttl = null)
     {
@@ -43,12 +45,17 @@ class Parser
             return $this->parse($userInput);
         }
 
+        // $answer = array_shift($this->answers);
+        // if($answer) {
+        //     return $this->parse($answer);
+        // }
+
         return $output;
     }
 
     protected function clean(string $code = ''): string
     {
-        if(! $code) {
+        if (! $code) {
             return $code;
         }
 
@@ -94,7 +101,7 @@ class Parser
         }
 
         $this->cache->put("{$this->prefix}_session_id", $session_id, $this->ttl);
-        $this->cache->put("{$this->prefix}_service_code", $service_code, $this->ttl);
+        $this->cache->put("{$this->prefix}_service_code", $this->clean($service_code), $this->ttl);
         $this->cache->put("{$this->prefix}_answer", $this->clean($service_code), $this->ttl);
         $this->cache->put("{$this->prefix}_phone_number", $phone_number, $this->ttl);
 
@@ -116,23 +123,27 @@ class Parser
         $tagName = $this->resolveTagName($preNode);
         $tag = $this->createTag($tagName, [$preNode, $this->cache, $this->prefix, $this->ttl]);
 
-        if(! $tag instanceof AnswerableTag) {
+        if (! $tag instanceof AnswerableTag) {
             return;
         }
 
-        // if('userInput'.contains('serviceCode')) {
-        //     $answer = userInput - serviceCode
-        // }
+        // ...
 
-        // // multiple answer
-        // if('answer'.contains('*')) {
-        //     answers = explode('*', answer)
-        // }
+        // $serviceCode = $this->cache->get("{$this->prefix}_service_code");
+        $preAnswer = $this->cache->get("{$this->prefix}_answer");
 
-        // // single answer
-        // $answer = userInput;
+        $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
-        $tag->process($userInput);
+        $this->cache->put("{$this->prefix}_answer", $userInput, $this->ttl);
+
+        Log::debug('answers ---', [
+            'pre_answer' => $preAnswer,
+            'input' => $userInput,
+            'answer' => $answer,
+        ]);
+
+        // $tag->process($userInput);
+        $tag->process($answer);
     }
 
     protected function setBreakpoint(): void
