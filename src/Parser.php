@@ -127,23 +127,31 @@ class Parser
             return;
         }
 
-        // ...
+        $answer = $this->determineAnswer($userInput);
 
+        $tag->process($answer);
+    }
+
+    protected function determineAnswer(?string $userInput): string
+    {
         // $serviceCode = $this->cache->get("{$this->prefix}_service_code");
         $preAnswer = $this->cache->get("{$this->prefix}_answer");
+
+        if (! $preAnswer) {
+            return $userInput;
+        }
 
         $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
         $this->cache->put("{$this->prefix}_answer", $userInput, $this->ttl);
 
-        Log::debug('answers ---', [
-            'pre_answer' => $preAnswer,
-            'input' => $userInput,
-            'answer' => $answer,
-        ]);
+        // Log::debug('answers ---', [
+        //     'pre_answer' => $preAnswer,
+        //     'input' => $userInput,
+        //     'answer' => $answer,
+        // ]);
 
-        // $tag->process($userInput);
-        $tag->process($answer);
+        return $answer;
     }
 
     protected function setBreakpoint(): void
