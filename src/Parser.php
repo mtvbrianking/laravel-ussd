@@ -29,6 +29,20 @@ class Parser
 
     public function parse(?string $userInput): string
     {
+        // $preAnswer = $this->cache->get("{$this->prefix}_answer");
+
+        // $answer = $this->clean($userInput);
+
+        // if ($preAnswer) {
+        //     $answer = $this->clean(str_replace($preAnswer, '', $userInput));
+        // }
+
+        // $this->answers = explode('*', $answer);
+
+        // $this->cache->put("{$this->prefix}_answer", $userInput, $this->ttl);
+
+        // .......................
+
         $this->processResponse($userInput);
 
         $exp = $this->cache->get("{$this->prefix}_exp");
@@ -129,10 +143,13 @@ class Parser
 
         $answer = $this->determineAnswer($userInput);
 
+        // $answer = array_shift($this->answers);
+        // $this->cache->put("{$this->prefix}_answer", "{$userInput}*{$answer}", $this->ttl);
+
         $tag->process($answer);
     }
 
-    protected function determineAnswer(?string $userInput): string
+    protected function determineAnswer(?string $userInput): ?string
     {
         // $serviceCode = $this->cache->get("{$this->prefix}_service_code");
         $preAnswer = $this->cache->get("{$this->prefix}_answer");
