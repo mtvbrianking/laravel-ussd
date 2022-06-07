@@ -56,19 +56,15 @@ class Parser
             'new' => $answer,
         ]);
 
-        return $output = $this->doParse($answer);
+        // return $output = $this->doParse($answer);
 
-        // $answers = explode('*', $answer);
+        $answers = explode('*', $answer);
 
-        // foreach ($answers as $answer) {
-        //     if($answer) {
-        //         $this->store->append('_answer', "*{$answer}");
-        //     }
+        foreach ($answers as $answer) {
+            $output = $this->doParse($answer);
+        }
 
-        //     $output = $this->doParse($answer);
-        // }
-
-        // return $output;
+        return $output;
     }
 
     protected function doParse(?string $answer = ''): ?string
