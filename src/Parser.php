@@ -41,12 +41,24 @@ class Parser
             $this->store->put($key, $value);
         }
 
-        return self;
+        return $this;
     }
 
     public function parse(?string $userInput = ''): string
     {
-        // $answers = explode('*', $this->getAnswer($userInput));
+        // return $this->doParse($userInput);
+
+        $answer = $this->getAnswer($userInput);
+
+        \Illuminate\Support\Facades\Log::debug('__answers', [
+            'old' => $this->store->get('_answer'),
+            'input' => $userInput,
+            'new' => $answer,
+        ]);
+
+        return $output = $this->doParse($answer);
+
+        // $answers = explode('*', $answer);
 
         // foreach ($answers as $answer) {
         //     if($answer) {
@@ -57,8 +69,6 @@ class Parser
         // }
 
         // return $output;
-
-        return $this->doParse($userInput);
     }
 
     protected function doParse(?string $answer = ''): ?string
@@ -138,14 +148,3 @@ class Parser
         return $output;
     }
 }
-
-/*
-$parser = new Parser($xpath, $exp, $request->session_id, $request->serviceCode);
-
-$parser = new Parser($xpath, $exp, $request->session_id, $request->serviceCode)
-    ->setOptions([
-        'phone_number' => $request->phone_number,
-    ]);
-
-$output = $parser->parse($request->input);
-*/
