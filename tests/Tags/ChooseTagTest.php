@@ -9,9 +9,9 @@ class ChooseTagTest extends TestCase
 {
     public function testHandleChoose()
     {
-        $this->cache->put('prefix_exp', '/*[1]');
+        $this->store->put('_exp', '/*[1]');
 
-        $this->cache->put('prefix_gender', 'F');
+        $this->store->put('gender', 'F');
 
         $xml = <<<'XML'
 <choose>
@@ -29,20 +29,20 @@ XML;
 
         $node = $this->getNodeByTagName($xml, 'choose');
 
-        $tag = new ChooseTag($node, $this->cache, 'prefix', 30);
+        $tag = new ChooseTag($node, $this->store);
 
         $output = $tag->handle();
 
         static::assertEmpty($output);
-        static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[1]/*[2]', $this->cache->get('prefix_exp'));
+        static::assertSame('/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[1]/*[2]', $this->store->get('_exp'));
     }
 
     public function testHandleChooseOtherwise()
     {
-        $this->cache->put('prefix_exp', '/*[1]');
+        $this->store->put('_exp', '/*[1]');
 
-        $this->cache->put('prefix_gender', 'X');
+        $this->store->put('gender', 'X');
 
         $xml = <<<'XML'
 <choose>
@@ -60,20 +60,20 @@ XML;
 
         $node = $this->getNodeByTagName($xml, 'choose');
 
-        $tag = new ChooseTag($node, $this->cache, 'prefix', 30);
+        $tag = new ChooseTag($node, $this->store);
 
         $output = $tag->handle();
 
         static::assertEmpty($output);
-        static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[1]/*[3]', $this->cache->get('prefix_exp'));
+        static::assertSame('/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[1]/*[3]', $this->store->get('_exp'));
     }
 
     public function testHandleChooseNoMatch()
     {
-        $this->cache->put('prefix_exp', '/*[1]');
+        $this->store->put('_exp', '/*[1]');
 
-        $this->cache->put('prefix_gender', 'X');
+        $this->store->put('gender', 'X');
 
         $xml = <<<'XML'
 <choose>
@@ -85,12 +85,12 @@ XML;
 
         $node = $this->getNodeByTagName($xml, 'choose');
 
-        $tag = new ChooseTag($node, $this->cache, 'prefix', 30);
+        $tag = new ChooseTag($node, $this->store);
 
         $output = $tag->handle();
 
         static::assertEmpty($output);
-        static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[2]', $this->cache->get('prefix_exp'));
+        static::assertSame('/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[2]', $this->store->get('_exp'));
     }
 }

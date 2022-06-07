@@ -15,7 +15,7 @@ class ResponseTagTest extends TestCase
 
         $node = $this->getNodeByTagName('<response text="Thank you."/>', 'response');
 
-        $tag = new ResponseTag($node, $this->cache, 'prefix', 30);
+        $tag = new ResponseTag($node, $this->store);
 
         $tag->handle();
     }

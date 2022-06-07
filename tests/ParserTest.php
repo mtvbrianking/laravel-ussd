@@ -6,21 +6,6 @@ use Bmatovu\Ussd\Parser;
 
 class ParserTest extends TestCase
 {
-    public function testMissingOptions()
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Missing parser options: session_id, phone_number, service_code, and expression');
-
-        $xpath = $this->xmlToXpath('<dummy/>');
-
-        $opts = [];
-
-        $parser = new Parser($xpath, $opts, $this->cache, 120);
-
-        $parser->parse('');
-    }
-
     public function testMissingTag()
     {
         $this->expectException(\Exception::class);
@@ -29,16 +14,9 @@ class ParserTest extends TestCase
 
         $xpath = $this->xmlToXpath('<dummy/>');
 
-        $opts = [
-            'session_id' => 'qwerty',
-            'phone_number' => '256712999222',
-            'service_code' => '321',
-            'expression' => '/*[1]',
-        ];
+        $parser = new Parser($xpath, '/*[1]', 'ussd_wScXk');
 
-        $parser = new Parser($xpath, $opts, $this->cache, 120);
-
-        $parser->parse('');
+        $parser->parse();
     }
 
     public function testExceptionExit()
@@ -49,16 +27,9 @@ class ParserTest extends TestCase
 
         $xpath = $this->xmlToXpath('<response text="Bye bye."/>');
 
-        $opts = [
-            'session_id' => 'qwerty',
-            'phone_number' => '256712999222',
-            'service_code' => '321',
-            'expression' => '/*[1]',
-        ];
+        $parser = new Parser($xpath, '/*[1]', 'ussd_wScXk');
 
-        $parser = new Parser($xpath, $opts, $this->cache, 120);
-
-        $parser->parse('');
+        $parser->parse();
     }
 
     public function testProceedQuietly()
@@ -72,26 +43,19 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $opts = [
-            'session_id' => 'qwe534',
-            'phone_number' => '256712999222',
-            'service_code' => '321',
-            'expression' => '/document/*[1]',
-        ];
+        $parser = new Parser($xpath, '/document/*[1]', 'ussd_wScXk');
 
-        $parser = new Parser($xpath, $opts, $this->cache, 120);
-
-        $output = $parser->parse('');
+        $output = $parser->parse();
 
         static::assertSame('Enter username: ', $output);
-        static::assertSame('John Doe', $this->cache->get('256712999222321_name'));
+        static::assertSame('John Doe', $parser->store->get('name'));
     }
 
     public function testReuseSession()
     {
-        $this->cache->put('256712999222321_session_id', 'qwe534');
-        $this->cache->put('256712999222321_pre', '');
-        $this->cache->put('256712999222321_exp', '/document/*[1]');
+        $this->store->put('_session_id', 'ussd_wScXk');
+        $this->store->put('_pre', '');
+        $this->store->put('_exp', '/document/*[1]');
 
         $xml = <<<'XML'
 <document>
@@ -101,21 +65,14 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $opts = [
-            'session_id' => 'qwe534',
-            'phone_number' => '256712999222',
-            'service_code' => '321',
-            'expression' => '/document/*[1]',
-        ];
+        $parser = new Parser($xpath, '/document/*[1]', 'ussd_wScXk');
 
-        $parser = new Parser($xpath, $opts, $this->cache, 120);
-
-        $output = $parser->parse('');
+        $output = $parser->parse();
 
         static::assertSame('Enter username: ', $output);
-        static::assertSame('qwe534', $this->cache->get('256712999222321_session_id'));
-        static::assertSame('/document/*[1]', $this->cache->get('256712999222321_pre'));
-        static::assertSame('/document/*[2]', $this->cache->get('256712999222321_exp'));
+        static::assertSame('ussd_wScXk', $this->store->get('_session_id'));
+        static::assertSame('/document/*[1]', $this->store->get('_pre'));
+        static::assertSame('/document/*[2]', $this->store->get('_exp'));
     }
 
     public function testBreakpoints()
@@ -129,23 +86,16 @@ XML;
     <question name="greet" text="Say hi: "/>
 </document>
 XML;
-        $this->cache->put('256712999222321_session_id', '54746');
-        $this->cache->put('256712999222321_pre', '/document/*[2]/*[1]');
-        $this->cache->put('256712999222321_exp', '/document/*[2]/*[2]');
-        $this->cache->put('256712999222321_breakpoints', '[{"\/document\/*[2]\/*[2]":"\/document\/*[3]"}]');
+        $this->store->put('_session_id', 'ussd_wScXk');
+        $this->store->put('_pre', '/document/*[2]/*[1]');
+        $this->store->put('_exp', '/document/*[2]/*[2]');
+        $this->store->put('_breakpoints', '[{"\/document\/*[2]\/*[2]":"\/document\/*[3]"}]');
 
         $xpath = $this->xmlToXpath($xml);
 
-        $opts = [
-            'session_id' => '54746',
-            'phone_number' => '256712999222',
-            'service_code' => '321',
-            'expression' => '/document/*[1]',
-        ];
+        $parser = new Parser($xpath, '/document/*[1]', 'ussd_wScXk');
 
-        $parser = new Parser($xpath, $opts, $this->cache, 120);
-
-        $output = $parser->parse('');
+        $output = $parser->parse();
 
         static::assertSame('Say hi: ', $output);
     }

@@ -2,26 +2,26 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Support\Helper;
+use Bmatovu\Ussd\Support\Dom;
 
 class OtherwiseTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $pre = $this->fromCache('pre');
-        $exp = $this->fromCache('exp', $this->node->getNodePath());
-        $breakpoints = (array) json_decode((string) $this->fromCache('breakpoints'), true);
+        $pre = $this->store->get('_pre');
+        $exp = $this->store->get('_exp', $this->node->getNodePath());
+        $breakpoints = (array) json_decode((string) $this->store->get('_breakpoints'), true);
 
-        $children = Helper::getDomElements($this->node->childNodes, null);
+        $children = Dom::getElements($this->node->childNodes, null);
         $no_of_tags = \count($children);
 
         $break = $this->incExp("{$exp}/*[1]", $no_of_tags);
 
         array_unshift($breakpoints, [$break => $this->incExp($pre)]);
-        $this->toCache('breakpoints', json_encode($breakpoints));
+        $this->store->put('_breakpoints', json_encode($breakpoints));
 
-        $this->toCache('pre', $exp);
-        $this->toCache('exp', "{$exp}/*[1]");
+        $this->store->put('_pre', $exp);
+        $this->store->put('_exp', "{$exp}/*[1]");
 
         return '';
     }

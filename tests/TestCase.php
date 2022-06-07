@@ -2,14 +2,13 @@
 
 namespace Bmatovu\Ussd\Tests;
 
+use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\UssdServiceProvider;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
-    protected CacheContract $cache;
+    protected Store $store;
 
     /**
      * Setup the test environment.
@@ -18,9 +17,8 @@ abstract class TestCase extends Orchestra
     {
         parent::setup();
 
-        $this->cache = Container::getInstance()->make('cache')->store();
-
-        // $this->cache->put('prefix_exp', '/*[1]');
+        $this->store = new Store('file', 120, 'ussd_wScXk');
+        $this->store->flush();
     }
 
     /**

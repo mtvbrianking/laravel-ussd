@@ -3,29 +3,22 @@
 namespace Bmatovu\Ussd\Actions;
 
 use Bmatovu\Ussd\Contracts\RenderableTag;
+use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Traits\Attributes;
-use Bmatovu\Ussd\Traits\CacheStore;
 use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
 
 class BaseAction implements RenderableTag
 {
     use Attributes;
-    use CacheStore;
     use Expressions;
 
     protected \DOMNode $node;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
-    protected bool $isAnswerable = false;
+    protected Store $store;
 
-    public function __construct(\DOMNode $node, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function __construct(\DOMNode $node, Store $store)
     {
         $this->node = $node;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
+        $this->store = $store;
     }
 
     public function handle(): ?string
@@ -37,10 +30,10 @@ class BaseAction implements RenderableTag
 
     protected function shiftCursor(): void
     {
-        $pre = $this->fromCache('pre');
-        $exp = $this->fromCache('exp', $this->node->getNodePath());
+        $pre = $this->store->get('_pre');
+        $exp = $this->store->get('_exp', $this->node->getNodePath());
 
-        $this->toCache('pre', $exp);
-        $this->toCache('exp', $this->incExp($exp));
+        $this->store->put('_pre', $exp);
+        $this->store->put('_exp', $this->incExp($exp));
     }
 }

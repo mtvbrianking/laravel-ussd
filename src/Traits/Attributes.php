@@ -22,7 +22,7 @@ trait Attributes
 
         foreach ($matches[0] as $match) {
             $var = Str::slug($match, '_');
-            $replace_vars["{{{$match}}}"] = $this->cache->get("{$this->prefix}_{$var}", "{{$var}}");
+            $replace_vars["{{{$match}}}"] = $this->store->get($var, "{{$var}}");
         }
 
         return strtr($text, $replace_vars);

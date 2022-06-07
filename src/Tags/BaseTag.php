@@ -3,28 +3,22 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Contracts\RenderableTag;
+use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Traits\Attributes;
-use Bmatovu\Ussd\Traits\CacheStore;
 use Bmatovu\Ussd\Traits\Expressions;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
 
 class BaseTag implements RenderableTag
 {
     use Attributes;
-    use CacheStore;
     use Expressions;
 
     protected \DOMNode $node;
-    protected CacheContract $cache;
-    protected string $prefix;
-    protected int $ttl;
+    protected Store $store;
 
-    public function __construct(\DOMNode $node, CacheContract $cache, string $prefix, ?int $ttl = null)
+    public function __construct(\DOMNode $node, Store $store)
     {
         $this->node = $node;
-        $this->cache = $cache;
-        $this->prefix = $prefix;
-        $this->ttl = $ttl;
+        $this->store = $store;
     }
 
     public function handle(): ?string

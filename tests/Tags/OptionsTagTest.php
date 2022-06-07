@@ -9,7 +9,7 @@ class OptionsTagTest extends TestCase
 {
     public function testHandleOptions()
     {
-        $this->cache->put('prefix_exp', '/*[1]');
+        $this->store->put('_exp', '/*[1]');
 
         $xml = <<<'XML'
 <options header="Choose Gender: ">
@@ -20,13 +20,13 @@ XML;
 
         $node = $this->getNodeByTagName($xml, 'options');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $output = $tag->handle();
 
         static::assertSame("Choose Gender: \n1) Male\n2) Female\n0) Back", $output);
-        static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[2]', $this->cache->get('prefix_exp'));
+        static::assertSame('/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[2]', $this->store->get('_exp'));
     }
 
     public function testHandleOptionsNoBack()
@@ -40,7 +40,7 @@ XML;
 
         $node = $this->getNodeByTagName($xml, 'options');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $output = $tag->handle();
 
@@ -49,7 +49,7 @@ XML;
 
     public function testProccessOptions()
     {
-        $this->cache->put('prefix_pre', '/*[1]');
+        $this->store->put('_pre', '/*[1]');
 
         $xml = <<<'XML'
 <options header="Choose Gender: " noback="no">
@@ -60,18 +60,18 @@ XML;
 
         $node = $this->getNodeByTagName($xml, 'options');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $tag->process('2');
 
-        static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[1]/*[2]', $this->cache->get('prefix_exp'));
+        static::assertSame('/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[1]/*[2]', $this->store->get('_exp'));
     }
 
     public function testProcessOptionsBack()
     {
-        $this->cache->put('prefix_pre', '/*[1]/*[2]/*[1]');
-        // $this->cache->put('prefix_exp', '');
+        $this->store->put('_pre', '/*[1]/*[2]/*[1]');
+        // $this->store->put('_exp', '');
 
         $xml = <<<'XML'
 <options header="Send Money" noback="no">
@@ -90,12 +90,12 @@ XML;
 
         $node = $this->getNodeByPathExp($xml, '/*[1]/*[2]/*[1]');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $tag->process(0);
 
-        static::assertSame('/*[1]/*[2]/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[1]', $this->cache->get('prefix_exp'));
+        static::assertSame('/*[1]/*[2]/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[1]', $this->store->get('_exp'));
     }
 
     public function testProccessOptionsValidationNoAnswer()
@@ -106,7 +106,7 @@ XML;
 
         $node = $this->getNodeByTagName('<options header="Gender"><option text="Male"/></options>', 'options');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $tag->process('');
     }
@@ -119,7 +119,7 @@ XML;
 
         $node = $this->getNodeByTagName('<options header="Gender"><option text="Male"/></options>', 'options');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $tag->process('2');
     }
@@ -132,7 +132,7 @@ XML;
 
         $node = $this->getNodeByTagName('<options header="Gender" noback="no"><option text="Male"/></options>', 'options');
 
-        $tag = new OptionsTag($node, $this->cache, 'prefix', 30);
+        $tag = new OptionsTag($node, $this->store);
 
         $tag->process('0');
     }

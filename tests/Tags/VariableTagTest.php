@@ -9,17 +9,17 @@ class VariableTagTest extends TestCase
 {
     public function testHandleVariable()
     {
-        $this->cache->put('prefix_exp', '/*[1]');
+        $this->store->put('_exp', '/*[1]');
 
         $node = $this->getNodeByTagName('<variable name="color" value="blue"/>', 'variable');
 
-        $tag = new VariableTag($node, $this->cache, 'prefix', 30);
+        $tag = new VariableTag($node, $this->store);
 
         $output = $tag->handle();
 
         static::assertEmpty($output);
-        static::assertSame('blue', $this->cache->get('prefix_color'));
-        static::assertSame('/*[1]', $this->cache->get('prefix_pre'));
-        static::assertSame('/*[2]', $this->cache->get('prefix_exp'));
+        static::assertSame('blue', $this->store->get('color'));
+        static::assertSame('/*[1]', $this->store->get('_pre'));
+        static::assertSame('/*[2]', $this->store->get('_exp'));
     }
 }

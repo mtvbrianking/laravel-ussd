@@ -3,7 +3,7 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
-use Bmatovu\Ussd\Support\Helper;
+use Bmatovu\Ussd\Support\Dom;
 
 class OptionsTag extends BaseTag implements AnswerableTag
 {
@@ -13,10 +13,10 @@ class OptionsTag extends BaseTag implements AnswerableTag
 
         $body = '';
 
-        $pre = $this->fromCache('pre');
-        $exp = $this->fromCache('exp', $this->node->getNodePath());
+        $pre = $this->store->get('_pre');
+        $exp = $this->store->get('_exp', $this->node->getNodePath());
 
-        $children = Helper::getDomElements($this->node->childNodes, 'option');
+        $children = Dom::getElements($this->node->childNodes, 'option');
 
         $pos = 0;
         foreach ($children as $child) {
@@ -28,8 +28,8 @@ class OptionsTag extends BaseTag implements AnswerableTag
             $body .= "\n0) Back";
         }
 
-        $this->toCache('pre', $exp);
-        $this->toCache('exp', $this->incExp($exp));
+        $this->store->put('_pre', $exp);
+        $this->store->put('_exp', $this->incExp($exp));
 
         return "{$header}{$body}";
     }
@@ -40,8 +40,8 @@ class OptionsTag extends BaseTag implements AnswerableTag
             throw new \Exception('Make a choice.');
         }
 
-        $pre = $this->fromCache('pre');
-        $exp = $this->fromCache('exp', $this->node->getNodePath());
+        $pre = $this->store->get('_pre');
+        $exp = $this->store->get('_exp', $this->node->getNodePath());
 
         if ('0' === $answer) {
             if ($this->node->attributes->getNamedItem('noback')) {
@@ -50,18 +50,18 @@ class OptionsTag extends BaseTag implements AnswerableTag
 
             $exp = $this->goBack($pre, 2);
 
-            $this->cache->put("{$this->prefix}_exp", $exp, $this->ttl);
+            $this->store->put('_exp', $exp);
 
             return;
         }
 
-        $children = Helper::getDomElements($this->node->childNodes, 'option');
+        $children = Dom::getElements($this->node->childNodes, 'option');
 
         if ((int) $answer > \count($children)) {
             throw new \Exception('Invalid choice.');
         }
 
-        $this->cache->put("{$this->prefix}_exp", "{$pre}/*[{$answer}]", $this->ttl);
+        $this->store->put('_exp', "{$pre}/*[{$answer}]");
     }
 
     protected function goBack(string $exp, int $steps = 1): string

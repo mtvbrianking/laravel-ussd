@@ -2,16 +2,16 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Support\Helper;
+use Bmatovu\Ussd\Support\Dom;
 
 class ChooseTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $pre = $this->fromCache('pre');
-        $exp = $this->fromCache('exp', $this->node->getNodePath());
+        $pre = $this->store->get('_pre');
+        $exp = $this->store->get('_exp', $this->node->getNodePath());
 
-        $whenEls = Helper::getDomElements($this->node->childNodes, 'when');
+        $whenEls = Dom::getElements($this->node->childNodes, 'when');
 
         $pos = 0;
         $isMatched = false;
@@ -21,7 +21,7 @@ class ChooseTag extends BaseTag
             $key = $whenEl->attributes->getNamedItem('key')->nodeValue;
             $val = $whenEl->attributes->getNamedItem('value')->nodeValue;
 
-            $var = $this->fromCache($key);
+            $var = $this->store->get($key);
 
             if ($var !== $val) {
                 continue;
@@ -29,8 +29,8 @@ class ChooseTag extends BaseTag
 
             $isMatched = true;
 
-            $this->toCache('pre', $exp);
-            $this->toCache('exp', "{$exp}/*[{$pos}]");
+            $this->store->put('_pre', $exp);
+            $this->store->put('_exp', "{$exp}/*[{$pos}]");
 
             break;
         }
@@ -39,19 +39,19 @@ class ChooseTag extends BaseTag
             return '';
         }
 
-        $this->toCache('pre', $exp);
+        $this->store->put('_pre', $exp);
 
-        $otherwiseEls = Helper::getDomElements($this->node->childNodes, 'otherwise');
+        $otherwiseEls = Dom::getElements($this->node->childNodes, 'otherwise');
 
         if (! isset($otherwiseEls[0])) {
-            $this->toCache('exp', $this->incExp($exp));
+            $this->store->put('_exp', $this->incExp($exp));
 
             return '';
         }
 
         ++$pos;
 
-        $this->toCache('exp', "{$exp}/*[{$pos}]");
+        $this->store->put('_exp', "{$exp}/*[{$pos}]");
 
         return '';
     }

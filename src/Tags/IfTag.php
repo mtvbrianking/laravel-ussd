@@ -2,7 +2,7 @@
 
 namespace Bmatovu\Ussd\Tags;
 
-use Bmatovu\Ussd\Support\Helper;
+use Bmatovu\Ussd\Support\Dom;
 
 class IfTag extends BaseTag
 {
@@ -11,28 +11,28 @@ class IfTag extends BaseTag
         $key = $this->readAttr('key');
         $value = $this->readAttr('value');
 
-        if ($this->fromCache($key) !== $value) {
-            $exp = $this->fromCache('exp', $this->node->getNodePath());
+        if ($this->store->get($key) !== $value) {
+            $exp = $this->store->get('_exp', $this->node->getNodePath());
 
-            $this->toCache('pre', $exp);
-            $this->toCache('exp', $this->incExp($exp));
+            $this->store->put('_pre', $exp);
+            $this->store->put('_exp', $this->incExp($exp));
 
             return '';
         }
 
-        $pre = $this->fromCache('pre');
-        $exp = $this->fromCache('exp', $this->node->getNodePath());
-        $breakpoints = (array) json_decode((string) $this->fromCache('breakpoints'), true);
+        $pre = $this->store->get('_pre');
+        $exp = $this->store->get('_exp', $this->node->getNodePath());
+        $breakpoints = (array) json_decode((string) $this->store->get('_breakpoints'), true);
 
-        $this->toCache('pre', $exp);
-        $this->toCache('exp', "{$exp}/*[1]");
+        $this->store->put('_pre', $exp);
+        $this->store->put('_exp', "{$exp}/*[1]");
 
-        $children = Helper::getDomElements($this->node->childNodes, null);
+        $children = Dom::getElements($this->node->childNodes, null);
         $no_of_tags = \count($children);
 
         $break = $this->incExp("{$exp}/*[1]", $no_of_tags);
         array_unshift($breakpoints, [$break => $this->incExp($exp)]);
-        $this->toCache('breakpoints', json_encode($breakpoints));
+        $this->store->put('_breakpoints', json_encode($breakpoints));
 
         return '';
     }
