@@ -15,7 +15,10 @@ class Parser
     protected Store $store;
     protected bool $newSession = false;
 
-    public function __construct(\DOMXPath|string $xpath, string $expression, string $sessionId)
+    /**
+     * @param \DOMXPath|string $xpath
+     */
+    public function __construct($xpath, string $expression, string $sessionId)
     {
         $this->xpath = \is_string($xpath) ? $this->xpathFromStr($xpath) : $xpath;
 
