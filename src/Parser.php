@@ -17,7 +17,7 @@ class Parser
 
     public function __construct(\DOMXPath|string $xpath, string $expression, string $sessionId)
     {
-        $this->xpath = is_string($xpath) ? $this->xpathFromStr($xpath) : $xpath;
+        $this->xpath = \is_string($xpath) ? $this->xpathFromStr($xpath) : $xpath;
 
         // $config = Container::getInstance()->make('config');
         $store = config('ussd.cache.store', 'file');
@@ -49,10 +49,10 @@ class Parser
     {
         $answer = $this->getAnswer($userInput);
 
-        if($this->newSession) {
+        if ($this->newSession) {
             $inquiry = $this->doParse();
 
-            if(! $answer) {
+            if (! $answer) {
                 return $inquiry;
             }
         }

@@ -76,12 +76,13 @@ trait ParserUtils
 
         $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
-        if(! $answer) {
+        if (! $answer) {
             Log::debug('ANSWERS', ['_answer' => $preAnswer, 'input' => $userInput, 'answer' => $answer]);
+
             return $answer;
         }
 
-        if(! $preAnswer || Str::endsWith($preAnswer, '*')) {
+        if (! $preAnswer || Str::endsWith($preAnswer, '*')) {
             $this->store->append('_answer', "{$answer}*");
         } else {
             $this->store->append('_answer', "*{$answer}*");
