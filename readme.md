@@ -94,7 +94,7 @@ class UssdController extends Controller
         try {
             $demo = Storage::path('demo.xml');
 
-            $parser = (new Parser($demo, '/menu/*[1]', $request->session_id));
+            $parser = new Parser($demo, '/menu/*[1]', $request->session_id);
 
             $output = $parser->parse($request->text);
         } catch(\Exception $ex) {
@@ -110,7 +110,7 @@ class UssdController extends Controller
 
 ### **Parameters**
 
-The parser takes in an array of the following options...
+The parser takes in an the following options...
 
 | Param        | Is Required | Description |
 | ------------ | :---------: | ----------- |
