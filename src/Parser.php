@@ -4,6 +4,7 @@ namespace Bmatovu\Ussd;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Traits\ParserUtils;
+use Illuminate\Support\Facades\Log;
 
 class Parser
 {
@@ -12,10 +13,11 @@ class Parser
     protected \DOMXPath $xpath;
     protected string $sessionId;
     protected Store $store;
+    protected bool $newSession = false;
 
-    public function __construct(\DOMXPath $xpath, string $expression, string $sessionId, string $serviceCode = '')
+    public function __construct(\DOMXPath|string $xpath, string $expression, string $sessionId)
     {
-        $this->xpath = $xpath;
+        $this->xpath = is_string($xpath) ? $this->xpathFromStr($xpath) : $xpath;
 
         // $config = Container::getInstance()->make('config');
         $store = config('ussd.cache.store', 'file');
@@ -26,16 +28,15 @@ class Parser
             return;
         }
 
-        $serviceCode = $this->clean($serviceCode);
+        $this->newSession = true;
         $this->store->put('_session_id', $sessionId);
-        $this->store->put('_service_code', $serviceCode);
-        $this->store->put('_answer', $serviceCode);
+        $this->store->put('_answer', '');
         $this->store->put('_pre', '');
         $this->store->put('_exp', $expression);
         $this->store->put('_breakpoints', '[]');
     }
 
-    public function setOptions(array $options): self
+    public function save(array $options): self
     {
         foreach ($options as $key => $value) {
             $this->store->put($key, $value);
@@ -46,29 +47,29 @@ class Parser
 
     public function parse(?string $userInput = ''): string
     {
-        // return $this->doParse($userInput);
-
         $answer = $this->getAnswer($userInput);
 
-        \Illuminate\Support\Facades\Log::debug('__answers', [
-            'old' => $this->store->get('_answer'),
-            'input' => $userInput,
-            'new' => $answer,
-        ]);
+        if($this->newSession) {
+            $inquiry = $this->doParse();
 
-        // return $output = $this->doParse($answer);
+            if(! $answer) {
+                return $inquiry;
+            }
+        }
 
         $answers = explode('*', $answer);
 
         foreach ($answers as $answer) {
-            $output = $this->doParse($answer);
+            $inquiry = $this->doParse($answer);
         }
 
-        return $output;
+        return $inquiry;
     }
 
     protected function doParse(?string $answer = ''): ?string
     {
+        Log::debug("doParse({$answer})");
+
         $this->doProcess($answer);
 
         $exp = $this->store->get('_exp');
@@ -78,13 +79,13 @@ class Parser
             $this->doBreak();
         }
 
-        $output = $this->doRender();
+        $inquiry = $this->doRender();
 
-        if (! $output) {
+        if (! $inquiry) {
             return $this->doParse($answer);
         }
 
-        return $output;
+        return $inquiry;
     }
 
     protected function doProcess(?string $answer): void
@@ -130,7 +131,7 @@ class Parser
 
         $tagName = $this->resolveTagName($node);
         $tag = $this->instantiateTag($tagName, [$node, $this->store]);
-        $output = $tag->handle();
+        $inquiry = $tag->handle();
 
         $exp = $this->store->get('_exp');
         $breakpoints = (array) json_decode((string) $this->store->get('_breakpoints'), true);
@@ -141,6 +142,6 @@ class Parser
             $this->store->put('_breakpoints', json_encode($breakpoints));
         }
 
-        return $output;
+        return $inquiry;
     }
 }

@@ -4,6 +4,7 @@ namespace Bmatovu\Ussd\Traits;
 
 use Bmatovu\Ussd\Contracts\RenderableTag;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait ParserUtils
@@ -40,6 +41,15 @@ trait ParserUtils
         return strtr($text, $replace_vars);
     }
 
+    protected function xpathFromStr(string $file): \DOMXPath
+    {
+        $doc = new \DOMDocument();
+
+        $doc->load($file);
+
+        return new \DOMXPath($doc);
+    }
+
     protected function sessionExists(string $sessionId): bool
     {
         $preSessionId = $this->store->get('_session_id', '');
@@ -62,14 +72,22 @@ trait ParserUtils
             return '';
         }
 
-        $preAnswer = $this->store->get('_answer');
-        if (! $preAnswer) {
-            return (string) $userInput;
-        }
+        $preAnswer = $this->store->get('_answer', '');
 
         $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
-        $this->store->put('_answer', $userInput);
+        if(! $answer) {
+            Log::debug('ANSWERS', ['_answer' => $preAnswer, 'input' => $userInput, 'answer' => $answer]);
+            return $answer;
+        }
+
+        if(! $preAnswer || Str::endsWith($preAnswer, '*')) {
+            $this->store->append('_answer', "{$answer}*");
+        } else {
+            $this->store->append('_answer', "*{$answer}*");
+        }
+
+        Log::debug('ANSWERS', ['_answer' => $preAnswer, 'input' => $userInput, 'answer' => $answer]);
 
         return $answer;
     }

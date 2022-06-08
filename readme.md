@@ -16,7 +16,6 @@
     - [Example](#example)
     - [Parser](#parser)
     - [Simulator](#simulator)
-- [Flow](#flow)
 - [Constructs](#constructs)
     - [Variable](#variable)
     - [Question](#question)
@@ -70,83 +69,62 @@ If need be, clear the session data on 'flow break'.
 
 ### Example
 
-```php
-use Bmatovu\Ussd\Menus\Parser;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+> ../storage/app/demo.xml
 
-class UssdController extends Controller
-{
-    const FC = 'continue';
-    const FB = 'break';
-
-    protected CacheContract $cache;
-
-    public function __construct(CacheContract $cache)
-    {
-        $this->cache = $cache;
-    }
-    
-    public function __invoke(Request $request): JsonResponse
-    {
-        try {
-            $doc = new \DOMDocument();
-
-            $menu = <<<XML
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <menu>
     <response text="Hello World."/>
 </menu>
-XML;
-            $doc->loadXml($menu);
-            
-            $xpath = new \DOMXPath($doc);
+```
 
-            $options = $request->only(['session_id', 'phone_number', 'service_code']);
-            $options['expression'] = '/menu/*[1]';
+```php
+use Bmatovu\Ussd\Parser;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
-            $parser = new Parser($xpath, $options, $this->cache, 120);
+/**
+ * @see https://developers.africastalking.com/docs/ussd/overview
+ */
+class UssdController extends Controller
+{
+    public function __invoke(Request $request): Response
+    {
+        try {
+            $demo = Storage::path('demo.xml');
 
-            $output = $parser->parse($request->answer);
+            $parser = (new Parser($demo, '/menu/*[1]', $request->session_id));
+
+            $output = $parser->parse($request->text);
         } catch(\Exception $ex) {
-            return response()->json(['flow' => self::FB, 'data' => $ex->getMessage()]);
+            return response('END ' . $ex->getMessage());
         }
 
-        return response()->json(['flow' => self::FC, 'data' => $output]);
+        return response('CON ' . $output);
     }
 }
 ```
 
 ### Parser
 
-### **Options**
+### **Parameters**
 
 The parser takes in an array of the following options...
 
-| Option       | Is Required | Description |
-| ------------ | :---------: | ---- |
-| session_id   | yes         | Unique per session, not request. |
-| phone_number | yes         | MSISDN format. Alphanumeric including country code. |
-| service_code | yes         | USSD shortcode for the service being request. |
+| Param        | Is Required | Description |
+| ------------ | :---------: | ----------- |
+| xpath        | yes         | DOMXPath for your menus. |
 | expression   | yes         | Query to 1st executable tag in your XML menu. [Playground](http://xpather.com) |
-
-**Prefix** is a concatenation of the phone_number and the service_code.
+| session_id   | yes         | Unique per session, not request. |
 
 ### Simulator
 
-\* to be developed
-
 ```bash
 ./vendor/bin/ussd 0790123123
+./vendor/bin/ussd 0790123123 --dail 209
 ./vendor/bin/ussd 0790123123 --dail 209*4*5
 ```
-
-## Flow
-
-USSD has basically 2 flow types namely; `continue` (default) and `break`.
-
-Always assume the flow to be continuing unless you get an exception.
 
 ## Constructs
 
@@ -340,18 +318,12 @@ Note: Actions have no output. But they can manipulate (get/set) variables in cac
 
 ### Cache
 
-**Prefix**
-
-```php
-$prefix = "{$phone_number}{$service_code}";
-```
-
 **Accessing variables**
 
 ```php
 <variable name="color" value="blue"/>
 
-$this->cache->get("{$this->prefix}_color"); // blue
+$this->store->get('color'); // blue
 ```
 
 **Reusing existing variables**
@@ -365,7 +337,7 @@ $this->cache->get("{$this->prefix}_color"); // blue
 **Manual injection**
 
 ```php
-$this->cache->put("{$this->prefix}_color", 'pink');
+$this->store->put('color', 'pink');
 ```
 
 ## Testing
