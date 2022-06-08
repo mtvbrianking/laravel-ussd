@@ -105,11 +105,6 @@
             </div>
                     <div class="row">
                 <div class="col-md-6">
-                    <a href="../../../Bmatovu/Ussd/Traits/CacheStore.html"><abbr title="Bmatovu\Ussd\Traits\CacheStore">CacheStore</abbr></a>    </div>
-                <div class="col-md-6"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-6">
                     <a href="../../../Bmatovu/Ussd/Traits/Expressions.html"><abbr title="Bmatovu\Ussd\Traits\Expressions">Expressions</abbr></a>    </div>
                 <div class="col-md-6"></div>
             </div>
@@ -130,33 +125,13 @@
 <abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
             </tr>
                     <tr>
-                <td class="type" id="property_cache">
+                <td class="type" id="property_store">
                                         protected                                        
                                                                                 
                                     </td>
-                <td>$cache</td>
+                <td>$store</td>
                 <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_cache">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
-            </tr>
-                    <tr>
-                <td class="type" id="property_prefix">
-                                        protected                                        
-                                                                                
-                                    </td>
-                <td>$prefix</td>
-                <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_prefix">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
-            </tr>
-                    <tr>
-                <td class="type" id="property_ttl">
-                                        protected                                        
-                                                                                
-                                    </td>
-                <td>$ttl</td>
-                <td class="last"></td>
-                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_ttl">
+                <td><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#property_store">
 <abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a></small></td>
             </tr>
             </table>
@@ -191,30 +166,6 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    void
-                </div>
-                <div class="col-md-8">
-                    <a href="#method_toCache">toCache</a>(string $key, $value)
-        
-                                            <p class="no-description">No description</p>
-                                    </div>
-                <div class="col-md-2"><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Traits/CacheStore.html#method_toCache">
-<abbr title="Bmatovu\Ussd\Traits\CacheStore">CacheStore</abbr></a></small></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    
-                </div>
-                <div class="col-md-8">
-                    <a href="#method_fromCache">fromCache</a>(string $key, $default = null)
-        
-                                            <p class="no-description">No description</p>
-                                    </div>
-                <div class="col-md-2"><small>from&nbsp;<a href="../../../Bmatovu/Ussd/Traits/CacheStore.html#method_fromCache">
-<abbr title="Bmatovu\Ussd\Traits\CacheStore">CacheStore</abbr></a></small></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
                     string
                 </div>
                 <div class="col-md-8">
@@ -230,7 +181,7 @@
                     
                 </div>
                 <div class="col-md-8">
-                    <a href="#method___construct">__construct</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node, <abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, int|null $ttl = null)
+                    <a href="#method___construct">__construct</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node, <a href="../../../Bmatovu/Ussd/Store.html"><abbr title="Bmatovu\Ussd\Store">Store</abbr></a> $store)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -243,17 +194,6 @@
                 </div>
                 <div class="col-md-8">
                     <a href="#method_handle">handle</a>()
-        
-                                            <p class="no-description">No description</p>
-                                    </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    void
-                </div>
-                <div class="col-md-8">
-                    <a href="#method_process">process</a>(string|null $answer)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -372,95 +312,6 @@
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_toCache">
-        <div class="location">in <a href="../../../Bmatovu/Ussd/Traits/CacheStore.html#method_toCache">
-<abbr title="Bmatovu\Ussd\Traits\CacheStore">CacheStore</abbr></a> <a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/CacheStore.php#L7">at line 7</a></div>
-        <code>                    void
-    <strong>toCache</strong>(string $key, $value)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$key</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td></td>
-                <td>$value</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>void</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_fromCache">
-        <div class="location">in <a href="../../../Bmatovu/Ussd/Traits/CacheStore.html#method_fromCache">
-<abbr title="Bmatovu\Ussd\Traits\CacheStore">CacheStore</abbr></a> <a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/CacheStore.php#L12">at line 12</a></div>
-        <code>                    
-    <strong>fromCache</strong>(string $key, $default = null)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$key</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td></td>
-                <td>$default</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_incExp">
         <div class="location">in <a href="../../../Bmatovu/Ussd/Traits/Expressions.html#method_incExp">
 <abbr title="Bmatovu\Ussd\Traits\Expressions">Expressions</abbr></a> <a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/Expressions.php#L7">at line 7</a></div>
@@ -512,9 +363,9 @@
                     <div class="method-item">
                     <h3 id="method___construct">
         <div class="location">in <a href="../../../Bmatovu/Ussd/Tags/BaseTag.html#method___construct">
-<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a> <a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php#L22">at line 22</a></div>
+<abbr title="Bmatovu\Ussd\Tags\BaseTag">BaseTag</abbr></a> <a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/BaseTag.php#L18">at line 18</a></div>
         <code>                    
-    <strong>__construct</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node, <abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, int|null $ttl = null)
+    <strong>__construct</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node, <a href="../../../Bmatovu/Ussd/Store.html"><abbr title="Bmatovu\Ussd\Store">Store</abbr></a> $store)
         </code>
     </h3>
     <div class="details">    
@@ -535,18 +386,8 @@
                 <td></td>
             </tr>
                     <tr>
-                <td><abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr></td>
-                <td>$cache</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$prefix</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>int|null</td>
-                <td>$ttl</td>
+                <td><a href="../../../Bmatovu/Ussd/Store.html"><abbr title="Bmatovu\Ussd\Store">Store</abbr></a></td>
+                <td>$store</td>
                 <td></td>
             </tr>
             </table>
@@ -581,49 +422,6 @@
                     <table class="table table-condensed">
         <tr>
             <td>string|null</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_process">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Tags/ResponseTag.php#L14">at line 14</a></div>
-        <code>                    void
-    <strong>process</strong>(string|null $answer)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string|null</td>
-                <td>$answer</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>void</td>
             <td></td>
         </tr>
     </table>

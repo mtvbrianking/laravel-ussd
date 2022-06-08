@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Support\Helper | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Support\Dom | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Support_Helper" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Support_Dom" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -75,18 +75,18 @@
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
                 <li><span class="label label-default">class</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Support.html">Support</a></li><li class="backslash">\</li><li>Helper</li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Support.html">Support</a></li><li class="backslash">\</li><li>Dom</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>Helper    
+        <h1>Dom    
             </h1>
     </div>
 
     
     <p>        class
-    <strong>Helper</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php">View source</a>)
+    <strong>Dom</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Dom.php">View source</a>)
 </p>
 
         
@@ -105,7 +105,7 @@
                     static&nbsp;string
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_renderNode">renderNode</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node)
+                    <a href="#method_render">render</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -116,18 +116,7 @@
                     static&nbsp;array
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_getDomElements">getDomElements</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
-        
-                                            <p class="no-description">No description</p>
-                                    </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    static&nbsp;string
-                </div>
-                <div class="col-md-8">
-                    <a href="#method_translate">translate</a>(<abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, string $text, string $pattern = &#039;/[^{{\\}\\}]+(?=}})/&#039;)
+                    <a href="#method_getElements">getElements</a>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -140,10 +129,10 @@
 
             <div id="method-details">
                     <div class="method-item">
-                    <h3 id="method_renderNode">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L10">at line 10</a></div>
+                    <h3 id="method_render">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Dom.php#L7">at line 7</a></div>
         <code>        static            string
-    <strong>renderNode</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node)
+    <strong>render</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNode">DOMNode</a> $node)
         </code>
     </h3>
     <div class="details">    
@@ -183,10 +172,10 @@
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_getDomElements">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L21">at line 21</a></div>
+                    <h3 id="method_getElements">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Dom.php#L18">at line 18</a></div>
         <code>        static            array
-    <strong>getDomElements</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
+    <strong>getElements</strong>(<a target="_blank" rel="noopener" href="https://www.php.net/DOMNodeList">DOMNodeList</a> $nodeList, string|null $nodeName)
         </code>
     </h3>
     <div class="details">    
@@ -225,81 +214,6 @@
 
             
             
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_translate">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Support/Helper.php#L42">at line 42</a></div>
-        <code>        static            string
-    <strong>translate</strong>(<abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr> $cache, string $prefix, string $text, string $pattern = &#039;/[^{{\\}\\}]+(?=}})/&#039;)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><abbr title="Illuminate\Contracts\Cache\Repository">Repository</abbr></td>
-                <td>$cache</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$prefix</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$text</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$pattern</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>string</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-                            <h4>See also</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>
-                                            <a href="https://stackoverflow.com/q/413071/2732184">https://stackoverflow.com/q/413071/2732184</a>
-                                    </td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>
-                                            <a href="https://www.regextester.com/97707">https://www.regextester.com/97707</a>
-                                    </td>
-                <td></td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>

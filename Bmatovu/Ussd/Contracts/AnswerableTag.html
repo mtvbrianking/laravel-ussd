@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Traits\CacheStore | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Contracts\AnswerableTag | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Traits_CacheStore" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Contracts_AnswerableTag" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -74,19 +74,19 @@
 
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
-                <li><span class="label label-default">trait</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Traits.html">Traits</a></li><li class="backslash">\</li><li>CacheStore</li>
+                <li><span class="label label-default">interface</span></li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Contracts.html">Contracts</a></li><li class="backslash">\</li><li>AnswerableTag</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>CacheStore    
+        <h1>AnswerableTag    
             </h1>
     </div>
 
     
-    <p>        trait
-    <strong>CacheStore</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/CacheStore.php">View source</a>)
+    <p>        interface
+    <strong>AnswerableTag</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Contracts/AnswerableTag.php">View source</a>)
 </p>
 
         
@@ -105,18 +105,7 @@
                     void
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_toCache">toCache</a>(string $key, $value)
-        
-                                            <p class="no-description">No description</p>
-                                    </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    
-                </div>
-                <div class="col-md-8">
-                    <a href="#method_fromCache">fromCache</a>(string $key, $default = null)
+                    <a href="#method_process">process</a>(string|null $answer)
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -129,10 +118,10 @@
 
             <div id="method-details">
                     <div class="method-item">
-                    <h3 id="method_toCache">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/CacheStore.php#L7">at line 7</a></div>
+                    <h3 id="method_process">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Contracts/AnswerableTag.php#L8">at line 8</a></div>
         <code>                    void
-    <strong>toCache</strong>(string $key, $value)
+    <strong>process</strong>(string|null $answer)
         </code>
     </h3>
     <div class="details">    
@@ -148,13 +137,8 @@
 
                     <table class="table table-condensed">
                     <tr>
-                <td>string</td>
-                <td>$key</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td></td>
-                <td>$value</td>
+                <td>string|null</td>
+                <td>$answer</td>
                 <td></td>
             </tr>
             </table>
@@ -169,45 +153,6 @@
         </tr>
     </table>
 
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_fromCache">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Traits/CacheStore.php#L12">at line 12</a></div>
-        <code>                    
-    <strong>fromCache</strong>(string $key, $default = null)
-        </code>
-    </h3>
-    <div class="details">    
-    
-            
-
-        <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
-        </div>
-        <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$key</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td></td>
-                <td>$default</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
             
             
             
