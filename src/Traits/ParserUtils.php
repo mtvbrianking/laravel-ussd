@@ -4,7 +4,7 @@ namespace Bmatovu\Ussd\Traits;
 
 use Bmatovu\Ussd\Contracts\RenderableTag;
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Support\Str;
 
 trait ParserUtils
@@ -77,8 +77,6 @@ trait ParserUtils
         $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
         if (! $answer) {
-            Log::debug('ANSWERS', ['_answer' => $preAnswer, 'input' => $userInput, 'answer' => $answer]);
-
             return $answer;
         }
 
@@ -87,8 +85,6 @@ trait ParserUtils
         } else {
             $this->store->append('_answer', "*{$answer}*");
         }
-
-        Log::debug('ANSWERS', ['_answer' => $preAnswer, 'input' => $userInput, 'answer' => $answer]);
 
         return $answer;
     }
@@ -108,9 +104,9 @@ trait ParserUtils
 
     protected function resolveTagClass(string $tagName): string
     {
-        // $config = Container::getInstance()->make('config');
-        $tagNs = config('ussd.tag-ns', []);
-        $actionNs = config('ussd.action-ns', []);
+        $config = Container::getInstance()->make(ConfigRepository::class);
+        $tagNs = $config->get('ussd.tag-ns', []);
+        $actionNs = $config->get('ussd.action-ns', []);
 
         $namespaces = array_merge($tagNs, $actionNs);
 

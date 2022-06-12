@@ -4,7 +4,8 @@ namespace Bmatovu\Ussd;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Traits\ParserUtils;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class Parser
 {
@@ -20,11 +21,11 @@ class Parser
      */
     public function __construct($xpath, string $expression, string $sessionId)
     {
-        $this->xpath = \is_string($xpath) ? $this->xpathFromStr($xpath) : $xpath;
+        $this->xpath = $xpath instanceof \DOMXPath ? $xpath : $this->xpathFromStr($xpath);
 
-        // $config = Container::getInstance()->make('config');
-        $store = config('ussd.cache.store', 'file');
-        $ttl = config('ussd.cache.ttl', 120);
+        $config = Container::getInstance()->make(ConfigRepository::class);
+        $store = $config->get('ussd.cache.store', 'file');
+        $ttl = $config->get('ussd.cache.ttl', 120);
         $this->store = new Store($store, $ttl, $sessionId);
 
         if ($this->sessionExists($sessionId)) {
@@ -71,8 +72,6 @@ class Parser
 
     protected function doParse(?string $answer = ''): ?string
     {
-        Log::debug("doParse({$answer})");
-
         $this->doProcess($answer);
 
         $exp = $this->store->get('_exp');
