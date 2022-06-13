@@ -39,6 +39,9 @@
     "bin/ussd"
   ],
   "autoload": {
+    "files": [
+      "src/Support/helpers.php"
+    ],
     "psr-4": {
       "Bmatovu\\Ussd\\": "src/"
     }

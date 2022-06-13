@@ -15,4 +15,6 @@ return [
         'Bmatovu\\Ussd\\Actions',
         'App\\Ussd\\Actions',
     ],
+
+    'menus-path' => env('USSD_MENUS_PATH', 'menus'),
 ];

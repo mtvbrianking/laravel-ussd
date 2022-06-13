@@ -114,7 +114,8 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <menu>
-    <response text="Hello World."/>
+    <question name="guest" text="Enter Name: "/>
+    <response text="Hello {{guest}}."/>
 </menu>
 ```
 
@@ -160,7 +161,7 @@ The parser takes in an array of the following options...
 
 **Cache**
 
-This package persists USSD session data in cache. Each key is prefixed with the `session_id` to make it unique and avoid overriding data accidentally.
+This package persists USSD session data in cache. Each key is prefixed with the `session_id` and it automatically expires after the configured `ttl`.
 
 ### Simulator
 
@@ -343,22 +344,22 @@ switch ($gender) {
 
 ### Action
 
-This tag gives you the ability to perform more complex operations.
+The action tag gives you the ability to perform more customized operations.
 
 ```php
-$user = getUser($phone);
+$userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```
 
 ```xml
 <!-- Actions can access all variable in cache -->
-<action name="get-user"/>
+<action name="get-user-info"/>
 <!-- Pass by value -->
-<action name="get-user" phone="256732000000"/>
+<action name="get-user-info" msisdn="256732000000"/>
 <!-- Pass by reference -->
-<action name="get-user" phone="{{phone}}"/>
+<action name="get-user-info" msisdn="{{msisdn}}"/>
 ```
 
-Note: Actions have no output. But they can manipulate (get/set) variables in cache.
+Note: Actions behave just like the normal tag i.e they can take input from a user or cache, and may or may not return output.
 
 ## Advanced
 
@@ -370,6 +371,8 @@ Note: Actions have no output. But they can manipulate (get/set) variables in cac
 <variable name="color" value="blue"/>
 
 $this->store->get('color'); // blue
+
+Cache::store($driver)->get("{$sessionId}color"); // blue
 ```
 
 **Reusing existing variables**
