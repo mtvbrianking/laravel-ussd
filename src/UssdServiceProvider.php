@@ -15,6 +15,14 @@ class UssdServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/ussd.php' => base_path('config/ussd.php'),
             ], 'config');
+
+            $this->publishes([
+                __DIR__.'/../menus/menus.xsd' => base_path('storage/app/menus/menus.xsd'),
+            ], 'xsd');
+
+            $this->commands([
+                Commands\Validate::class,
+            ]);
         }
     }
 
