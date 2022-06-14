@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+    <xs:element name="menu" type="menuType" />
+    <!-- +++++++++++++++++ Simple Types ++++++++++++++++ -->
+    <xs:simpleType name="key-str">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z0-9._-]{1,100}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="value-str">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="1000" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="bool-str">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(yes|no)" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- +++++++++++++++++ Complex Types ++++++++++++++++ -->
+    <xs:complexType name="variableType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="key-str" use="required" />
+                <xs:attribute name="value" type="value-str" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="questionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="key-str" use="required" />
+                <xs:attribute name="text" type="value-str" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="responseType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="text" type="value-str" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="actionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="key-str" use="required" />
+                <xs:attribute name="text" type="value-str" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="listType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="action" type="key-str" use="required" />
+                <xs:attribute name="header" type="value-str" use="optional" />
+                <xs:attribute name="name" type="key-str" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="optionType">
+        <xs:sequence>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="text" type="value-str" use="required" />
+    </xs:complexType>
+    <xs:complexType name="optionsType">
+        <xs:sequence>
+            <xs:element type="optionType" name="option" maxOccurs="unbounded" minOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="header" type="value-str" use="optional" />
+        <xs:attribute name="noback" type="bool-str" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="ifType">
+        <xs:sequence>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="key-str" use="required" />
+        <xs:attribute name="value" type="value-str" use="required" />
+    </xs:complexType>
+    <xs:complexType name="whenType">
+        <xs:sequence>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="key-str" use="required" />
+        <xs:attribute name="value" type="value-str" use="required" />
+    </xs:complexType>
+    <xs:complexType name="otherwiseType">
+        <xs:sequence>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="chooseType">
+        <xs:sequence>
+            <xs:element type="whenType" name="when" maxOccurs="unbounded" minOccurs="1" />
+            <xs:element type="otherwiseType" name="otherwise" maxOccurs="1" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="menuType">
+        <xs:sequence>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="key-str" use="optional" />
+    </xs:complexType>
+    <!-- +++++++++++++++++ Groups ++++++++++++++++ -->
+    <xs:group name="elementsGroup">
+        <xs:choice>
+            <xs:element type="actionType" name="action" />
+            <xs:element type="variableType" name="variable" />
+            <xs:element type="questionType" name="question" />
+            <xs:element type="responseType" name="response" />
+            <xs:element type="optionsType" name="options" />
+            <xs:element type="listType" name="list" />
+            <xs:element type="ifType" name="if" />
+            <xs:element type="chooseType" name="choose" />
+        </xs:choice>
+    </xs:group>
+</xs:schema>

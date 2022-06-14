@@ -14,7 +14,6 @@
 - [Usage](#usage)
     - [Example](#example)
     - [Validation](#validation)
-    - [Parser](#parser)
     - [Simulator](#simulator)
 - [Constructs](#constructs)
     - [Variable](#variable)
@@ -26,6 +25,7 @@
     - [Action](#action)
 - [Advanced](#advanced)
     - [Cache](#cache)
+    - [Parser](#parser)
 - [Testing](#testing)
 - [Security](#security)
 - [Contribution](#contribution)
@@ -44,52 +44,50 @@ Let's see an example for a simple would be SACCO USSD application.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<menus>
-    <menu name="sacco">
-        <action name="check-user"/>
-        <options header="SACCO Services" noback="no">
-            <option text="Savings">
-                <list header="Saving Accounts" name="account" action="fetch-savings-accounts"/>
-                <options header="Savings">
-                    <option text="Deposit">
-                        <options header="Deposit From:">
-                            <option text="My Number">
-                                <variable name="sender" value="{{phone_number}}"/>
-                            </option>
-                            <option text="Another Number">
-                                <question name="sender" text="Enter Phone Number: "/>
-                            </option>
-                        </options>
-                        <question name="amount" text="Enter Amount: "/>
-                        <action name="deposit"/>
-                    </option>
-                    <option text="Withdraw">
-                        <options header="Withdraw To:">
-                            <option text="My Number">
-                                <variable name="receiver" value="{{phone_number}}"/>
-                            </option>
-                            <option text="Another Number">
-                                <question name="receiver" text="Enter Phone Number: "/>
-                            </option>
-                        </options>
-                        <question name="amount" text="Enter Amount: "/>
-                        <action name="withdraw"/>
-                    </option>
-                    <option text="Check Balance">
-                        <action name="check-balance" text="To see your balance, enter PIN: "/>
-                    </option>
-                    <option text="Check Transaction">
-                        <question name="transaction_id" text="Enter Transaction ID: "/>
-                        <action name="check-transaction"/>
-                    </option>
-                </options>
-            </option>
-            <option text="Loans">
-                <response text="Coming soon."/>
-            </option>
-        </options>
-    </menu>
-</menus>
+<menu name="sacco">
+    <action name="check-user"/>
+    <options header="SACCO Services" noback="no">
+        <option text="Savings">
+            <list header="Saving Accounts" name="account" action="fetch-savings-accounts"/>
+            <options header="Savings">
+                <option text="Deposit">
+                    <options header="Deposit From:">
+                        <option text="My Number">
+                            <variable name="sender" value="{{phone_number}}"/>
+                        </option>
+                        <option text="Another Number">
+                            <question name="sender" text="Enter Phone Number: "/>
+                        </option>
+                    </options>
+                    <question name="amount" text="Enter Amount: "/>
+                    <action name="deposit"/>
+                </option>
+                <option text="Withdraw">
+                    <options header="Withdraw To:">
+                        <option text="My Number">
+                            <variable name="receiver" value="{{phone_number}}"/>
+                        </option>
+                        <option text="Another Number">
+                            <question name="receiver" text="Enter Phone Number: "/>
+                        </option>
+                    </options>
+                    <question name="amount" text="Enter Amount: "/>
+                    <action name="withdraw"/>
+                </option>
+                <option text="Check Balance">
+                    <action name="check-balance" text="To see your balance, enter PIN: "/>
+                </option>
+                <option text="Check Transaction">
+                    <question name="transaction_id" text="Enter Transaction ID: "/>
+                    <action name="check-transaction"/>
+                </option>
+            </options>
+        </option>
+        <option text="Loans">
+            <response text="Coming soon."/>
+        </option>
+    </options>
+</menu>
 ```
 
 ## Installation
@@ -113,12 +111,10 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<menus>
-    <menu name="demo">
-        <question name="guest" text="Enter Name: "/>
-        <response text="Hello {{guest}}."/>
-    </menu>
-</menus>
+<menu name="demo">
+    <question name="guest" text="Enter Name: "/>
+    <response text="Hello {{guest}}."/>
+</menu>
 ```
 
 ```php
@@ -135,9 +131,9 @@ class UssdController extends Controller
     public function __invoke(Request $request): Response
     {
         try {
-            $menus = menus_path('menus.xml');
+            $menu = menus_path('menu.xml');
 
-            $parser = new Parser($menus, "/menus/menu[@name='demo']/*[1]", $request->session_id);
+            $parser = new Parser($menu, $request->session_id);
 
             $output = $parser->parse($request->text);
         } catch(\Exception $ex) {
@@ -151,39 +147,33 @@ class UssdController extends Controller
 
 ### Validation
 
-Publish menus schema (optional)
+Publish the menu schema (optional)
 
-> php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="schema"
+```bash
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="schema"
+```
 
 Validate your menu files against the schema
 
-> php artisan ussd:validate
-
-### Parser
-
-**Parameters**
-
-The parser takes in an array of the following options...
-
-| Param      | Is Required | Description                                                  |
-| ---------- | :---------: | ------------------------------------------------------------ |
-| xpath      |     yes     | DOMXPath for your menus.                                     |
-| expression |     yes     | Query to 1st executable tag in your XML menu. [Playground](http://xpather.com) |
-| session_id |     yes     | Unique per session, not request.                             |
-
-**Cache**
-
-This package persists USSD session data in cache. Each key is prefixed with the `session_id` and it automatically expires after the configured `ttl`.
+```bash
+php artisan ussd:validate
+```
 
 ### Simulator
 
+The package comes with a CLI USSD simulator supporting a handful of populator aggregators.
+
+This is very helpful for testing locally and for testing aggregators that provide no simulators for their integrations.
+
 ```bash
 ./vendor/bin/ussd --help
-./vendor/bin/ussd [aggregator] [msisdn] <options>
+
 ./vendor/bin/ussd africastalking 0790123123
 ./vendor/bin/ussd africastalking 0790123123 --dail 209
 ./vendor/bin/ussd africastalking 0790123123 --dail 209*4*5
 ```
+
+__If you're an aggregator missing from the current list reachout to have you added. Or simply send a pull request__
 
 ## Constructs
 
@@ -377,6 +367,8 @@ Note: Actions behave just like the normal tag i.e they can take input from a use
 
 ### Cache
 
+This package persists USSD session data in cache. Each key is prefixed with the `session_id` and it automatically expires after the configured `ttl`.
+
 **Accessing variables**
 
 ```php
@@ -399,6 +391,32 @@ Cache::store($driver)->get("{$sessionId}color"); // blue
 
 ```php
 $this->store->put('color', 'pink');
+```
+
+### Parser
+
+**Save default variables**
+
+Example for saving any variable from the incoming USSD request.
+
+```php
+(new Parser($xpath, $request->session_id))
+    // ->save($request->all())
+    ->save([
+        'phone_number' => $request->phone_number,
+        'network_code' => $request->network_code,
+    ]);
+```
+
+**Use custom menu entry point**
+
+By default the parsing starts at the 1st element in you menu file, i.e `/menu/*[1]`.
+
+If you wish to start from a different point or using a custom menu file structure. Here's how to go about it...
+
+```php
+(new Parser($xpath, $request->session_id))
+    ->entry("/menus/menus[@name='sacco']/*[1]");
 ```
 
 ## Testing

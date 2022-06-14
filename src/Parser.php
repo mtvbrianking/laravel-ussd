@@ -19,7 +19,7 @@ class Parser
     /**
      * @param \DOMXPath|string $xpath
      */
-    public function __construct($xpath, string $expression, string $sessionId)
+    public function __construct($xpath, string $sessionId)
     {
         $this->xpath = $xpath instanceof \DOMXPath ? $xpath : $this->xpathFromStr($xpath);
 
@@ -36,8 +36,17 @@ class Parser
         $this->store->put('_session_id', $sessionId);
         $this->store->put('_answer', '');
         $this->store->put('_pre', '');
-        $this->store->put('_exp', $expression);
+        $this->store->put('_exp', '/menu/*[1]');
         $this->store->put('_breakpoints', '[]');
+    }
+
+    public function entry(string $expression): self
+    {
+        if ($this->newSession) {
+            $this->store->put('_exp', $expression);
+        }
+
+        return $this;
     }
 
     public function save(array $options): self

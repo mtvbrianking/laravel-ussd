@@ -12,8 +12,8 @@ class Validate extends Command
      * @var string
      */
     protected $signature = 'ussd:validate
-                                {--f|file=menus.xml : Main menu file.}
-                                {--s|schema=menus.xsd : XSD to validate against.}';
+                                {--f|file=menu.xml : Main menu file.}
+                                {--s|schema=menu.xsd : XSD to validate against.}';
 
     /**
      * The console command description.
@@ -30,18 +30,20 @@ class Validate extends Command
         $xml = menus_path($this->option('file'));
         $xsd = menus_path($this->option('schema'));
 
-        if(! file_exists($xsd)) {
-            $xsd = __DIR__.'/../../menus/menus.xsd';
+        if (! file_exists($xsd)) {
+            $xsd = __DIR__.'/../../menus/menu.xsd';
+            $this->line("Using '{$xsd}'");
         }
 
         $errors = $this->validate($xml, $xsd);
 
-        if(! $errors) {
-            $this->info('Cheers, you have valid menus.');
+        if (! $errors) {
+            $this->info('OK');
+
             return;
         }
 
-        foreach($errors as $file => $messages) {
+        foreach ($errors as $file => $messages) {
             $this->error('File: '.$file);
             $this->table(['Line', 'Element', 'Message'], $messages);
         }

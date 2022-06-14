@@ -14,7 +14,7 @@ class ParserTest extends TestCase
 
         $xpath = $this->xmlToXpath('<dummy/>');
 
-        $parser = new Parser($xpath, '/*[1]', 'ussd_wScXk');
+        $parser = (new Parser($xpath, 'ussd_wScXk'))->entry('/*[1]');
 
         $parser->parse();
     }
@@ -27,7 +27,7 @@ class ParserTest extends TestCase
 
         $xpath = $this->xmlToXpath('<response text="Bye bye."/>');
 
-        $parser = new Parser($xpath, '/*[1]', 'ussd_wScXk');
+        $parser = (new Parser($xpath, 'ussd_wScXk'))->entry('/*[1]');
 
         $parser->parse();
     }
@@ -35,15 +35,15 @@ class ParserTest extends TestCase
     public function testProceedQuietly()
     {
         $xml = <<<'XML'
-<document>
+<menu>
     <variable name="name" value="John Doe"/>
     <question name="alias" text="Enter username: "/>
-</document>
+</menu>
 XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = new Parser($xpath, '/document/*[1]', 'ussd_wScXk');
+        $parser = new Parser($xpath, 'ussd_wScXk');
 
         $output = $parser->parse();
 
@@ -55,45 +55,45 @@ XML;
     {
         $this->store->put('_session_id', 'ussd_wScXk');
         $this->store->put('_pre', '');
-        $this->store->put('_exp', '/document/*[1]');
+        $this->store->put('_exp', '/menu/*[1]');
 
         $xml = <<<'XML'
-<document>
+<menu>
     <question name="alias" text="Enter username: "/>
-</document>
+</menu>
 XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = new Parser($xpath, '/document/*[1]', 'ussd_wScXk');
+        $parser = new Parser($xpath, 'ussd_wScXk');
 
         $output = $parser->parse();
 
         static::assertSame('Enter username: ', $output);
         static::assertSame('ussd_wScXk', $this->store->get('_session_id'));
-        static::assertSame('/document/*[1]', $this->store->get('_pre'));
-        static::assertSame('/document/*[2]', $this->store->get('_exp'));
+        static::assertSame('/menu/*[1]', $this->store->get('_pre'));
+        static::assertSame('/menu/*[2]', $this->store->get('_exp'));
     }
 
     public function testBreakpoints()
     {
         $xml = <<<'XML'
-<document>
+<menu>
     <variable name="gender" value="M"/>
     <if key="gender" value="M">
         <variable name="color" value="Blue"/>
     </if>
     <question name="greet" text="Say hi: "/>
-</document>
+</menu>
 XML;
         $this->store->put('_session_id', 'ussd_wScXk');
-        $this->store->put('_pre', '/document/*[2]/*[1]');
-        $this->store->put('_exp', '/document/*[2]/*[2]');
-        $this->store->put('_breakpoints', '[{"\/document\/*[2]\/*[2]":"\/document\/*[3]"}]');
+        $this->store->put('_pre', '/menu/*[2]/*[1]');
+        $this->store->put('_exp', '/menu/*[2]/*[2]');
+        $this->store->put('_breakpoints', '[{"\/menu\/*[2]\/*[2]":"\/menu\/*[3]"}]');
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = new Parser($xpath, '/document/*[1]', 'ussd_wScXk');
+        $parser = new Parser($xpath, 'ussd_wScXk');
 
         $output = $parser->parse();
 
