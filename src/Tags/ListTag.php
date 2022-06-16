@@ -100,12 +100,12 @@ class ListTag extends BaseTag implements AnswerableTag
     protected function validate(array $list): void
     {
         $validator = Validator::make($list, [
-            "*.id"  => "required",
-            "*.label"  => "required",
+            '*.id' => 'required',
+            '*.label' => 'required',
         ]);
 
         if ($validator->fails()) {
-            throw new Execption($validator->errors()->toJson());
+            throw new \Exception($validator->errors()->toJson());
         }
     }
 }
