@@ -2,9 +2,9 @@
 
 namespace Bmatovu\Ussd\Dto;
 
-use Spatie\DataTransferObject\Caster;
+// use Spatie\DataTransferObject\Caster;
 
-class ItemArrayCaster implements Caster
+class ItemArrayCaster // implements Caster
 {
     public function cast(mixed $values): array
     {

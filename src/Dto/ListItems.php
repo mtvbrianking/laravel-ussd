@@ -2,11 +2,14 @@
 
 namespace Bmatovu\Ussd\Dto;
 
-use Spatie\DataTransferObject\Attributes\CastWith;
+// use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class ListItems extends DataTransferObject
 {
-    #[CastWith(ItemArrayCaster::class)]
+    // #[CastWith(ItemArrayCaster::class)]
+    // public array $items;
+
+    /** @var Item[] */
     public array $items;
 }
