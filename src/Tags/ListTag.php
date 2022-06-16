@@ -7,6 +7,7 @@ use Bmatovu\Ussd\Contracts\ListProvider;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ListTag extends BaseTag implements AnswerableTag
@@ -23,13 +24,15 @@ class ListTag extends BaseTag implements AnswerableTag
         $provider = $this->instantiateListProvider($this->readAttr('provider'), [$this->store]);
         $list = $provider->load();
 
+        $this->validate($list);
+
         $itemPrefix = $this->readAttr('prefix');
         $this->store->put("{$itemPrefix}_list", $list);
 
         $pos = 0;
-        foreach ($list->items as $item) {
+        foreach ($list as $item) {
             ++$pos;
-            $body .= "\n{$pos}) ".$item->label;
+            $body .= "\n{$pos}) ".$item['label'];
         }
 
         $this->store->put('_pre', $exp);
@@ -50,14 +53,14 @@ class ListTag extends BaseTag implements AnswerableTag
         $itemPrefix = $this->readAttr('prefix');
         $list = $this->store->pull("{$itemPrefix}_list");
 
-        $item = $list->items[--$answer] ?? null;
+        $item = $list[--$answer] ?? null;
 
         if (! $item) {
             throw new \Exception('Invalid choice.');
         }
 
-        $this->store->put("{$itemPrefix}_id", $item->id);
-        $this->store->put("{$itemPrefix}_label", $item->label);
+        $this->store->put("{$itemPrefix}_id", $item['id']);
+        $this->store->put("{$itemPrefix}_label", $item['label']);
     }
 
     protected function resolveProviderClass(string $providerName): string
@@ -92,5 +95,17 @@ class ListTag extends BaseTag implements AnswerableTag
         }
 
         return $provider;
+    }
+
+    protected function validate(array $list): void
+    {
+        $validator = Validator::make($list, [
+            "*.id"  => "required",
+            "*.label"  => "required",
+        ]);
+
+        if ($validator->fails()) {
+            throw new Execption($validator->errors()->toJson());
+        }
     }
 }
