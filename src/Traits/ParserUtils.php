@@ -68,7 +68,7 @@ trait ParserUtils
 
     protected function getAnswer(?string $userInput): ?string
     {
-        if (! $userInput) {
+        if (null === $userInput) {
             return '';
         }
 
@@ -76,8 +76,8 @@ trait ParserUtils
 
         $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
-        if (! $answer) {
-            return $answer;
+        if (null === $answer) {
+            return '';
         }
 
         if (! $preAnswer || Str::endsWith($preAnswer, '*')) {
@@ -119,7 +119,7 @@ trait ParserUtils
             }
         }
 
-        throw new \Exception("Missing class: {$tagName}");
+        throw new \Exception("Missing tag {$tagName}.\nClass: {$fqcn}.");
     }
 
     protected function instantiateTag(string $tagName, array $args = []): RenderableTag

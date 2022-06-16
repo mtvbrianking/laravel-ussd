@@ -107,7 +107,7 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 
 ### Example
 
-> menus/menus.xml
+> menus/menu.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -147,7 +147,8 @@ class UssdController extends Controller
 
 ### Validation
 
-Publish the menu schema (optional)
+Publish the menu schema (optional). 
+Defaults to using the schema bundled within the package if none is present in your menus path, usually `menus/menu.xsd`.
 
 ```bash
 php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="schema"
@@ -416,8 +417,10 @@ If you wish to start from a different point or using a custom menu file structur
 
 ```php
 (new Parser($xpath, $request->session_id))
-    ->entry("/menus/menus[@name='sacco']/*[1]");
+    ->entry("/menus/menu[@name='sacco']/*[1]");
 ```
+
+See: [xpath playground](http://xpather.com)
 
 ## Testing
 

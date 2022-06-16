@@ -52,9 +52,9 @@
     <xs:complexType name="listType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="action" type="key-str" use="required" />
                 <xs:attribute name="header" type="value-str" use="optional" />
-                <xs:attribute name="name" type="key-str" use="optional" />
+                <xs:attribute name="provider" type="key-str" use="required" />
+                <xs:attribute name="prefix" type="key-str" use="required" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

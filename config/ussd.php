@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'menus-path' => env('USSD_MENUS_PATH', 'menus'),
+
     'cache' => [
         'driver' => env('USSD_CACHE_DRIVER', 'file'),
         'ttl' => env('USSD_CACHE_TTL', 120),
@@ -16,5 +18,8 @@ return [
         'App\\Ussd\\Actions',
     ],
 
-    'menus-path' => env('USSD_MENUS_PATH', 'menus'),
+    'provider-ns' => [
+        'Bmatovu\\Ussd\\Providers',
+        'App\\Ussd\\Providers',
+    ],
 ];
