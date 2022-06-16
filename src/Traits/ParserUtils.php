@@ -119,7 +119,7 @@ trait ParserUtils
             }
         }
 
-        throw new \Exception("Missing tag {$tagName}.\nClass: {$fqcn}.");
+        throw new \Exception("Missing tag {$tagName}.");
     }
 
     protected function instantiateTag(string $tagName, array $args = []): RenderableTag

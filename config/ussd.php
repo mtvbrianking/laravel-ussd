@@ -10,7 +10,6 @@ return [
 
     'tag-ns' => [
         'Bmatovu\\Ussd\\Tags',
-        'App\\Ussd\\Tags',
     ],
 
     'action-ns' => [

@@ -23,6 +23,7 @@
     - [If](#if)
     - [Choose](#choose)
     - [Action](#action)
+    - [List](#list)
 - [Advanced](#advanced)
     - [Cache](#cache)
     - [Parser](#parser)
@@ -48,7 +49,7 @@ Let's see an example for a simple would be SACCO USSD application.
     <action name="check-user"/>
     <options header="SACCO Services" noback="no">
         <option text="Savings">
-            <list header="Saving Accounts" name="account" action="fetch-savings-accounts"/>
+            <list header="Saving Accounts" provider="saving-accounts" prefix="account"/>
             <options header="Savings">
                 <option text="Deposit">
                     <options header="Deposit From:">
@@ -363,6 +364,20 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```
 
 Note: Actions behave just like the normal tag i.e they can take input from a user or cache, and may or may not return output.
+
+### List
+
+List are showing dynamic items. E.g: user accounts fetched on demand.
+
+Provider is the class providing the list of items. It must implement the ListProvider interface.
+
+```php
+$listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
+```
+
+```xml
+<list header="Saving Accounts" provider="saving-accounts" prefix="account"/>
+```
 
 ## Advanced
 
