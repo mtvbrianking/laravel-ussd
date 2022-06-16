@@ -7,6 +7,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 // #[Strict]
 class Item extends DataTransferObject
 {
-    public string|int $id;
+    /** @var int|string $id */
+    public $id;
     public string $label;
 }

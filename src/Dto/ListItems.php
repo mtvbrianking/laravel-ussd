@@ -10,6 +10,6 @@ class ListItems extends DataTransferObject
     // #[CastWith(ItemArrayCaster::class)]
     // public array $items;
 
-    /** @var Item[] */
+    /** @var Item[] $items */
     public array $items;
 }
