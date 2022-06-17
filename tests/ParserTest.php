@@ -45,6 +45,8 @@ XML;
 
         $parser = new Parser($xpath, 'ussd_wScXk');
 
+        $parser->store = $this->store; // ->set('name', 'John Doe');
+
         $output = $parser->parse();
 
         static::assertSame('Enter username: ', $output);
@@ -98,5 +100,90 @@ XML;
         $output = $parser->parse();
 
         static::assertSame('Say hi: ', $output);
+    }
+
+    public function testParseLongCode()
+    {
+        $xml = <<<'XML'
+<menu>
+    <question name="title" text="Enter title: "/>
+    <question name="fname" text="Enter first name: "/>
+    <question name="lname" text="Enter last name: "/>
+</menu>
+XML;
+
+        $xpath = $this->xmlToXpath($xml);
+
+        $parser = (new Parser($xpath, 'ussd_wScXk'));
+
+        $output = $parser->parse('Mr*John');
+
+        static::assertSame('Enter last name: ', $output);
+    }
+
+    public function testTracksAnswers()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Hi Mr. John Doe');
+
+        $xml = <<<'XML'
+<menu>
+    <!--<question name="title" text="Enter title: "/>-->
+    <question name="fname" text="Enter first name: "/>
+    <question name="lname" text="Enter last name: "/>
+    <response text="Hi {{title}} {{fname}} {{lname}}."/>
+</menu>
+XML;
+
+        $xpath = $this->xmlToXpath($xml);
+
+        $parser = (new Parser($xpath, 'ussd_wScXk'));
+
+        $parser->store->put('title', 'Mr.');
+        $parser->store->put('_answer', 'Mr.');
+
+        $parser->parse('John*Doe');
+
+        static::assertSame('Mr.*John*Doe', $parser->store->get('_answer'));
+    }
+
+    public function testPathFromFile()
+    {
+        $xml = <<<'XML'
+<menu>
+    <question name="alias" text="Enter username: "/>
+</menu>
+XML;
+
+        $menuFile = tempnam(sys_get_temp_dir(), 'phpunit_test_');
+
+        file_put_contents($menuFile, $xml);
+
+        $parser = (new Parser($menuFile, 'ussd_wScXk'));
+
+        $output = $parser->parse('');
+
+        static::assertSame('Enter username: ', $output);
+
+        if (file_exists($menuFile)) {
+            unlink($menuFile);
+        }
+    }
+
+    public function testSaveOptions()
+    {
+        $xpath = $this->xmlToXpath('<question name="alias" text="Enter username: "/>');
+
+        $rand = rand(100, 1000);
+
+        $parser = (new Parser($xpath, 'ussd_wScXk'))
+            ->entry('/*[1]')
+            ->save(['rand' => $rand])
+        ;
+
+        $parser->parse();
+
+        static::assertSame($rand, $parser->store->get('rand'));
     }
 }

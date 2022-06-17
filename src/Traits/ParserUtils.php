@@ -19,28 +19,6 @@ trait ParserUtils
         $this->{$key} = $value;
     }
 
-    /**
-     * @see https://stackoverflow.com/q/413071/2732184
-     * @see https://www.regextester.com/97707
-     */
-    public function translate(string $text, string $pattern = '/[^{{\}\}]+(?=}})/'): string
-    {
-        preg_match_all($pattern, $text, $matches);
-
-        if (0 === \count($matches[0])) {
-            return $text;
-        }
-
-        $replace_vars = [];
-
-        foreach ($matches[0] as $match) {
-            $var = Str::slug($match, '_');
-            $replace_vars["{{{$match}}}"] = $this->store->get("{$prefix}{$var}", "{{$var}}");
-        }
-
-        return strtr($text, $replace_vars);
-    }
-
     protected function xpathFromStr(string $file): \DOMXPath
     {
         $doc = new \DOMDocument();
@@ -59,16 +37,12 @@ trait ParserUtils
 
     protected function clean(string $code = ''): string
     {
-        if (! $code) {
-            return $code;
-        }
-
-        return rtrim(ltrim($code, '*'), '#');
+        return trim(trim($code, '*'), '#');
     }
 
     protected function getAnswer(?string $userInput): ?string
     {
-        if (null === $userInput) {
+        if ('' === (string) $userInput) {
             return '';
         }
 
@@ -76,7 +50,7 @@ trait ParserUtils
 
         $answer = $this->clean(str_replace($preAnswer, '', $userInput));
 
-        if (null === $answer) {
+        if ('' === (string) $answer) {
             return '';
         }
 

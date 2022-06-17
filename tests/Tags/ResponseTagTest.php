@@ -19,4 +19,19 @@ class ResponseTagTest extends TestCase
 
         $tag->handle();
     }
+
+    public function testResponseTranslation()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Hello John.');
+
+        $this->store->put('guest', 'John');
+
+        $node = $this->getNodeByTagName('<response text="Hello {{guest}}."/>', 'response');
+
+        $tag = new ResponseTag($node, $this->store);
+
+        $tag->handle();
+    }
 }
