@@ -369,10 +369,17 @@ Note: Actions behave just like the normal tag i.e they can take input from a use
 
 List are showing dynamic items. E.g: user accounts fetched on demand.
 
-Provider is the class providing the list of items. It must implement the ListProvider interface.
+Provider is the class providing the list of items. Each item must container an `id` and a `label`.
 
 ```php
 $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
+
+// [
+//     [
+//         'id' => 4364852, // account_id 
+//         'label' => '01085475262', // account_number
+//     ],
+// ]
 ```
 
 ```xml

@@ -27,8 +27,8 @@ class Validate extends Command
      */
     public function handle(): void
     {
-        $xml = menus_path($this->option('file'));
-        $xsd = menus_path($this->option('schema'));
+        $xml = file_exists($this->option('file')) ? $this->option('file') : menus_path($this->option('file'));
+        $xsd = file_exists($this->option('schema')) ? $this->option('schema') : menus_path($this->option('schema'));
 
         if (! file_exists($xsd)) {
             $xsd = __DIR__.'/../../menus/menu.xsd';
