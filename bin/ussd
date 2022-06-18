@@ -16,6 +16,7 @@ if (! file_exists($dir.'/autoload.php')) {
 
 require $dir.'/autoload.php';
 
+use Bmatovu\Ussd\Contracts\Aggregator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
@@ -26,6 +27,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
 class Simulator extends Command
@@ -37,18 +39,52 @@ class Simulator extends Command
             ->setDefinition(
                 new InputDefinition([
                     new InputArgument('phone', InputArgument::REQUIRED, 'MSISDN'),
+                    new InputOption('--aggregator', '-a', InputOption::VALUE_OPTIONAL, 'USSD aggregator'), // ...
                     new InputOption('--dail', '-d', InputOption::VALUE_OPTIONAL, 'User request'),
                     new InputOption('--service', '-s', InputOption::VALUE_REQUIRED, 'USSD shortcode', '*156#'),
                     new InputOption('--network', '-n', InputOption::VALUE_OPTIONAL, 'Network code', '6001'),
                     new InputOption('--session', '-z', InputOption::VALUE_OPTIONAL, 'Session ID (Auto Gen)'),
-                    new InputOption('--api', '-a', InputOption::VALUE_REQUIRED, 'API URI', 'http://localhost:8000/api/ussd'),
+                    new InputOption('--config', '-c', InputOption::VALUE_OPTIONAL, 'Simulator config file', 'simulator.php'),
+                    new InputOption('--base_uri', '-u', InputOption::VALUE_REQUIRED, 'USSD Service Base URI', 'http://localhost:8000/api/ussd'), // ...
                 ])
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $api = $input->getOption('api');
+        // check if config file exists
+        //  if not ask user to create one by sharing a sample + instructions
+
+        // if exists and has 1 line - default to that
+        // else ask user to choose aggregator per run
+
+        // ./vendr/bin/ussd ------ check in default
+
+        // 1. check simulator config file
+        // 2. validate simulator config file
+
+        // ...
+
+        $qnHelper = $this->getHelper('question');
+
+        $aggregator = $input->getOption('aggregator');
+
+        if(! $aggregator) {
+            $choiceQn = new ChoiceQuestion('Choose aggregator: ', ['Generic', 'Africastalking'], 0);
+            $choiceQn->setErrorMessage('Aggregator %s is invalid.');
+            $aggregator = $qnHelper->ask($input, $output, $choiceQn);
+        }
+
+        $baseUri = $input->getOption('base_uri');
+
+        if(! $baseUri) {
+            $baseUri = $qnHelper->ask($input, $output, new Question("Enter USSD Service Base URI: ", 'http://localhost:8000/api/ussd'));
+        }
+
+        $uri = $baseUri . '/' . strtolower($aggregator);
+
+        $output->writeln("\nUsing: '{$aggregator}' --> {$uri}\n");
+
         $session = $input->getOption('session') ?? uniqid();
         $phone = $input->getArgument('phone');
         $service = $input->getOption('service');
@@ -59,45 +95,68 @@ class Simulator extends Command
 
         $dail = $this->clean($dail) ?? $service;
 
-        $answer = $this->clean(str_replace($service, '', $dail));
+        $answers = $this->clean(str_replace($service, '', $dail));
 
         $body = [
+            'new_session' => true,
             'session_id' => $session,
             'network_code' => $network,
             'phone_number' => $phone,
             'input' => $dail,
             'service_code' => $service,
-            'answer' => $answer
+            'answers' => $answers,
         ];
 
-        $data = $this->call($api, $body, $output);
+        // resolve aggregator provider once...
 
-        $helper = $this->getHelper('question');
-        $answer = $helper->ask($input, $output, new Question("{$data}\n"));
+        $data = (new $aggregator)->call($uri, $body, $output);
+
+        $answer = $qnHelper->ask($input, $output, new Question("{$data}\n"));
 
         while(true) {
-            $dail .= "*" . $answer;
+            $answers .= "*" . $answer;
 
-            $body['input'] = $dail;
-            $body['answer'] = $answer;
+            $body['new_session'] = false;
+            $body['input'] = $answer;
+            $body['answers'] = $answers;
 
-            $data = $this->call($api, $body, $output);
+            $data = (new $aggregator)->call($uri, $body, $output);
 
-            $helper = $this->getHelper('question');
-            $answer = $helper->ask($input, $output, new Question("\n{$data}\n"));
+            $answer = $qnHelper->ask($input, $output, new Question("\n{$data}\n"));
         }
 
         return Command::SUCCESS;
     }
 
-    protected function call(string $apiUri, array $data, OutputInterface $output): ?string
+    protected function clean(?string $code): ?string
     {
+        if(! $code) {
+            return $code;
+        }
+
+        return trim(trim($code, '*'), '#');
+    }
+}
+
+class Generic implements Aggregator
+{
+    public function call(string $uri, array $data, OutputInterface $output): ?string
+    {
+        $params = [
+            'new_session' => $data['new_session'] === true ? 'yes' : 'no',
+            'session_id' => $data['session_id'],
+            'network_code' => $data['network_code'],
+            'phone_number' => $data['phone_number'],
+            'input' => $data['input'],
+            'service_code' => $data['service_code'],
+        ];
+
         try {
-            $response = (new Client)->request('POST', $apiUri, [
+            $response = (new Client)->request('POST', $uri, [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
-                'json' => $data
+                'json' => $params
             ]);
 
             $body = json_decode((string) $response->getBody());
@@ -117,19 +176,55 @@ class Simulator extends Command
 
             exit(Command::FAILURE);
         } catch (TransferException $ex) {
-            $output->writeln("\n<error>{$response->getCode()} . {$ex->getMessage()}</error>");
+            $output->writeln("\n<error>{$ex->getCode()} . {$ex->getMessage()}</error>");
 
             exit(Command::FAILURE);
         }
     }
+}
 
-    protected function clean(?string $code): ?string
+class Africastalking implements Aggregator
+{
+    public function call(string $uri, array $data, OutputInterface $output): ?string
     {
-        if(! $code) {
-            return $code;
-        }
+        $params = [
+            'sessionId' => $data['session_id'],
+            'networkCode' => $data['network_code'],
+            'phoneNumber' => $data['phone_number'],
+            'text' => $data['answers'],
+            'serviceCode' => $data['service_code'],
+        ];
 
-        return rtrim(ltrim($code, '*'), '#');
+        try {
+            $response = (new Client)->request('POST', $uri, [
+                'form_params' => $params
+            ]);
+
+            $body = (string) $response->getBody();
+
+            $cmd = substr($body, 0, 3);
+            $data = substr($body, 4);
+
+            if($cmd == 'END') {
+                $output->writeln("\n<options=bold>{$data}</>");
+                exit(Command::SUCCESS);
+            }
+
+            return $data;
+        } catch (RequestException $ex) {
+            $response = $ex->getResponse();
+            $body = (string) $response->getBody();
+
+            // $msg = substr($body, 4) ?? $response->getReasonPhrase();
+            $msg = $body ?? $response->getReasonPhrase();
+            $output->writeln("\n<error>{$response->getStatusCode()} . {$msg}</error>");
+
+            exit(Command::FAILURE);
+        } catch (TransferException $ex) {
+            $output->writeln("\n<error>{$ex->getCode()} . {$ex->getMessage()}</error>");
+
+            exit(Command::FAILURE);
+        }
     }
 }
 
