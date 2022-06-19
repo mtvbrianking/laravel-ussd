@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Dto\Item | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Contracts\Aggregator | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Dto_Item" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Contracts_Aggregator" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -74,19 +74,19 @@
 
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
-                <li><span class="label label-default">class</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Dto.html">Dto</a></li><li class="backslash">\</li><li>Item</li>
+                <li><span class="label label-default">interface</span></li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Contracts.html">Contracts</a></li><li class="backslash">\</li><li>Aggregator</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>Item    
+        <h1>Aggregator    
             </h1>
     </div>
 
     
-    <p>        class
-    <strong>Item</strong>        extends <abbr title="Spatie\DataTransferObject\DataTransferObject">DataTransferObject</abbr>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Dto/Item.php">View source</a>)
+    <p>        interface
+    <strong>Aggregator</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Contracts/Aggregator.php">View source</a>)
 </p>
 
         
@@ -96,30 +96,84 @@
             
         
     
-            <h2>Properties</h2>
+    
+            <h2>Methods</h2>
 
-            <table class="table table-condensed">
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string|null
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_call">call</a>(string $uri, array $options)
+        
+                                            <p><p>Call USSD service.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_call">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Contracts/Aggregator.php#L24">at line 24</a></div>
+        <code>                    string|null
+    <strong>call</strong>(string $uri, array $options)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Call USSD service.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
                     <tr>
-                <td class="type" id="property_id">
-                                                                                int|string
-                                                                                
-                                    </td>
-                <td>$id</td>
-                <td class="last"></td>
+                <td>string</td>
+                <td>$uri</td>
                 <td></td>
             </tr>
                     <tr>
-                <td class="type" id="property_label">
-                                                                                
-                                                                                
-                                    </td>
-                <td>$label</td>
-                <td class="last"></td>
-                <td></td>
+                <td>array</td>
+                <td>$options</td>
+                <td><p>Simulator options
+$options = [
+'new_session'   =&gt; (bool)    Request type
+'session_id'    =&gt; (string)  Session ID - Auto generated
+'phone_number'  =&gt; (string)  Phone Number
+'service_code'  =&gt; (string)  Service Code
+'network_code'  =&gt; (?string) Network Code
+'input'         =&gt; (?string) Current user input
+'answers'       =&gt; (?string) All the user's input for this session
+]</p></td>
             </tr>
             </table>
 
-    
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string|null</td>
+            <td><p>successful response</p></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
     
 </div><div id="footer">
         Generated by <a href="https://github.com/code-lts/doctum">Doctum, a API Documentation generator and fork of Sami</a>.</div></div>

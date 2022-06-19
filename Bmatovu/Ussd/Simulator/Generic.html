@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Dto\ItemArrayCaster | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Simulator\Generic | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Dto_ItemArrayCaster" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Simulator_Generic" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -75,18 +75,18 @@
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
                 <li><span class="label label-default">class</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Dto.html">Dto</a></li><li class="backslash">\</li><li>ItemArrayCaster</li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Simulator.html">Simulator</a></li><li class="backslash">\</li><li>Generic</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>ItemArrayCaster    
+        <h1>Generic    
             </h1>
     </div>
 
     
     <p>        class
-    <strong>ItemArrayCaster</strong>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Dto/ItemArrayCaster.php">View source</a>)
+    <strong>Generic</strong>        implements        <a href="../../../Bmatovu/Ussd/Contracts/Aggregator.html"><abbr title="Bmatovu\Ussd\Contracts\Aggregator">Aggregator</abbr></a>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Simulator/Generic.php">View source</a>)
 </p>
 
         
@@ -102,13 +102,12 @@
             <div class="container-fluid underlined">
                     <div class="row">
                 <div class="col-md-2 type">
-                    array
+                    string|null
                 </div>
                 <div class="col-md-8">
-                    <a href="#method_cast">cast</a>(mixed $values)
+                    <a href="#method_call">call</a>(string $uri, array $simulator)
         
-                                            <p class="no-description">No description</p>
-                                    </div>
+                                            <p><p>Call USSD service.</p></p>                </div>
                 <div class="col-md-2"></div>
             </div>
             </div>
@@ -118,10 +117,10 @@
 
             <div id="method-details">
                     <div class="method-item">
-                    <h3 id="method_cast">
-        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Dto/ItemArrayCaster.php#L9">at line 9</a></div>
-        <code>                    array
-    <strong>cast</strong>(mixed $values)
+                    <h3 id="method_call">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Simulator/Generic.php#L12">at line 12</a></div>
+        <code>                    string|null
+    <strong>call</strong>(string $uri, array $simulator)
         </code>
     </h3>
     <div class="details">    
@@ -129,16 +128,20 @@
             
 
         <div class="method-description">
-                            <p class="no-description">No description</p>
-                    
+                            <p><p>Call USSD service.</p></p>                        
         </div>
         <div class="tags">
                             <h4>Parameters</h4>
 
                     <table class="table table-condensed">
                     <tr>
-                <td>mixed</td>
-                <td>$values</td>
+                <td>string</td>
+                <td>$uri</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$simulator</td>
                 <td></td>
             </tr>
             </table>
@@ -148,8 +151,8 @@
 
                     <table class="table table-condensed">
         <tr>
-            <td>array</td>
-            <td></td>
+            <td>string|null</td>
+            <td><p>successful response</p></td>
         </tr>
     </table>
 

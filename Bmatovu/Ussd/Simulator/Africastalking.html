@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Bmatovu\Ussd\Dto\ListItems | Laravel USSD</title>
+    <title>Bmatovu\Ussd\Simulator\Africastalking | Laravel USSD</title>
 
             <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
 
     </head>
 
-    <body id="class" data-name="class:Bmatovu_Ussd_Dto_ListItems" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
+    <body id="class" data-name="class:Bmatovu_Ussd_Simulator_Africastalking" data-root-path="../../../" data-search-index-url="../../../doctum-search.json">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -75,18 +75,18 @@
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
                 <li><span class="label label-default">class</span></li>
-                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Dto.html">Dto</a></li><li class="backslash">\</li><li>ListItems</li>
+                        <li><a href="../../../Bmatovu.html">Bmatovu</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd.html">Ussd</a></li><li class="backslash">\</li><li><a href="../../../Bmatovu/Ussd/Simulator.html">Simulator</a></li><li class="backslash">\</li><li>Africastalking</li>
             </ol>
         </div>
                 <div id="page-content">
     <div class="page-header">
-        <h1>ListItems    
+        <h1>Africastalking    
             </h1>
     </div>
 
     
     <p>        class
-    <strong>ListItems</strong>        extends <abbr title="Spatie\DataTransferObject\DataTransferObject">DataTransferObject</abbr>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Dto/ListItems.php">View source</a>)
+    <strong>Africastalking</strong>        implements        <a href="../../../Bmatovu/Ussd/Contracts/Aggregator.html"><abbr title="Bmatovu\Ussd\Contracts\Aggregator">Aggregator</abbr></a>        (<a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Simulator/Africastalking.php">View source</a>)
 </p>
 
         
@@ -96,21 +96,75 @@
             
         
     
-            <h2>Properties</h2>
+    
+            <h2>Methods</h2>
 
-            <table class="table table-condensed">
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string|null
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_call">call</a>(string $uri, array $simulator)
+        
+                                            <p><p>Call USSD service.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_call">
+        <div class="location"><a href="https://github.com/mtvbrianking/laravel-ussd/blob/master/src/Simulator/Africastalking.php#L12">at line 12</a></div>
+        <code>                    string|null
+    <strong>call</strong>(string $uri, array $simulator)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Call USSD service.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
                     <tr>
-                <td class="type" id="property_items">
-                                                                                <a href="../../../Bmatovu/Ussd/Dto/Item.html"><abbr title="Bmatovu\Ussd\Dto\Item">Item</abbr></a>[]
-                                                                                
-                                    </td>
-                <td>$items</td>
-                <td class="last"></td>
+                <td>string</td>
+                <td>$uri</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$simulator</td>
                 <td></td>
             </tr>
             </table>
 
-    
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string|null</td>
+            <td><p>successful response</p></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
     
 </div><div id="footer">
         Generated by <a href="https://github.com/code-lts/doctum">Doctum, a API Documentation generator and fork of Sami</a>.</div></div>
