@@ -20,6 +20,10 @@ class UssdServiceProvider extends ServiceProvider
                 __DIR__.'/../menus/menu.xsd' => menus_path('menu.xsd'),
             ], 'schema');
 
+            $this->publishes([
+                __DIR__.'/../bin/simulator.json' => base_path('simulator.json'),
+            ], 'simulator');
+
             $this->commands([
                 Commands\Validate::class,
             ]);

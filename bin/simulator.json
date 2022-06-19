@@ -1,0 +1,15 @@
+{
+  "aggregator": "africastalking",
+  "aggregators": {
+    "africastalking": {
+      "provider": "Bmatovu\\Ussd\\Simulator\\Africastalking",
+      "uri": "http://localhost:8000/api/ussd/africastalking",
+      "service_code": "*156#"
+    },
+    "generic": {
+      "provider": "Bmatovu\\Ussd\\Simulator\\Generic",
+      "uri": "http://localhost:8000/api/ussd/generic",
+      "service_code": "*156#"
+    }
+  }
+}

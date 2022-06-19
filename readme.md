@@ -27,6 +27,7 @@
 - [Advanced](#advanced)
     - [Cache](#cache)
     - [Parser](#parser)
+    - [Simulator](#simulator)
 - [Testing](#testing)
 - [Security](#security)
 - [Contribution](#contribution)
@@ -165,14 +166,16 @@ php artisan ussd:validate
 
 The package comes with a CLI USSD simulator supporting a handful of populator aggregators.
 
-This is very helpful for testing locally and for testing aggregators that provide no simulators for their integrations.
+Public the simulator config file to get started. Update the aggregator and the USSD service endpoint in the config file.
+
+```bash
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="simulator"
+```
+Usage:
 
 ```bash
 ./vendor/bin/ussd --help
-
-./vendor/bin/ussd africastalking 0790123123
-./vendor/bin/ussd africastalking 0790123123 --dail 209
-./vendor/bin/ussd africastalking 0790123123 --dail 209*4*5
+./vendor/bin/ussd 0790123123
 ```
 
 __If you're an aggregator missing from the current list reachout to have you added. Or simply send a pull request__
@@ -443,6 +446,27 @@ If you wish to start from a different point or using a custom menu file structur
 ```
 
 See: [xpath playground](http://xpather.com)
+
+### Simulator
+
+You can extend the USSD simulator with your aggregator of choice by simply registering it in the simulator config file.
+
+The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
+
+> simulator.json
+
+```diff
+  {
++   "aggregator": "generic",
+    "aggregators": {
++      "generic": {
++        "provider": "App\\Ussd\\Simulator\\Hubtel",
++        "uri": "http://localhost:8000/api/ussd/hubtel",
++        "service_code": "*123#"
++      }
+    }
+  }
+```
 
 ## Testing
 

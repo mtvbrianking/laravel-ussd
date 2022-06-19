@@ -16,10 +16,7 @@ if (! file_exists($dir.'/autoload.php')) {
 
 require $dir.'/autoload.php';
 
-use Bmatovu\Ussd\Contracts\Aggregator;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
+use Illuminate\Support\Arr;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -38,94 +35,109 @@ class Simulator extends Command
             ->setName($_SERVER['argv'][0])
             ->setDefinition(
                 new InputDefinition([
-                    new InputArgument('phone', InputArgument::REQUIRED, 'MSISDN'),
-                    new InputOption('--aggregator', '-a', InputOption::VALUE_OPTIONAL, 'USSD aggregator'), // ...
+                    new InputArgument('phone_number', InputArgument::REQUIRED, 'MSISDN'),
                     new InputOption('--dail', '-d', InputOption::VALUE_OPTIONAL, 'User request'),
-                    new InputOption('--service', '-s', InputOption::VALUE_REQUIRED, 'USSD shortcode', '*156#'),
-                    new InputOption('--network', '-n', InputOption::VALUE_OPTIONAL, 'Network code', '6001'),
-                    new InputOption('--session', '-z', InputOption::VALUE_OPTIONAL, 'Session ID (Auto Gen)'),
-                    new InputOption('--config', '-c', InputOption::VALUE_OPTIONAL, 'Simulator config file', 'simulator.php'),
-                    new InputOption('--base_uri', '-u', InputOption::VALUE_REQUIRED, 'USSD Service Base URI', 'http://localhost:8000/api/ussd'), // ...
+                    new InputOption('--service_code', '-s', InputOption::VALUE_REQUIRED, 'USSD shortcode', '*123#'),
+                    new InputOption('--network_code', '-n', InputOption::VALUE_OPTIONAL, 'Network code'),
+                    new InputOption('--session_id', '-z', InputOption::VALUE_OPTIONAL, 'Session ID (Auto Gen)'),
+                    // ...
+                    new InputOption('--config', '-c', InputOption::VALUE_OPTIONAL, 'Simulator config file', 'simulator.json'),
+                    new InputOption('--aggregator', '-a', InputOption::VALUE_OPTIONAL, 'USSD aggregator'),
+                    new InputOption('--provider', '-p', InputOption::VALUE_OPTIONAL, 'Aggregator Class'),
+                    new InputOption('--uri', '-u', InputOption::VALUE_REQUIRED, 'USSD Service Base URI'),
                 ])
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // check if config file exists
-        //  if not ask user to create one by sharing a sample + instructions
+        $defaults = $this->readConfig($input, $output);
 
-        // if exists and has 1 line - default to that
-        // else ask user to choose aggregator per run
+        $params = $this->buildParams($input, $defaults);
 
-        // ./vendr/bin/ussd ------ check in default
+        $uri = $input->getOption('uri') ?? Arr::get($defaults, 'uri');
+        $provider = $input->getOption('provider') ?? Arr::get($defaults, 'provider');
 
-        // 1. check simulator config file
-        // 2. validate simulator config file
+        // $output->writeln(sprintf("Provider: %s\nUri: %s\n", $provider, $uri));
 
-        // ...
+        try {
+            $data = (new $provider)->call($uri, $params);
 
+            $qnHelper = $this->getHelper('question');
+
+            $answer = $qnHelper->ask($input, $output, new Question("{$data}\n"));
+
+            while(true) {
+                $params['new_session'] = false;
+                $params['input'] = $answer;
+                $params['answers'] .= "*{$answer}";
+
+                $data = (new $provider)->call($uri, $params);
+
+                $answer = $qnHelper->ask($input, $output, new Question("\n{$data}\n"));
+            }
+        } catch(\Exception $ex) {
+            $output->writeln(PHP_EOL . $ex->getMessage());
+        }
+
+        return Command::SUCCESS;
+    }
+
+    protected function readConfig(InputInterface $input, OutputInterface $output): array
+    {
         $qnHelper = $this->getHelper('question');
 
-        $aggregator = $input->getOption('aggregator');
+        $configFile = $input->getOption('config');
+
+        if(! (is_file($configFile) && is_readable($configFile))) {
+            $output->writeln("<error>Can't read config file '{$configFile}'</error>");
+            exit(Command::FAILURE);
+        }
+
+        $configJson = file_get_contents($configFile);
+
+        $configJson = preg_replace('/[\\\\]+/', '\\\\\\\\', $configJson);
+
+        $config = json_decode($configJson, true);
+
+        if($config === null) {
+            $output->writeln(sprintf("<error>%s --> JSON . %s</error>", $configFile, json_last_error_msg()));
+            exit(Command::FAILURE);
+        }
+
+        $aggregator = $input->getOption('aggregator') ?? Arr::get($config, 'aggregator');
 
         if(! $aggregator) {
-            $choiceQn = new ChoiceQuestion('Choose aggregator: ', ['Generic', 'Africastalking'], 0);
+            $aggregators = array_keys($config['aggregators']);
+            $choiceQn = new ChoiceQuestion('Choose aggregator: ', $aggregators);
             $choiceQn->setErrorMessage('Aggregator %s is invalid.');
             $aggregator = $qnHelper->ask($input, $output, $choiceQn);
         }
 
-        $baseUri = $input->getOption('base_uri');
+        return Arr::get($config, "aggregators.{$aggregator}");
+    }
 
-        if(! $baseUri) {
-            $baseUri = $qnHelper->ask($input, $output, new Question("Enter USSD Service Base URI: ", 'http://localhost:8000/api/ussd'));
-        }
+    protected function buildParams(InputInterface $input, array $config = []): array
+    {
+        $session_id = $input->getOption('session_id') ?? Arr::get($config, 'session_id', uniqid());
+        $phone_number = $input->getArgument('phone_number') ?? Arr::get($config, 'phone_number');
+        $service_code = $input->getOption('service_code') ?? Arr::get($config, 'service_code');
+        $network_code = $input->getOption('network_code') ?? Arr::get($config, 'network_code');
+        $dail = $input->getOption('dail') ?? $service_code;
 
-        $uri = $baseUri . '/' . strtolower($aggregator);
+        $service_code = $this->clean($service_code);
+        $dail = $this->clean($dail) ?? $service_code;
+        $answers = $this->clean(str_replace($service_code, '', $dail));
 
-        $output->writeln("\nUsing: '{$aggregator}' --> {$uri}\n");
-
-        $session = $input->getOption('session') ?? uniqid();
-        $phone = $input->getArgument('phone');
-        $service = $input->getOption('service');
-        $network = $input->getOption('network');
-        $dail = $input->getOption('dail') ?? $service;
-
-        $service = $this->clean($service);
-
-        $dail = $this->clean($dail) ?? $service;
-
-        $answers = $this->clean(str_replace($service, '', $dail));
-
-        $body = [
+        return [
             'new_session' => true,
-            'session_id' => $session,
-            'network_code' => $network,
-            'phone_number' => $phone,
+            'session_id' => $session_id,
+            'network_code' => $network_code,
+            'phone_number' => $phone_number,
             'input' => $dail,
-            'service_code' => $service,
+            'service_code' => $service_code,
             'answers' => $answers,
         ];
-
-        // resolve aggregator provider once...
-
-        $data = (new $aggregator)->call($uri, $body, $output);
-
-        $answer = $qnHelper->ask($input, $output, new Question("{$data}\n"));
-
-        while(true) {
-            $answers .= "*" . $answer;
-
-            $body['new_session'] = false;
-            $body['input'] = $answer;
-            $body['answers'] = $answers;
-
-            $data = (new $aggregator)->call($uri, $body, $output);
-
-            $answer = $qnHelper->ask($input, $output, new Question("\n{$data}\n"));
-        }
-
-        return Command::SUCCESS;
     }
 
     protected function clean(?string $code): ?string
@@ -135,96 +147,6 @@ class Simulator extends Command
         }
 
         return trim(trim($code, '*'), '#');
-    }
-}
-
-class Generic implements Aggregator
-{
-    public function call(string $uri, array $data, OutputInterface $output): ?string
-    {
-        $params = [
-            'new_session' => $data['new_session'] === true ? 'yes' : 'no',
-            'session_id' => $data['session_id'],
-            'network_code' => $data['network_code'],
-            'phone_number' => $data['phone_number'],
-            'input' => $data['input'],
-            'service_code' => $data['service_code'],
-        ];
-
-        try {
-            $response = (new Client)->request('POST', $uri, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-                'json' => $params
-            ]);
-
-            $body = json_decode((string) $response->getBody());
-
-            if($body->flow == 'break') {
-                $output->writeln("\n<options=bold>{$body->data}</>");
-                exit(Command::SUCCESS);
-            }
-
-            return $body->data;
-        } catch (RequestException $ex) {
-            $response = $ex->getResponse();
-            $body = json_decode((string) $response->getBody());
-
-            $msg = $body->message ?? $response->getReasonPhrase();
-            $output->writeln("\n<error>{$response->getStatusCode()} . {$msg}</error>");
-
-            exit(Command::FAILURE);
-        } catch (TransferException $ex) {
-            $output->writeln("\n<error>{$ex->getCode()} . {$ex->getMessage()}</error>");
-
-            exit(Command::FAILURE);
-        }
-    }
-}
-
-class Africastalking implements Aggregator
-{
-    public function call(string $uri, array $data, OutputInterface $output): ?string
-    {
-        $params = [
-            'sessionId' => $data['session_id'],
-            'networkCode' => $data['network_code'],
-            'phoneNumber' => $data['phone_number'],
-            'text' => $data['answers'],
-            'serviceCode' => $data['service_code'],
-        ];
-
-        try {
-            $response = (new Client)->request('POST', $uri, [
-                'form_params' => $params
-            ]);
-
-            $body = (string) $response->getBody();
-
-            $cmd = substr($body, 0, 3);
-            $data = substr($body, 4);
-
-            if($cmd == 'END') {
-                $output->writeln("\n<options=bold>{$data}</>");
-                exit(Command::SUCCESS);
-            }
-
-            return $data;
-        } catch (RequestException $ex) {
-            $response = $ex->getResponse();
-            $body = (string) $response->getBody();
-
-            // $msg = substr($body, 4) ?? $response->getReasonPhrase();
-            $msg = $body ?? $response->getReasonPhrase();
-            $output->writeln("\n<error>{$response->getStatusCode()} . {$msg}</error>");
-
-            exit(Command::FAILURE);
-        } catch (TransferException $ex) {
-            $output->writeln("\n<error>{$ex->getCode()} . {$ex->getMessage()}</error>");
-
-            exit(Command::FAILURE);
-        }
     }
 }
 
