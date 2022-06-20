@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'menus-path' => env('USSD_MENUS_PATH', 'menus'),
+    'menu-path' => env('USSD_MENU_PATH', 'menus'),
 
     'cache' => [
         'driver' => env('USSD_CACHE_DRIVER', 'file'),
