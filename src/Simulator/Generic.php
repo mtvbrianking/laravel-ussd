@@ -9,16 +9,9 @@ use GuzzleHttp\Exception\TransferException;
 
 class Generic implements Aggregator
 {
-    public function call(string $uri, array $simulator): ?string
+    public function call(string $uri, array $params): ?string
     {
-        $params = [
-            'new_session' => true === $simulator['new_session'] ? 'yes' : 'no',
-            'session_id' => $simulator['session_id'],
-            'network_code' => $simulator['network_code'],
-            'phone_number' => $simulator['phone_number'],
-            'input' => $simulator['input'],
-            'service_code' => $simulator['service_code'],
-        ];
+        $params['new_session'] = true === $params['new_session'] ? 'yes' : 'no';
 
         try {
             $response = (new Client())->request('POST', $uri, [
