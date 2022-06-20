@@ -48,7 +48,6 @@ class Store
 
     public function put(string $key, $value): void
     {
-        // dd(['key' => "{$this->prefix}{$key}", 'value' => $value]);
         $this->cache->put("{$this->prefix}{$key}", $value, $this->ttl);
     }
 

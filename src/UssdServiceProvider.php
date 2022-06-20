@@ -13,11 +13,11 @@ class UssdServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/ussd.php' => base_path('config/ussd.php'),
+                __DIR__.'/../config/ussd.php' => config_path('ussd.php'),
             ], 'config');
 
             $this->publishes([
-                __DIR__.'/../menus/menu.xsd' => menus_path('menu.xsd'),
+                __DIR__.'/../menus/menu.xsd' => menu_path('menu.xsd'),
             ], 'schema');
 
             $this->publishes([

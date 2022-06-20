@@ -22,7 +22,7 @@ trait Utilities
     protected function fileToXpath(string $menuFile): \DOMXPath
     {
         if (! file_exists($menuFile)) {
-            $menuFile = menus_path($menuFile);
+            $menuFile = menu_path($menuFile);
         }
 
         $doc = new \DOMDocument();

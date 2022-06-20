@@ -6,7 +6,6 @@ use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Contracts\ListProvider;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -73,7 +72,6 @@ class ListTag extends BaseTag implements AnswerableTag
 
         foreach ($providerNs as $ns) {
             $fqcn = "{$ns}\\{$providerName}";
-            Log::debug("{$providerName} --> {$fqcn}");
             if (class_exists($fqcn)) {
                 return $fqcn;
             }
