@@ -7,7 +7,7 @@ use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Support\Str;
 
-trait ParserUtils
+trait Utilities
 {
     public function __get(string $key)
     {
@@ -19,11 +19,15 @@ trait ParserUtils
         $this->{$key} = $value;
     }
 
-    protected function xpathFromStr(string $file): \DOMXPath
+    protected function fileToXpath(string $menuFile): \DOMXPath
     {
+        if (! file_exists($menuFile)) {
+            $menuFile = menus_path($menuFile);
+        }
+
         $doc = new \DOMDocument();
 
-        $doc->load($file);
+        $doc->load($menuFile);
 
         return new \DOMXPath($doc);
     }

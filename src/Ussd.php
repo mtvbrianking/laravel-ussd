@@ -3,13 +3,13 @@
 namespace Bmatovu\Ussd;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
-use Bmatovu\Ussd\Traits\ParserUtils;
+use Bmatovu\Ussd\Traits\Utilities;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
-class Parser
+class Ussd
 {
-    use ParserUtils;
+    use Utilities;
 
     protected \DOMXPath $xpath;
     protected string $sessionId;
@@ -17,11 +17,11 @@ class Parser
     protected bool $newSession = false;
 
     /**
-     * @param \DOMXPath|string $xpath
+     * @param \DOMXPath|string $menu
      */
-    public function __construct($xpath, string $sessionId)
+    public function __construct($menu, string $sessionId)
     {
-        $this->xpath = $xpath instanceof \DOMXPath ? $xpath : $this->xpathFromStr($xpath);
+        $this->xpath = $menu instanceof \DOMXPath ? $menu : $this->fileToXpath($menu);
 
         $config = Container::getInstance()->make(ConfigRepository::class);
         $store = $config->get('ussd.cache.store', 'file');
@@ -58,7 +58,7 @@ class Parser
         return $this;
     }
 
-    public function parse(?string $userInput = ''): string
+    public function handle(?string $userInput = ''): string
     {
         $answer = $this->getAnswer($userInput);
 

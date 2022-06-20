@@ -2,9 +2,9 @@
 
 namespace Bmatovu\Ussd\Tests;
 
-use Bmatovu\Ussd\Parser;
+use Bmatovu\Ussd\Ussd;
 
-class ParserTest extends TestCase
+class UssdTest extends TestCase
 {
     public function testMissingTag()
     {
@@ -14,9 +14,9 @@ class ParserTest extends TestCase
 
         $xpath = $this->xmlToXpath('<dummy/>');
 
-        $parser = (new Parser($xpath, 'ussd_wScXk'))->entry('/*[1]');
+        $ussd = (new Ussd($xpath, 'ussd_wScXk'))->entry('/*[1]');
 
-        $parser->parse();
+        $ussd->handle();
     }
 
     public function testExceptionExit()
@@ -27,9 +27,9 @@ class ParserTest extends TestCase
 
         $xpath = $this->xmlToXpath('<response text="Bye bye."/>');
 
-        $parser = (new Parser($xpath, 'ussd_wScXk'))->entry('/*[1]');
+        $ussd = (new Ussd($xpath, 'ussd_wScXk'))->entry('/*[1]');
 
-        $parser->parse();
+        $ussd->handle();
     }
 
     public function testProceedQuietly()
@@ -43,14 +43,14 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = new Parser($xpath, 'ussd_wScXk');
+        $ussd = new Ussd($xpath, 'ussd_wScXk');
 
-        $parser->store = $this->store; // ->set('name', 'John Doe');
+        $ussd->store = $this->store; // ->set('name', 'John Doe');
 
-        $output = $parser->parse();
+        $output = $ussd->handle();
 
         static::assertSame('Enter username: ', $output);
-        static::assertSame('John Doe', $parser->store->get('name'));
+        static::assertSame('John Doe', $ussd->store->get('name'));
     }
 
     public function testReuseSession()
@@ -67,9 +67,9 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = new Parser($xpath, 'ussd_wScXk');
+        $ussd = new Ussd($xpath, 'ussd_wScXk');
 
-        $output = $parser->parse();
+        $output = $ussd->handle();
 
         static::assertSame('Enter username: ', $output);
         static::assertSame('ussd_wScXk', $this->store->get('_session_id'));
@@ -95,9 +95,9 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = new Parser($xpath, 'ussd_wScXk');
+        $ussd = new Ussd($xpath, 'ussd_wScXk');
 
-        $output = $parser->parse();
+        $output = $ussd->handle();
 
         static::assertSame('Say hi: ', $output);
     }
@@ -114,9 +114,9 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = (new Parser($xpath, 'ussd_wScXk'));
+        $ussd = (new Ussd($xpath, 'ussd_wScXk'));
 
-        $output = $parser->parse('Mr*John');
+        $output = $ussd->handle('Mr*John');
 
         static::assertSame('Enter last name: ', $output);
     }
@@ -138,14 +138,14 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $parser = (new Parser($xpath, 'ussd_wScXk'));
+        $ussd = (new Ussd($xpath, 'ussd_wScXk'));
 
-        $parser->store->put('title', 'Mr.');
-        $parser->store->put('_answer', 'Mr.');
+        $ussd->store->put('title', 'Mr.');
+        $ussd->store->put('_answer', 'Mr.');
 
-        $parser->parse('John*Doe');
+        $ussd->handle('John*Doe');
 
-        static::assertSame('Mr.*John*Doe', $parser->store->get('_answer'));
+        static::assertSame('Mr.*John*Doe', $ussd->store->get('_answer'));
     }
 
     public function testPathFromFile()
@@ -160,9 +160,9 @@ XML;
 
         file_put_contents($menuFile, $xml);
 
-        $parser = (new Parser($menuFile, 'ussd_wScXk'));
+        $ussd = (new Ussd($menuFile, 'ussd_wScXk'));
 
-        $output = $parser->parse('');
+        $output = $ussd->handle('');
 
         static::assertSame('Enter username: ', $output);
 
@@ -177,13 +177,13 @@ XML;
 
         $rand = rand(100, 1000);
 
-        $parser = (new Parser($xpath, 'ussd_wScXk'))
+        $ussd = (new Ussd($xpath, 'ussd_wScXk'))
             ->entry('/*[1]')
             ->save(['rand' => $rand])
         ;
 
-        $parser->parse();
+        $ussd->handle();
 
-        static::assertSame($rand, $parser->store->get('rand'));
+        static::assertSame($rand, $ussd->store->get('rand'));
     }
 }

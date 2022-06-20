@@ -28,6 +28,7 @@
     - [Cache](#cache)
     - [Parser](#parser)
     - [Simulator](#simulator)
+    - [JSON](#json)
 - [Testing](#testing)
 - [Security](#security)
 - [Contribution](#contribution)
@@ -120,10 +121,9 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 ```
 
 ```php
-use Bmatovu\Ussd\Parser;
+use Bmatovu\Ussd\Ussd;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @see https://developers.africastalking.com/docs/ussd/overview
@@ -133,11 +133,9 @@ class UssdController extends Controller
     public function __invoke(Request $request): Response
     {
         try {
-            $menu = menus_path('menu.xml');
+            $ussd = new Ussd('menu.xml', $request->session_id);
 
-            $parser = new Parser($menu, $request->session_id);
-
-            $output = $parser->parse($request->text);
+            $output = $ussd->handle($request->text);
         } catch(\Exception $ex) {
             return response('END ' . $ex->getMessage());
         }
@@ -166,7 +164,7 @@ php artisan ussd:validate
 
 The package comes with a CLI USSD simulator supporting a handful of populator aggregators.
 
-Public the simulator config file to get started. Update the aggregator and the USSD service endpoint in the config file.
+Publish the simulator config file to get started. Update the aggregator and the USSD service endpoint in the config file.
 
 ```bash
 php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="simulator"
@@ -175,7 +173,7 @@ Usage:
 
 ```bash
 ./vendor/bin/ussd --help
-./vendor/bin/ussd 0790123123
+./vendor/bin/ussd 256772100103
 ```
 
 __If you're an aggregator missing from the current list reachout to have you added. Or simply send a pull request__
@@ -377,12 +375,12 @@ Provider is the class providing the list of items. Each item must container an `
 ```php
 $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
 
-// [
-//     [
-//         'id' => 4364852, // account_id 
-//         'label' => '01085475262', // account_number
-//     ],
-// ]
+[
+    [
+        'id' => 4364852, // account_id 
+        'label' => '01085475262', // account_number
+    ],
+];
 ```
 
 ```xml
@@ -426,7 +424,7 @@ $this->store->put('color', 'pink');
 Example for saving any variable from the incoming USSD request.
 
 ```php
-(new Parser($xpath, $request->session_id))
+(new Ussd($menu, $request->session_id))
     // ->save($request->all())
     ->save([
         'phone_number' => $request->phone_number,
@@ -441,7 +439,7 @@ By default the parsing starts at the 1st element in you menu file, i.e `/menu/*[
 If you wish to start from a different point or using a custom menu file structure. Here's how to go about it...
 
 ```php
-(new Parser($xpath, $request->session_id))
+(new Ussd($menu, $request->session_id))
     ->entry("/menus/menu[@name='sacco']/*[1]");
 ```
 
@@ -457,16 +455,46 @@ The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
 
 ```diff
   {
-+   "aggregator": "generic",
-    "aggregators": {
-+      "generic": {
-+        "provider": "App\\Ussd\\Simulator\\Hubtel",
-+        "uri": "http://localhost:8000/api/ussd/hubtel",
-+        "service_code": "*123#"
-+      }
-    }
++     "aggregator": "hubtel",
+      "aggregators": {
++         "hubtel": {
++             "provider": "App\\Ussd\\Simulator\\Hubtel",
++             "uri": "http://localhost:8000/api/ussd/hubtel",
++             "service_code": "*123#"
++         }
+      }
   }
 ```
+
+### JSON
+
+Why use XML 🥴 and not JSON ☺️?
+
+Compare the snippets below...
+
+```xml
+<menu name="demo">
+    <question name="guest" text="Enter Name: "/>
+    <response text="Hello {{guest}}."/>
+</menu>
+```
+
+```json
+{
+    "@name": "demo",
+    "question": {
+        "@name": "guest",
+        "@text": "Enter Name:"
+    },
+    "response": {
+        "@text": "Hello {{guest}}."
+    }
+}
+```
+
+XML is more suited for writing programming language like constructs. 
+It's very easy to validate XML schemas.
+XML is also more compact and readable 🥰.
 
 ## Testing
 
