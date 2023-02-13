@@ -30,8 +30,8 @@ jobs:
             php: 7.4
           # - laravel: ^8.0
           #   php: 8.1
-          - laravel: ^7.0
-            php: 8.1
+          # - laravel: ^7.0
+          #   php: 8.1
           - laravel: ^6.0
             php: 8.1
     name: Tests P${{ matrix.php }} - L${{ matrix.laravel }} - T${{ matrix.testbench }}
