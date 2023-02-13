@@ -17,22 +17,23 @@
     {
       "name": "Brian Matovu",
       "email": "mtvbrianking@gmail.com",
-      "homepage": "http://bmatovu.com",
+      "homepage": "https://bmatovu.com",
       "role": "Developer"
     }
   ],
   "require": {
     "php": "^7.4|^8.0",
-    "illuminate/container": "^6.0|^7.0|^8.0|^9.0",
-    "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0",
-    "illuminate/support": "^6.0|^7.0|^8.0|^9.0"
+    "illuminate/container": "^6.0|^7.0|^8.0|^9.0|^10.0",
+    "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0",
+    "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0"
   },
   "require-dev": {
     "code-lts/doctum": "^5.5",
-    "friendsofphp/php-cs-fixer": "^3.0",
+    "friendsofphp/php-cs-fixer": "^3.14",
     "guzzlehttp/guzzle": "^6.3|^7.0",
-    "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0",
-    "phpunit/phpunit": "^8.0|^9.0",
+    "laravel/framework": "^10.0",
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^8.0|^9.0|^10.0",
     "symfony/console": "^4.3.4|^5.0|^6.0"
   },
   "bin": [
@@ -64,6 +65,9 @@
     "sort-packages": true
   },
   "extra": {
+    "branch-alias": {
+      "dev-master": "2.x-dev"
+    },
     "laravel": {
       "providers": [
         "Bmatovu\\Ussd\\UssdServiceProvider"
