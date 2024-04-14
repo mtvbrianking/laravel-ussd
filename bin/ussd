@@ -3,18 +3,18 @@
 
 declare(strict_types=1);
 
-$dir = __DIR__.'/../vendor';
+$dir = __DIR__ . '/../vendor';
 
-if (! file_exists($dir.'/autoload.php')) {
-    $dir = __DIR__.'/../../..';
+if (!file_exists($dir . '/autoload.php')) {
+    $dir = __DIR__ . '/../../..';
 }
 
-if (! file_exists($dir.'/autoload.php')) {
+if (!file_exists($dir . '/autoload.php')) {
     echo 'Autoload not found.';
     exit(1);
 }
 
-require $dir.'/autoload.php';
+require $dir . '/autoload.php';
 
 use Illuminate\Support\Arr;
 use Symfony\Component\Console\Application;
@@ -67,7 +67,7 @@ class Simulator extends Command
 
             $answer = $qnHelper->ask($input, $output, new Question("{$data}\n"));
 
-            while(true) {
+            while (true) {
                 $params['new_session'] = false;
                 $params['input'] = $answer;
                 $params['answers'] .= "*{$answer}";
@@ -76,7 +76,7 @@ class Simulator extends Command
 
                 $answer = $qnHelper->ask($input, $output, new Question("\n{$data}\n"));
             }
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $output->writeln(PHP_EOL . $ex->getMessage());
         }
 
@@ -89,7 +89,7 @@ class Simulator extends Command
 
         $configFile = $input->getOption('config');
 
-        if(! (is_file($configFile) && is_readable($configFile))) {
+        if (!(is_file($configFile) && is_readable($configFile))) {
             $output->writeln("<error>Can't read config file '{$configFile}'</error>");
             exit(Command::FAILURE);
         }
@@ -100,14 +100,14 @@ class Simulator extends Command
 
         $config = json_decode($configJson, true);
 
-        if($config === null) {
+        if ($config === null) {
             $output->writeln(sprintf("<error>%s --> JSON . %s</error>", $configFile, json_last_error_msg()));
             exit(Command::FAILURE);
         }
 
         $aggregator = $input->getOption('aggregator') ?? Arr::get($config, 'aggregator');
 
-        if(! $aggregator) {
+        if (!$aggregator) {
             $aggregators = array_keys($config['aggregators']);
             $choiceQn = new ChoiceQuestion('Choose aggregator: ', $aggregators);
             $choiceQn->setErrorMessage('Aggregator %s is invalid.');
@@ -142,7 +142,7 @@ class Simulator extends Command
 
     protected function clean(?string $code): ?string
     {
-        if(! $code) {
+        if (!$code) {
             return $code;
         }
 
