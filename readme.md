@@ -241,7 +241,7 @@ if($choice === 1) {
 
 **Disable backward navigation**
 
-By default `0) Back` option will be added to the options rendered. Use the attribute `noback` to this able this behavior.
+By default `0) Back` option will be added to the options rendered. Use the attribute `noback` to disable this behavior.
 
 This behavior may only be used for nested `<options>` tags.
 
