@@ -72,17 +72,17 @@ class Comviva implements Aggregator
         } else {
             $rootEl = $domDoc->createElement($root['name']);
             foreach ($root['attributes'] ?? [] as $key => $value) {
-                $rootEl->setAttribute($key, $value);
+                $rootEl->setAttribute($key, (string) $value);
             }
         }
 
         foreach ($elements as $key => $value) {
             if (!is_array($value)) {
-                $elem = $domDoc->createElement($key, $value);
+                $elem = $domDoc->createElement($key, (string) $value);
             } else {
                 $elem = $domDoc->createElement($key);
                 foreach ($value as $key => $value) {
-                    $subElem = $domDoc->createElement($key, $value);
+                    $subElem = $domDoc->createElement($key, (string) $value);
                     $elem->appendChild($subElem);
                 }
             }
