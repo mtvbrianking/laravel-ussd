@@ -40,7 +40,10 @@ class Ussd
         $this->store->put('_breakpoints', '[]');
     }
 
-    public static function make(\DOMXPath|string $menu, string $sessionId): self
+    /**
+     * @param \DOMXPath|string $menu
+     */
+    public static function make($menu, string $sessionId): self
     {
         return new static($menu, $sessionId);
     }
