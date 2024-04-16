@@ -14,9 +14,7 @@ class UssdTest extends TestCase
 
         $xpath = $this->xmlToXpath('<dummy/>');
 
-        $ussd = (new Ussd($xpath, 'ussd_wScXk'))->entry('/*[1]');
-
-        $ussd->handle();
+        Ussd::new($xpath, 'ussd_wScXk')->entry('/*[1]')->handle();
     }
 
     public function testExceptionExit()
@@ -27,9 +25,7 @@ class UssdTest extends TestCase
 
         $xpath = $this->xmlToXpath('<response text="Bye bye."/>');
 
-        $ussd = (new Ussd($xpath, 'ussd_wScXk'))->entry('/*[1]');
-
-        $ussd->handle();
+        Ussd::make($xpath, 'ussd_wScXk')->entry('/*[1]')->handle();
     }
 
     public function testProceedQuietly()
@@ -43,7 +39,7 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $ussd = new Ussd($xpath, 'ussd_wScXk');
+        $ussd = Ussd::make($xpath, 'ussd_wScXk');
 
         $ussd->store = $this->store; // ->set('name', 'John Doe');
 
@@ -67,9 +63,7 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $ussd = new Ussd($xpath, 'ussd_wScXk');
-
-        $output = $ussd->handle();
+        $output = Ussd::make($xpath, 'ussd_wScXk')->handle();
 
         static::assertSame('Enter username: ', $output);
         static::assertSame('ussd_wScXk', $this->store->get('_session_id'));
@@ -95,9 +89,7 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $ussd = new Ussd($xpath, 'ussd_wScXk');
-
-        $output = $ussd->handle();
+        $output = Ussd::make($xpath, 'ussd_wScXk')->handle();
 
         static::assertSame('Say hi: ', $output);
     }
@@ -114,9 +106,7 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $ussd = (new Ussd($xpath, 'ussd_wScXk'));
-
-        $output = $ussd->handle('Mr*John');
+        $output = Ussd::make($xpath, 'ussd_wScXk')->handle('Mr*John');
 
         static::assertSame('Enter last name: ', $output);
     }
@@ -138,7 +128,7 @@ XML;
 
         $xpath = $this->xmlToXpath($xml);
 
-        $ussd = (new Ussd($xpath, 'ussd_wScXk'));
+        $ussd = Ussd::make($xpath, 'ussd_wScXk');
 
         $ussd->store->put('title', 'Mr.');
         $ussd->store->put('_answer', 'Mr.');
@@ -160,9 +150,7 @@ XML;
 
         file_put_contents($menuFile, $xml);
 
-        $ussd = (new Ussd($menuFile, 'ussd_wScXk'));
-
-        $output = $ussd->handle('');
+        $output = Ussd::make($menuFile, 'ussd_wScXk')->handle('');
 
         static::assertSame('Enter username: ', $output);
 
@@ -179,8 +167,7 @@ XML;
 
         $ussd = (new Ussd($xpath, 'ussd_wScXk'))
             ->entry('/*[1]')
-            ->save(['rand' => $rand])
-        ;
+            ->save(['rand' => $rand]);
 
         $ussd->handle();
 

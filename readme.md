@@ -37,13 +37,9 @@
 
 ## Overview
 
-Build USSD menus with ease. 
+Effortlessly construct intricate USSD menus with streamlined efficiency by replacing convoluted nests of PHP files with the simplicity of XML-based menu construction. This approach allows for seamless execution similar to standard PHP scripts, minimizing code complexity and  enhancing readability.
 
-Instead of having tonnes of nested, complex PHP files, this package give you the ability to construct your menus in XML and execute them as though they were plain PHP files.
-
-This approach greatly shrinks the code footprint as well as increase readability. 
-
-Let's see an example for a simple would be SACCO USSD application.
+Let's explore an example of a simple SACCO USSD application.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -120,6 +116,8 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 </menu>
 ```
 
+> app/Http/Controller/Api/UssdController
+
 ```php
 use Bmatovu\Ussd\Ussd;
 use Illuminate\Http\Request;
@@ -133,9 +131,8 @@ class UssdController extends Controller
     public function __invoke(Request $request): Response
     {
         try {
-            $ussd = new Ussd('menu.xml', $request->session_id);
-
-            $output = $ussd->handle($request->text);
+            $output = Ussd::make($menu, $request->session_id)
+                ->handle($request->text);
         } catch(\Exception $ex) {
             return response('END ' . $ex->getMessage());
         }
@@ -144,6 +141,8 @@ class UssdController extends Controller
     }
 }
 ```
+
+See more examples in the [demo repo](https://github.com/mtvbrianking/ussd-demo/tree/master/app/Http/Controllers/Api)
 
 ### Validation
 
@@ -176,7 +175,11 @@ Usage:
 ./vendor/bin/ussd 256772100103
 ```
 
-__If you're an aggregator missing from the current list reachout to have you added. Or simply send a pull request__
+**Aggregators**
+- Africastalking
+- Comviva (Airtel & MTN)
+
+_If you're an aggregator missing from the current list reachout to have you added. Or simply send a pull request_
 
 ## Constructs
 
@@ -219,21 +222,21 @@ exit('Thank you for banking with us.');
 Options are like named grouped `if, else-if` statements that allow a user to navigate to a predefined path.
 
 ```php
-$choice = readline('Choose gender [1. Male, 2. Female]: ');
+$choice = readline('Choose service [1. Deposit, 2. Withdraw]: ');
 
 if($choice === 1) {
-    // do male stuff
+    // deposit...
 } elseif($choice === 2) {
-    // Do female stuff
+    // withdraw...
 }
 ```
 
 ```xml
-<options header="Choose gender">
-    <option text="Male">
+<options header="Choose service">
+    <option text="Deposit">
         <!-- ... -->
     </option>
-    <option text="Female">
+    <option text="Withdraw">
         <!-- ... -->
     </option>
 </options>
@@ -246,7 +249,7 @@ By default `0) Back` option will be added to the options rendered. Use the attri
 This behavior may only be used for nested `<options>` tags.
 
 ```xml
-<options header="Choose gender" noback="no">
+<options header="Choose service" noback="no">
     <!-- ... -->
 </options>
 ```
@@ -256,13 +259,13 @@ This behavior may only be used for nested `<options>` tags.
 Can container any other tags inclusive of the IF tag itself.
 
 ```php
-if($gender == 'male') {
+if($role == 'treasurer') {
     // ...
 }
 ```
 
 ```xml
-<if key="gender" value="male">
+<if key="role" value="treasurer">
     <!-- ... -->
 </if>
 ```
@@ -274,7 +277,7 @@ This construct should cover for `if-else`, `if-elseif-else`, and the native `swi
 **Example #1**
 
 ```php
-if($gender == 'male') {
+if($role == 'treasurer') {
     // ...
 } else {
     // ...
@@ -283,7 +286,7 @@ if($gender == 'male') {
 
 ```xml
 <choose>
-    <when key="gender" value="male">
+    <when key="role" value="treasurer">
         <!-- ... -->
     </when>
     <otherwise>
@@ -295,9 +298,9 @@ if($gender == 'male') {
 **Example #2**
 
 ```php
-if($gender == 'male') {
+if($role == 'treasurer') {
     // ...
-} elseif($gender == 'female') {
+} elseif($role == 'member') {
     // ...
 } else {
 
@@ -306,10 +309,10 @@ if($gender == 'male') {
 
 ```xml
 <choose>
-    <when key="gender" value="male">
+    <when key="role" value="treasurer">
         <!-- ... -->
     </when>
-    <when key="gender" value="female">
+    <when key="role" value="member">
         <!-- ... -->
     </when>
     <otherwise>
@@ -321,11 +324,11 @@ if($gender == 'male') {
 **Example #3**
 
 ```php
-switch ($gender) {
-    case "male":
+switch ($role) {
+    case "treasurer":
         // ...
         break;
-    case "female":
+    case "member":
         // ...
         break;
     default:
@@ -335,10 +338,10 @@ switch ($gender) {
 
 ```xml
 <choose>
-    <when key="gender" value="male">
+    <when key="role" value="treasurer">
         <!-- ... -->
     </when>
-    <when key="gender" value="female">
+    <when key="role" value="memeber">
         <!-- ... -->
     </when>
     <otherwise>
@@ -358,8 +361,10 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```xml
 <!-- Actions can access all variable in cache -->
 <action name="get-user-info"/>
+
 <!-- Pass by value -->
 <action name="get-user-info" msisdn="256732000000"/>
+
 <!-- Pass by reference -->
 <action name="get-user-info" msisdn="{{msisdn}}"/>
 ```
@@ -368,9 +373,9 @@ Note: Actions behave just like the normal tag i.e they can take input from a use
 
 ### List
 
-List are showing dynamic items. E.g: user accounts fetched on demand.
+Lists are used to display dynamic items. E.g: user accounts fetched on demand.
 
-Provider is the class providing the list of items. Each item must container an `id` and a `label`.
+Provider is the class providing the list of items. Each item must contain an `id` and a `label`.
 
 ```php
 $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
@@ -395,9 +400,11 @@ This package persists USSD session data in cache. Each key is prefixed with the 
 
 **Accessing variables**
 
-```php
+```xml
 <variable name="color" value="blue"/>
+```
 
+```php
 $this->store->get('color'); // blue
 
 Cache::store($driver)->get("{$sessionId}color"); // blue
@@ -411,12 +418,6 @@ Cache::store($driver)->get("{$sessionId}color"); // blue
 <response text="{{msg}}"/> <!-- Bye bye -->
 ```
 
-**Manual injection**
-
-```php
-$this->store->put('color', 'pink');
-```
-
 ### Parser
 
 **Save default variables**
@@ -424,23 +425,23 @@ $this->store->put('color', 'pink');
 Example for saving any variable from the incoming USSD request.
 
 ```php
-(new Ussd($menu, $request->session_id))
-    // ->save($request->all())
+Ussd::make($menu, $request->session_id)
     ->save([
         'phone_number' => $request->phone_number,
-        'network_code' => $request->network_code,
-    ]);
+    ])
+    ->handle(...);
 ```
 
 **Use custom menu entry point**
 
-By default the parsing starts at the 1st element in you menu file, i.e `/menu/*[1]`.
+By default the parsing starts at the 1st element in your menu file, i.e `/menu/*[1]`.
 
-If you wish to start from a different point or using a custom menu file structure. Here's how to go about it...
+If you wish to start from a different point or use a custom menu file structure. Here's how to go about it...
 
 ```php
-(new Ussd($menu, $request->session_id))
-    ->entry("/menus/menu[@name='sacco']/*[1]");
+Ussd::make($menu, $request->session_id)
+    ->entry("/menus/menu[@name='sacco']/*[1]")
+    ->handle(...);
 ```
 
 See: [xpath playground](http://xpather.com)
@@ -455,11 +456,11 @@ The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
 
 ```diff
   {
-+     "aggregator": "hubtel",
++     "aggregator": "africastalking",
       "aggregators": {
 +         "hubtel": {
-+             "provider": "App\\Ussd\\Simulator\\Hubtel",
-+             "uri": "http://localhost:8000/api/ussd/hubtel",
++             "provider": "App\\Ussd\\Simulator\\Africastalking",
++             "uri": "http://localhost:8000/api/ussd/africastalking",
 +             "service_code": "*123#"
 +         }
       }
@@ -468,7 +469,9 @@ The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
 
 ### JSON
 
-Why use XML 🥴 and not JSON ☺️?
+Why use XML 🥴 and not JSON 😉?
+
+_XML is better suited for writing constructs resembling programming languages. It offers straightforward validation of schemas. Additionally, XML is both more compact and readable._
 
 Compare the snippets below...
 
@@ -491,10 +494,6 @@ Compare the snippets below...
     }
 }
 ```
-
-XML is more suited for writing programming language like constructs. 
-It's very easy to validate XML schemas.
-XML is also more compact and readable 🥰.
 
 ## Testing
 
