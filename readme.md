@@ -244,7 +244,7 @@ if($choice === 1) {
 
 **Disable backward navigation**
 
-By default `0) Back` option will be added to the options rendered. Use the attribute `noback` to this able this behavior.
+By default `0) Back` option will be added to the options rendered. Use the attribute `noback` to disable this behavior.
 
 This behavior may only be used for nested `<options>` tags.
 
@@ -469,11 +469,11 @@ The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
 
 ### JSON
 
-Why use XML 🥴 and not JSON 😉?
+**Why use XML 🥴 and not JSON 😉?**
 
-_XML is better suited for writing constructs resembling programming languages. It offers straightforward validation of schemas. Additionally, XML is both more compact and readable._
+XML is better suited for writing constructs resembling programming languages. It offers straightforward validation of schemas. Additionally, XML is both more compact and readable.
 
-Compare the snippets below...
+**Compare the snippets below...**
 
 ```xml
 <menu name="demo">
