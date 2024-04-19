@@ -4,6 +4,8 @@ namespace Bmatovu\Ussd\Contracts;
 
 interface RenderableTag
 {
-    // public function render(): ?string;
+    /**
+     * Render tag at the current xpath
+     */
     public function handle(): ?string;
 }

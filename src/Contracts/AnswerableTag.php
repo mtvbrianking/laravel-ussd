@@ -4,6 +4,8 @@ namespace Bmatovu\Ussd\Contracts;
 
 interface AnswerableTag
 {
-    // public function reply(?string $answer): void;
+    /**
+     * Process answer to the tag at the previous xpath
+     */
     public function process(?string $answer): void;
 }
