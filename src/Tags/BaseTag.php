@@ -15,10 +15,16 @@ class BaseTag implements RenderableTag
     protected \DOMNode $node;
     protected Store $store;
 
+    protected string $pre = '';
+    protected string $exp;
+
     public function __construct(\DOMNode $node, Store $store)
     {
         $this->node = $node;
         $this->store = $store;
+
+        $this->pre = $this->store->get('_pre');
+        $this->exp = $this->store->get('_exp', $this->node->getNodePath());
     }
 
     public function handle(): ?string
