@@ -10,25 +10,27 @@
 
 - [Overview](#overview)
 - [Installation](#installation)
-    - [Configurations](#configurations)
+  * [Configurations](#configurations)
 - [Usage](#usage)
-    - [Example](#example)
-    - [Validation](#validation)
-    - [Simulator](#simulator)
+  * [Example](#example)
+  * [Validation](#validation)
+  * [Simulator](#simulator)
 - [Constructs](#constructs)
-    - [Variable](#variable)
-    - [Question](#question)
-    - [Response](#response)
-    - [Options](#options)
-    - [If](#if)
-    - [Choose](#choose)
-    - [Action](#action)
-    - [List](#list)
+  * [Variable](#variable)
+  * [Question](#question)
+  * [Response](#response)
+  * [Options](#options)
+  * [If](#if)
+  * [Choose](#choose)
+  * [Action](#action)
+  * [List](#list)
 - [Advanced](#advanced)
-    - [Cache](#cache)
-    - [Parser](#parser)
-    - [Simulator](#simulator)
-    - [JSON](#json)
+  * [Retries](#retries)
+  * [Comparisons](#comparisons)
+  * [Cache](#cache)
+  * [Parser](#parser)
+  * [Simulation](#simulation)
+  * [JSON](#json)
 - [Testing](#testing)
 - [Security](#security)
 - [Contribution](#contribution)
@@ -411,7 +413,7 @@ $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
 
 ## Advanced
 
-### Validation
+### Retries
 
 It's also possible to set the number of retries and a custom error message.
 
@@ -523,7 +525,7 @@ Ussd::make($menu, $request->session_id)
 
 See: [xpath playground](http://xpather.com)
 
-### Simulator
+### Simulation
 
 You can extend the USSD simulator with your aggregator of choice by simply registering it in the simulator config file.
 
