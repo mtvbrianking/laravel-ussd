@@ -29,7 +29,9 @@ class UtilTest extends TestCase
         static::assertTrue(Util::compare('18', 'eq', '18'));
         static::assertFalse(Util::compare('20', 'eq', '18'));
 
-        static::assertFalse(Util::compare('18', 'unknown', '18'));
+        // Defaults...
+        static::assertTrue(Util::compare('18', '', '18'));
+        static::assertTrue(Util::compare('18', 'unknown', '18'));
 
         static::assertTrue(Util::compare('1', 'ne', '1.1'));
         static::assertFalse(Util::compare('1', 'ne', '1.0'));

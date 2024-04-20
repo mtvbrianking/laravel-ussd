@@ -94,7 +94,7 @@ class Util
                 $max = now()->setTimeFromTimeString($end)->format('His');
                 return ($min <= $key) && ($key <= $max);
             default:
-                return false;
+                return $key == $value;
         }
     }
 }
