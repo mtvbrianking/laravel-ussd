@@ -195,6 +195,7 @@ Usage:
 ```
 
 **Aggregators**
+
 - Africastalking
 - Comviva (Airtel & MTN)
 
@@ -465,13 +466,16 @@ Falls back to `eq` if the `cond` is not set or it's unsupported.
 <if key="age" cond="eq" value="18">
 ```
 
-**Conditions**
-- Numbers: lt, gt, lte, gte, eq, ne, btn
-- Strings: str.equals, str.not_equals, str.starts, str.ends, str.contains
-- Regex: regex.match
-- Arrays: arr.in, arr.not_in
-- Dates: date.equals, date.before, date.after, date.between
-- Time**: time.equals, time.before, time.after, time.between
+| Type | Conditions |
+| :--- | :--------- |
+| Numbers | - lt<br/>- gt<br/>- lte<br/>- gte<br/>- eq<br/>- ne<br/>- btn |
+| Strings | - str.equals<br/>- str.not_equals<br/>- str.starts<br/>- str.ends<br/>- str.contains |
+| Regex | - regex.match |
+| Arrays | - arr.in<br/>- arr.not_in |
+| Dates | - date.equals<br/>- date.before<br/>- date.after<br/>- date.between |
+| Time | - time.equals<br/>- time.before<br/>- time.after<br/>- time.between |
+
+
 
 ### Cache
 
