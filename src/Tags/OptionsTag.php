@@ -9,11 +9,8 @@ class OptionsTag extends BaseTag implements AnswerableTag
 {
     public function handle(): ?string
     {
-        $header = $this->node->attributes->getNamedItem('header')->nodeValue;
-
         $body = '';
 
-        $pre = $this->store->get('_pre');
         $exp = $this->store->get('_exp', $this->node->getNodePath());
 
         $children = Dom::getElements($this->node->childNodes, 'option');
@@ -21,15 +18,19 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $pos = 0;
         foreach ($children as $child) {
             ++$pos;
-            $body .= "\n{$pos}) ".$child->attributes->getNamedItem('text')->nodeValue;
+            $body .= "\n{$pos}) " . $child->attributes->getNamedItem('text')->nodeValue;
         }
 
-        if (! $this->node->attributes->getNamedItem('noback')) {
+        if (!$this->node->attributes->getNamedItem('noback')) {
             $body .= "\n0) Back";
         }
 
         $this->store->put('_pre', $exp);
         $this->store->put('_exp', $this->incExp($exp));
+
+        $header = $this->store->get('fails', 0)
+            ? $this->readAttr('error', 'Invalid choice. Try again:')
+            : $this->readAttr('header');
 
         return "{$header}{$body}";
     }
@@ -43,9 +44,13 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $pre = $this->store->get('_pre');
         $exp = $this->store->get('_exp', $this->node->getNodePath());
 
+        $fails = (int) $this->store->get('fails') + 1;
+
+        $this->store->put('fails', $fails);
+
         if ('0' === $answer) {
             if ($this->node->attributes->getNamedItem('noback')) {
-                throw new \Exception('Invalid choice.');
+                $this->retry($pre, $fails);
             }
 
             $exp = $this->goBack($pre, 2);
@@ -58,10 +63,11 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $children = Dom::getElements($this->node->childNodes, 'option');
 
         if ((int) $answer > \count($children)) {
-            throw new \Exception('Invalid choice.');
+            $this->retry($pre, $fails);
         }
 
         $this->store->put('_exp', "{$pre}/*[{$answer}]");
+        $this->store->put('fails', 0);
     }
 
     protected function goBack(string $exp, int $steps = 1): string
@@ -73,5 +79,26 @@ class OptionsTag extends BaseTag implements AnswerableTag
         }, $exp, 1, $count);
 
         return 1 === $count ? $exp : '';
+    }
+
+    /**
+     * Retry step
+     *
+     * @param string $pre
+     * @param int $fails
+     *
+     * @return void
+     */
+    protected function retry($pre, $fails)
+    {
+        if ($fails > $this->readAttr('retries', 1)) {
+            throw new \Exception('Invalid choice.');
+        }
+
+        // repeat step
+        $this->store->put('_pre', $this->decExp($pre));
+        $this->store->put('_exp', $pre);
+
+        return;
     }
 }

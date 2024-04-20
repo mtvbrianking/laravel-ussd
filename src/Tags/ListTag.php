@@ -13,11 +13,11 @@ class ListTag extends BaseTag implements AnswerableTag
 {
     public function handle(): ?string
     {
-        $header = $this->readAttr('header');
+        // $header = $this->readAttr('header');
 
         $body = '';
 
-        $pre = $this->store->get('_pre');
+        // $pre = $this->store->get('_pre');
         $exp = $this->store->get('_exp', $this->node->getNodePath());
 
         $provider = $this->instantiateListProvider($this->readAttr('provider'), [$this->store]);
@@ -31,35 +31,47 @@ class ListTag extends BaseTag implements AnswerableTag
         $pos = 0;
         foreach ($list as $item) {
             ++$pos;
-            $body .= "\n{$pos}) ".$item['label'];
+            $body .= "\n{$pos}) " . $item['label'];
         }
 
         $this->store->put('_pre', $exp);
         $this->store->put('_exp', $this->incExp($exp));
+
+        $header = $this->store->get('fails', 0)
+            ? $this->readAttr('error', 'Invalid choice. Try again:')
+            : $this->readAttr('header');
 
         return "{$header}{$body}";
     }
 
     public function process(?string $answer): void
     {
-        if ('' === $answer) {
-            throw new \Exception('Make a choice.');
-        }
-
-        $pre = $this->store->get('_pre');
-        $exp = $this->store->get('_exp', $this->node->getNodePath());
-
         $itemPrefix = $this->readAttr('prefix');
         $list = $this->store->pull("{$itemPrefix}_list");
 
         $item = $list[--$answer] ?? null;
 
-        if (! $item) {
-            throw new \Exception('Invalid choice.');
+        if (!$item) {
+            $fails = (int) $this->store->get('fails') + 1;
+
+            $this->store->put('fails', $fails);
+
+            if ($fails > $this->readAttr('retries', 1)) {
+                throw new \Exception('Invalid choice.');
+            }
+
+            $pre = $this->store->get('_pre');
+
+            // repeat step
+            $this->store->put('_pre', $this->decExp($pre));
+            $this->store->put('_exp', $pre);
+
+            return;
         }
 
         $this->store->put("{$itemPrefix}_id", $item['id']);
         $this->store->put("{$itemPrefix}_label", $item['label']);
+        $this->store->put('fails', 0);
     }
 
     protected function resolveProviderClass(string $providerName): string
@@ -88,7 +100,7 @@ class ListTag extends BaseTag implements AnswerableTag
 
         $provider = \call_user_func_array([new \ReflectionClass($fqcn), 'newInstance'], $args);
 
-        if (! $provider instanceof ListProvider) {
+        if (!$provider instanceof ListProvider) {
             throw new \Exception("'{$providerName}' must implement the 'ListProvider' interface.");
         }
 
