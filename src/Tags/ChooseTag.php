@@ -3,6 +3,7 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Support\Dom;
+use Bmatovu\Ussd\Support\Util;
 
 class ChooseTag extends BaseTag
 {
@@ -19,11 +20,12 @@ class ChooseTag extends BaseTag
         foreach ($whenEls as $whenEl) {
             ++$pos;
             $key = $whenEl->attributes->getNamedItem('key')->nodeValue;
+            $cond = $whenEl->attributes->getNamedItem('cond')->nodeValue ?? 'eq';
             $val = $whenEl->attributes->getNamedItem('value')->nodeValue;
 
             $var = $this->store->get($key);
 
-            if ($var !== $val) {
+            if (!Util::compare($var, $cond, $val)) {
                 continue;
             }
 
@@ -43,7 +45,7 @@ class ChooseTag extends BaseTag
 
         $otherwiseEls = Dom::getElements($this->node->childNodes, 'otherwise');
 
-        if (! isset($otherwiseEls[0])) {
+        if (!isset($otherwiseEls[0])) {
             $this->store->put('_exp', $this->incExp($exp));
 
             return '';

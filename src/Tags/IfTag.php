@@ -3,15 +3,22 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Support\Dom;
+use Bmatovu\Ussd\Support\Util;
 
 class IfTag extends BaseTag
 {
     public function handle(): ?string
     {
         $key = $this->readAttr('key');
+        $var = $this->store->get($key);
+        $cond = $this->readAttr('cond', 'eq');
         $value = $this->readAttr('value');
 
-        if ($this->store->get($key) !== $value) {
+        if (!$var) {
+            trigger_error("Undefined variable \${$key}.", E_USER_WARNING);
+        }
+
+        if (!Util::compare($var, $cond, $value)) {
             $exp = $this->store->get('_exp', $this->node->getNodePath());
 
             $this->store->put('_pre', $exp);
