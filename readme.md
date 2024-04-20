@@ -43,7 +43,9 @@ Let's explore an example of a simple SACCO USSD application.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<menu name="sacco">
+<menu name="sacco"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="menu.xsd">
     <action name="check-user"/>
     <options header="SACCO Services" noback="no">
         <option text="Savings">
@@ -146,7 +148,8 @@ See more examples in the [demo repo](https://github.com/mtvbrianking/ussd-demo/t
 
 ### Validation
 
-Publish the menu schema (optional). 
+**Publish the menu schema**
+
 Defaults to using the schema bundled within the package if none is present in your menus path, usually `menus/menu.xsd`.
 
 ```bash
@@ -157,6 +160,20 @@ Validate your menu files against the schema
 
 ```bash
 php artisan ussd:validate
+```
+
+**VSCode**
+
+The [RedHat XML package](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml) is useful for realtime XSD validations and suggestions.
+
+```diff
+- <menu name="demo">
++ <menu name="demo"
++     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++     xsi:noNamespaceSchemaLocation="menu.xsd">
+      <question name="guest" text="Enter Name: "/>
+      <response text="Hello {{guest}}."/>
+  </menu>
 ```
 
 ### Simulator
@@ -256,7 +273,7 @@ This behavior may only be used for nested `<options>` tags.
 
 ### If
 
-Can container any other tags inclusive of the IF tag itself.
+Can contain any other tags inclusive of the IF tag itself.
 
 ```php
 if($role == 'treasurer') {
@@ -393,6 +410,66 @@ $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
 ```
 
 ## Advanced
+
+### Validation
+
+It's also possible to set the number of retries and a custom error message.
+
+**Question**
+
+Using regex patterns.
+
+```diff
+  <question
+      name="pin"
+      text="Enter PIN: "
++     retries="1"
++     pattern="^[0-9]{5}$"
++     error="You entered the wrong PIN. Try again" />
+```
+
+**Options & Lists**
+
+Validation is against the possible list options.
+
+```diff
+  <options
+      header="Choose a test"
++     retries="1"
++     error="Choose the correct number:">
+      ...
+  </option>
+```
+
+```diff
+  <list 
+      header="Saving Accounts" 
+      provider="saving-accounts" 
+      prefix="account" 
++     retries="1"
++     error="Choose the correct number:"/>
+```
+
+Note: retries in <action> tags are discouraged because the action tags are not aware of tags preceeding them.
+
+### Comparisons
+
+The <if> and <when> tags allow comparisions.
+
+Falls back to `eq` if the `cond` is not set or it's unsupported.
+
+```xml
+<if key="age" value="18">
+<if key="age" cond="eq" value="18">
+```
+
+**Conditions**
+- Numbers: lt, gt, lte, gte, eq, ne, btn
+- Strings: str.equals, str.not_equals, str.starts, str.ends, str.contains
+- Regex: regex.match
+- Arrays: arr.in, arr.not_in
+- Dates: date.equals, date.before, date.after, date.between
+- Time**: time.equals, time.before, time.after, time.between
 
 ### Cache
 
