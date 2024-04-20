@@ -35,14 +35,25 @@ class QuestionTagTest extends TestCase
 
     public function testProccessQuestionValidation()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Question requires an answer.');
+        $qn = <<<XML
+<question
+    name="pin"
+    text="Enter PIN: "
+    retries="1"
+    pattern="^[0-9]{5}$"
+    error="You entered the wrong PIN. Try again" />
+XML;
 
-        $node = $this->getNodeByTagName('<question name="alias" text="Enter Username: "/>', 'question');
+        $node = $this->getNodeByTagName($qn, 'question');
 
         $tag = new QuestionTag($node, $this->store);
 
-        $tag->process('');
+        $this->store->put('_pre', $_pre = '/*[1]');
+        $this->store->put('_exp', $_exp = '/*[2]');
+
+        $tag->process('524');
+
+        static::assertSame('/*[0]', $this->store->get('_pre'));
+        static::assertSame('/*[1]', $this->store->get('_exp'));
     }
 }

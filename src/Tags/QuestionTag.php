@@ -3,28 +3,61 @@
 namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
+use Bmatovu\Ussd\Support\Util;
 
 class QuestionTag extends BaseTag implements AnswerableTag
 {
     public function handle(): ?string
     {
-        $pre = $this->store->get('_pre');
-        $exp = $this->store->get('_exp', $this->node->getNodePath());
+        $current = $this->store->get('_exp');
 
-        $this->store->put('_pre', $exp);
-        $this->store->put('_exp', $this->incExp($exp));
+        // shift cursor...
+        $this->store->put('_pre', $current);
+        $this->store->put('_exp', $this->incExp($current));
 
-        return $this->readAttr('text');
+        $fails = $this->store->get('fails', 0);
+
+        return $fails
+            ? $this->readAttr('error', 'Validation failed. Try again:')
+            : $this->readAttr('text');
     }
 
     public function process(?string $answer): void
     {
-        if ('' === $answer) {
-            throw new \Exception('Question requires an answer.');
+        $current = $this->store->get('_pre');
+        $next = $this->store->get('_exp');
+
+        $fails = (int) $this->store->get('fails') + 1;
+
+        $this->store->put('fails', $fails);
+
+        if ($pattern = $this->readAttr('pattern')) {
+            $matched = preg_match(Util::regex($pattern), $answer);
+
+            if ($matched === false) {
+                throw new \Exception('Validation exception');
+            }
+
+            if ($matched === 0) {
+                if ($fails > $this->readAttr('retries', 1)) {
+                    throw new \Exception($this->readAttr('error', 'Validation failed.'));
+                }
+
+                // repeat step
+                $this->store->put('_pre', $this->decExp($current));
+                $this->store->put('_exp', $current);
+
+                return;
+            }
         }
 
-        $name = $this->readAttr('name');
+        $this->store->put($this->readAttr('name'), $answer);
 
-        $this->store->put($name, $answer);
+        // reset cursor...
+        $this->store->put('_pre', $current);
+        $this->store->put('_exp', $next);
+
+        // reset failures counter...
+        $this->store->put('fails', 0);
     }
 }
