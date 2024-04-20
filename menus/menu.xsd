@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified">
+
     <xs:element name="menu" type="menuType" />
     <!-- +++++++++++++++++ Simple Types ++++++++++++++++ -->
     <xs:simpleType name="key-str">
@@ -17,6 +21,12 @@
             <xs:pattern value="(yes|no)" />
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="condition">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="(lt|gt|lte|gte|eq|ne|btn|str.equals|str.not_equals|str.starts|str.ends|str.contains|regex.match|arr.in|arr.not_in|date.equals|date.before|date.after|date.between|time.equals|time.before|time.after|time.between)" />
+        </xs:restriction>
+    </xs:simpleType>
     <!-- +++++++++++++++++ Complex Types ++++++++++++++++ -->
     <xs:complexType name="variableType">
         <xs:simpleContent>
@@ -31,6 +41,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="name" type="key-str" use="required" />
                 <xs:attribute name="text" type="value-str" use="required" />
+                <xs:attribute name="retries" type="xs:int" use="optional" />
+                <xs:attribute name="pattern" type="xs:string" use="optional" />
+                <xs:attribute name="error" type="xs:string" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -55,12 +68,14 @@
                 <xs:attribute name="header" type="value-str" use="optional" />
                 <xs:attribute name="provider" type="key-str" use="required" />
                 <xs:attribute name="prefix" type="key-str" use="required" />
+                <xs:attribute name="retries" type="xs:int" use="optional" />
+                <xs:attribute name="error" type="xs:string" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="optionType">
         <xs:sequence>
-            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="text" type="value-str" use="required" />
     </xs:complexType>
@@ -70,24 +85,28 @@
         </xs:sequence>
         <xs:attribute name="header" type="value-str" use="optional" />
         <xs:attribute name="noback" type="bool-str" use="optional" />
+        <xs:attribute name="retries" type="xs:int" use="optional" />
+        <xs:attribute name="error" type="xs:string" use="optional" />
     </xs:complexType>
     <xs:complexType name="ifType">
         <xs:sequence>
-            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="key" type="key-str" use="required" />
+        <xs:attribute name="cond" type="condition" use="optional" />
         <xs:attribute name="value" type="value-str" use="required" />
     </xs:complexType>
     <xs:complexType name="whenType">
         <xs:sequence>
-            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="key" type="key-str" use="required" />
+        <xs:attribute name="cond" type="condition" use="optional" />
         <xs:attribute name="value" type="value-str" use="required" />
     </xs:complexType>
     <xs:complexType name="otherwiseType">
         <xs:sequence>
-            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="chooseType">
@@ -98,7 +117,7 @@
     </xs:complexType>
     <xs:complexType name="menuType">
         <xs:sequence>
-            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="name" type="key-str" use="optional" />
     </xs:complexType>
