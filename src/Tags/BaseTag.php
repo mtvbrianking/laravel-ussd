@@ -15,7 +15,7 @@ class BaseTag implements RenderableTag
     protected \DOMNode $node;
     protected Store $store;
 
-    protected string $pre = '';
+    protected ?string $pre;
     protected string $exp;
 
     public function __construct(\DOMNode $node, Store $store)
