@@ -59,6 +59,9 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="name" type="key-str" use="required" />
                 <xs:attribute name="text" type="value-str" use="optional" />
+                <xs:attribute name="retries" type="xs:int" use="optional" />
+                <xs:attribute name="error" type="xs:string" use="optional" />
+                <xs:anyAttribute namespace="##any" processContents="lax" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -120,6 +123,7 @@
             <xs:group ref="elementsGroup" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="name" type="key-str" use="optional" />
+        <xs:anyAttribute namespace="##any" processContents="lax" />
     </xs:complexType>
     <!-- +++++++++++++++++ Groups ++++++++++++++++ -->
     <xs:group name="elementsGroup">
