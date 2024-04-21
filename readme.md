@@ -82,7 +82,7 @@ Let's explore an example of a simple SACCO USSD application.
                 </option>
                 <option text="Check Transaction">
                     <question name="transaction_id" text="Enter Transaction ID: "/>
-                    <action name="check-transaction"/>
+                    <action name="check-transaction" text="To check transaction, enter PIN: "/>
                 </option>
             </options>
         </option>
@@ -93,14 +93,17 @@ Let's explore an example of a simple SACCO USSD application.
 </menu>
 ```
 
-## Installation
+## Getting started
+
+**Installation**
 
 Install the package via the Composer.
 
 ```bash
 composer require bmatovu/laravel-ussd
 ```
-### Configurations
+
+**Configurations**
 
 ```bash
 php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="config"
@@ -135,7 +138,7 @@ class UssdController extends Controller
     public function __invoke(Request $request): Response
     {
         try {
-            $output = Ussd::make($menu, $request->session_id)
+            $output = Ussd::make('menu.xml', $request->session_id)
                 ->handle($request->text);
         } catch(\Exception $ex) {
             return response('END ' . $ex->getMessage());
@@ -474,8 +477,6 @@ Falls back to `eq` if the `cond` is not set or it's unsupported.
 | Arrays | - arr.in<br/>- arr.not_in |
 | Dates | - date.equals<br/>- date.before<br/>- date.after<br/>- date.between |
 | Time | - time.equals<br/>- time.before<br/>- time.after<br/>- time.between |
-
-
 
 ### Cache
 

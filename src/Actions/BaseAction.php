@@ -25,13 +25,16 @@ class BaseAction implements RenderableTag
     {
         $this->shiftCursor();
 
-        return '';
+        $fails = $this->store->get('fails', 0);
+
+        return $fails
+            ? $this->readAttr('error', 'Something went wrong. Try again:')
+            : $this->readAttr('text');
     }
 
     protected function shiftCursor(): void
     {
-        $pre = $this->store->get('_pre');
-        $exp = $this->store->get('_exp', $this->node->getNodePath());
+        $exp = $this->store->get('_exp');
 
         $this->store->put('_pre', $exp);
         $this->store->put('_exp', $this->incExp($exp));

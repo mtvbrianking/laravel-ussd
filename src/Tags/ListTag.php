@@ -13,12 +13,7 @@ class ListTag extends BaseTag implements AnswerableTag
 {
     public function handle(): ?string
     {
-        // $header = $this->readAttr('header');
-
-        $body = '';
-
-        // $pre = $this->store->get('_pre');
-        $exp = $this->store->get('_exp', $this->node->getNodePath());
+        $exp = $this->store->get('_exp');
 
         $provider = $this->instantiateListProvider($this->readAttr('provider'), [$this->store]);
         $list = $provider->load();
@@ -29,6 +24,7 @@ class ListTag extends BaseTag implements AnswerableTag
         $this->store->put("{$itemPrefix}_list", $list);
 
         $pos = 0;
+        $body = '';
         foreach ($list as $item) {
             ++$pos;
             $body .= "\n{$pos}) " . $item['label'];
