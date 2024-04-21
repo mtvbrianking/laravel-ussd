@@ -382,7 +382,8 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```
 
 ```xml
-<!-- Actions can access all variable in cache -->
+<!-- Actions can access all variables in cache -->
+<!-- $msisdn = $this->store->get('msisdn'); -->
 <action name="get-user-info"/>
 
 <!-- Pass by value -->
@@ -392,7 +393,16 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 <action name="get-user-info" msisdn="{{msisdn}}"/>
 ```
 
-Note: Actions behave just like the normal tag i.e they can take input from a user or cache, and may or may not return output.
+**Note**: Actions behave just like the normal tag i.e they can take input from a user or cache. If the `text` attribute is set on an action, it will behave like the `<question>` tag waiting for user input
+
+```xml
+<!-- Approach #1 - user input handled by a qn tag -->
+<question name="pin" text="To check balance, enter PIN: "/>
+<action name="validate-pin"/>
+
+<!-- Approach #2 - user input handled by the action -->
+<action name="validate-pin" text="To check balance, enter PIN: "/>
+```
 
 ### List
 
