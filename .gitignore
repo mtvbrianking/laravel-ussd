@@ -1,4 +1,5 @@
 .idea
+*.bak
 *.cache
 composer.lock
 coverage
