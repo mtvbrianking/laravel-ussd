@@ -8,8 +8,8 @@ use Bmatovu\Ussd\Contracts\AnswerableTag;
  * Usage:
  *
  * ```xml
- * <action name="format-money" amount="15600.5075" currency="USD" decimals="2" />
- * <response text="{{_amount}}" /><!-- USD 15,600.50 -->
+ * <action name="format_money" amount="15600.5075" currency="USD" decimals="2" />
+ * <response text="{{fmt_amount}}" /><!-- USD 15,600.51 -->
  * ```
  */
 class FormatMoneyAction extends BaseAction implements AnswerableTag
@@ -29,8 +29,10 @@ class FormatMoneyAction extends BaseAction implements AnswerableTag
             $this->readAttr('thousands_separator', $this->store->get('thousands_separator', ','))
         );
 
-        $currency = $this->readAttr('currency', $this->store->get('currency'));
+        $currency = $this->readAttr('currency', 'USD');
 
-        $this->store->put('_amount', "{$currency} {$money}");
+        $prefix = $this->readAttr('prefix', 'fmt');
+
+        $this->store->put("{$prefix}_amount", "{$currency} {$money}");
     }
 }
