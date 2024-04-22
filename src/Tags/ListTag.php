@@ -47,6 +47,8 @@ class ListTag extends BaseTag implements AnswerableTag
 
         $item = $list[--$answer] ?? null;
 
+        $pre = $this->store->get('_pre');
+
         if (!$item) {
             $fails = (int) $this->store->get('fails') + 1;
 
@@ -55,8 +57,6 @@ class ListTag extends BaseTag implements AnswerableTag
             if ($fails > $this->readAttr('retries', 1)) {
                 throw new \Exception('Invalid choice.');
             }
-
-            $pre = $this->store->get('_pre');
 
             // repeat step
             $this->store->put('_pre', $this->decExp($pre));
@@ -67,6 +67,8 @@ class ListTag extends BaseTag implements AnswerableTag
 
         $this->store->put("{$itemPrefix}_id", $item['id']);
         $this->store->put("{$itemPrefix}_label", $item['label']);
+
+        $this->store->put('_exp', $this->incExp($pre));
         $this->store->put('fails', 0);
     }
 
