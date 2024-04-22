@@ -48,10 +48,10 @@ Let's explore an example of a simple SACCO USSD application.
 <menu name="sacco"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="menu.xsd">
-    <action name="check-user"/>
+    <action name="check_user"/>
     <options header="SACCO Services" noback="no">
         <option text="Savings">
-            <list header="Saving Accounts" provider="saving-accounts" prefix="account"/>
+            <list header="Saving Accounts" provider="saving_accounts" prefix="account"/>
             <options header="Savings">
                 <option text="Deposit">
                     <options header="Deposit From:">
@@ -78,11 +78,11 @@ Let's explore an example of a simple SACCO USSD application.
                     <action name="withdraw"/>
                 </option>
                 <option text="Check Balance">
-                    <action name="check-balance" text="To see your balance, enter PIN: "/>
+                    <action name="check_balance" text="To see your balance, enter PIN: "/>
                 </option>
                 <option text="Check Transaction">
                     <question name="transaction_id" text="Enter Transaction ID: "/>
-                    <action name="check-transaction" text="To check transaction, enter PIN: "/>
+                    <action name="check_transaction" text="To check transaction, enter PIN: "/>
                 </option>
             </options>
         </option>
@@ -384,13 +384,13 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```xml
 <!-- Actions can access all variables in cache -->
 <!-- $msisdn = $this->store->get('msisdn'); -->
-<action name="get-user-info"/>
+<action name="get_user_info"/>
 
 <!-- Pass by value -->
-<action name="get-user-info" msisdn="256732000000"/>
+<action name="get_user_info" msisdn="256732000000"/>
 
 <!-- Pass by reference -->
-<action name="get-user-info" msisdn="{{msisdn}}"/>
+<action name="get_user_info" msisdn="{{msisdn}}"/>
 ```
 
 **Note**: Actions behave just like the normal tag i.e they can take input from a user or cache. If the `text` attribute is set on an action, it will behave like the `<question>` tag waiting for user input
@@ -398,10 +398,10 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```xml
 <!-- Approach #1 - user input handled by a qn tag -->
 <question name="pin" text="To check balance, enter PIN: "/>
-<action name="validate-pin"/>
+<action name="validate_pin"/>
 
 <!-- Approach #2 - user input handled by the action -->
-<action name="validate-pin" text="To check balance, enter PIN: "/>
+<action name="validate_pin" text="To check balance, enter PIN: "/>
 ```
 
 ### List
@@ -422,7 +422,7 @@ $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
 ```
 
 ```xml
-<list header="Saving Accounts" provider="saving-accounts" prefix="account"/>
+<list header="Saving Accounts" provider="saving_accounts" prefix="account"/>
 ```
 
 ## Advanced
@@ -460,7 +460,7 @@ Validation is against the possible list options.
 ```diff
   <list 
       header="Saving Accounts" 
-      provider="saving-accounts" 
+      provider="saving_accounts" 
       prefix="account" 
 +     retries="1"
 +     error="Choose the correct number:"/>
