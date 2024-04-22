@@ -2,6 +2,8 @@
 
 namespace Bmatovu\Ussd\Traits;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait Attributes
@@ -10,7 +12,7 @@ trait Attributes
      * @see https://stackoverflow.com/q/413071/2732184
      * @see https://www.regextester.com/97707
      */
-    public function translate(string $text, string $pattern = '/[^{{\}\}]+(?=}})/'): string
+    public function hydrate(string $text, string $pattern = '/[^{{\}\}]+(?=}})/'): string
     {
         preg_match_all($pattern, $text, $matches);
 
@@ -32,10 +34,10 @@ trait Attributes
     {
         $value = $this->node->attributes->getNamedItem($name)->nodeValue ?? $default;
 
-        if (! $value) {
+        if (!$value) {
             return $value;
         }
 
-        return $this->translate($value);
+        return $this->hydrate(trans($value));
     }
 }
