@@ -466,11 +466,11 @@ Validation is against the possible list options.
 +     error="Choose the correct number:"/>
 ```
 
-Note: retries in <action> tags are discouraged because the action tags are not aware of tags preceeding them.
+**Note**: Retries in `<action>` tags are discouraged because the action tags are not aware of tags preceeding them.
 
 ### Comparisons
 
-The <if> and <when> tags allow comparisions.
+The `<if>` and `<when>` tags allow comparisions.
 
 Falls back to `eq` if the `cond` is not set or it's unsupported.
 

@@ -51,6 +51,8 @@ class OptionsTag extends BaseTag implements AnswerableTag
         if ('0' === $answer) {
             if ($this->node->attributes->getNamedItem('noback')) {
                 $this->retry($pre, $fails);
+
+                return;
             }
 
             $exp = $this->goBack($pre, 2);
@@ -64,6 +66,8 @@ class OptionsTag extends BaseTag implements AnswerableTag
 
         if ((int) $answer > \count($children)) {
             $this->retry($pre, $fails);
+
+            return;
         }
 
         $this->store->put('_exp', "{$pre}/*[{$answer}]");
