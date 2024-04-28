@@ -6,6 +6,7 @@ use Bmatovu\Ussd\Contracts\RenderableTag;
 use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Traits\Attributes;
 use Bmatovu\Ussd\Traits\Expressions;
+use Bmatovu\Ussd\Support\Dom;
 
 class BaseAction implements RenderableTag
 {
@@ -38,5 +39,32 @@ class BaseAction implements RenderableTag
 
         $this->store->put('_pre', $exp);
         $this->store->put('_exp', $this->incExp($exp));
+    }
+
+    protected function getVar(string $name, string $default = '', string $nodeName = 'variable'): string
+    {
+        $children = Dom::getElements($this->node->childNodes, $nodeName);
+
+        foreach ($children as $child) {
+            if ($name == $this->readAttrText('name', '', $child))
+                return $this->readAttrText('value', $default, $child);
+        }
+
+        return $default;
+    }
+
+    protected function getVars(string $nodeName = 'variable'): array
+    {
+        $children = Dom::getElements($this->node->childNodes, $nodeName);
+
+        $variables = [];
+        foreach ($children as $child) {
+            $name = $this->readAttrText('name', '', $child);
+            $value = $this->readAttrText('value', '', $child);
+
+            $variables[$name] = $value;
+        }
+
+        return $variables;
     }
 }
