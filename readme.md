@@ -382,7 +382,7 @@ Action tags give you the ability to perform more customized operations.
 $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```
 
-**Passing arguments**
+**Arguments**
 
 You can pass arguments to actions via attributes or as variables.
 
@@ -441,6 +441,8 @@ Accessing the selected item on the list
 <response text="{{account_id}}"/><!-- 4364852 -->
 <response text="{{account_label}}"/><!-- 01085475262 -->
 ```
+
+**Note**: Similar to actions, you can pass arguments to lists via attributes or as variables.
 
 ## Advanced
 
