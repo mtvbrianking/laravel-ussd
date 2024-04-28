@@ -16,7 +16,7 @@ trait Attributes
         return $node->attributes->getNamedItem($name)->nodeValue ?? $default;
     }
 
-    public function readAttrHydrate(string $name = 'text', $default = '', DOMNode $node = null)
+    public function readAttrText(string $name = 'text', $default = '', DOMNode $node = null)
     {
         $value = $this->readAttr($name, $default, $node);
 
@@ -24,17 +24,6 @@ trait Attributes
             return $value;
         }
 
-        return Util::hydrate($this->store, $value);
-    }
-
-    public function readAttrText(string $name = 'text', $default = '', DOMNode $node = null)
-    {
-        $value = $this->readAttrHydrate($name, $default, $node);
-
-        if (!$value) {
-            return $value;
-        }
-
-        return trans($value);
+        return Util::hydrate($this->store, trans($value));
     }
 }
