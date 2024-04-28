@@ -376,25 +376,33 @@ switch ($role) {
 
 ### Action
 
-The action tag gives you the ability to perform more customized operations.
+Action tags give you the ability to perform more customized operations.
 
 ```php
 $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 ```
 
+**Passing arguments**
+
+You can pass arguments to actions via attributes or as variables.
+
 ```xml
-<!-- Actions can access all variables in cache -->
+<!-- Read from cache -->
 <!-- $msisdn = $this->store->get('msisdn'); -->
 <action name="get_user_info"/>
 
-<!-- Pass by value -->
-<action name="get_user_info" msisdn="256732000000"/>
-
-<!-- Pass by reference -->
+<!-- Pass as attribute -->
 <action name="get_user_info" msisdn="{{msisdn}}"/>
+
+<!-- Pass as variable -->
+<action name="get_user_info">
+    <variable name="msisdn" value="{{msisdn}}"/>
+</action>
 ```
 
-**Note**: Actions behave just like the normal tag i.e they can take input from a user or cache. If the `text` attribute is set on an action, it will behave like the `<question>` tag waiting for user input
+**Getting user input**
+
+If the `text` attribute is set on an action, it will behave like the `<question>` tag waiting for user input
 
 ```xml
 <!-- Approach #1 - user input handled by a qn tag -->
@@ -407,9 +415,9 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 
 ### List
 
-Lists are used to display dynamic items. E.g: user accounts fetched on demand.
+Lists are used to display dynamic items.
 
-Provider is the class providing the list of items. Each item must contain an `id` and a `label`.
+The provider must return a list of items, each containing an `id` and a `label`.
 
 ```php
 $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
@@ -424,6 +432,14 @@ $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
 
 ```xml
 <list header="Saving Accounts" provider="saving_accounts" prefix="account"/>
+```
+
+Accessing the selected item on the list
+
+```xml
+<!-- Format: {prefix}_<id, label> -->
+<response text="{{account_id}}"/><!-- 4364852 -->
+<response text="{{account_label}}"/><!-- 01085475262 -->
 ```
 
 ## Advanced
@@ -493,15 +509,6 @@ Falls back to `eq` if the `cond` is not set or it's unsupported.
 
 Create the translation files in your project and return keys in your menu files... See the example below
 
-> resources/lang/fr.json
-
-```json
-{
-    "AskForName": "Entrez le nom:",
-    "GreetGuest": "Boujour {{guest}}"
-}
-```
-
 > menus/menu.xml
 
 ```xml
@@ -510,6 +517,15 @@ Create the translation files in your project and return keys in your menu files.
     <question name="guest" text="AskForName" />
     <response text="GreetGuest" />
 </menu>
+```
+
+> resources/lang/fr.json
+
+```json
+{
+    "AskForName": "Entrez le nom:",
+    "GreetGuest": "Boujour {{guest}}"
+}
 ```
 
 > USSD simulation
