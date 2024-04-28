@@ -27,6 +27,7 @@
 - [Advanced](#advanced)
   * [Retries](#retries)
   * [Comparisons](#comparisons)
+  * [Localization](#localization)
   * [Cache](#cache)
   * [Parser](#parser)
   * [Simulation](#simulation)
@@ -487,6 +488,43 @@ Falls back to `eq` if the `cond` is not set or it's unsupported.
 | Arrays | - arr.in<br/>- arr.not_in |
 | Dates | - date.equals<br/>- date.before<br/>- date.after<br/>- date.between |
 | Time | - time.equals<br/>- time.before<br/>- time.after<br/>- time.between |
+
+### [Localization](https://laravel.com/docs/11.x/localization)
+
+Create the translation files in your project and return keys in your menu files... See the example below
+
+> resources/lang/fr.json
+
+```json
+{
+    "AskForName": "Entrez le nom:",
+    "GreetGuest": "Boujour {{guest}}"
+}
+```
+
+> menus/menu.xml
+
+```xml
+<menu name="demo">
+    <action name="set_locale" locale="fr" />
+    <question name="guest" text="AskForName" />
+    <response text="GreetGuest" />
+</menu>
+```
+
+> USSD simulation
+
+```
+ussd-demo$ vendor/bin/ussd 250723000123
+Entrez le nom: 
+John
+
+Boujour John
+```
+
+**Note**:
+- use the `set_locale` action to change locale directly from the ussd menu, and
+- use `App::setLocale` to change locale in your controller
 
 ### Cache
 
