@@ -3,6 +3,7 @@
 namespace Bmatovu\Ussd\Traits;
 
 use Bmatovu\Ussd\Contracts\RenderableTag;
+use Bmatovu\Ussd\Support\Util;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ trait Utilities
 
     protected function fileToXpath(string $menuFile): \DOMXPath
     {
-        if (! file_exists($menuFile)) {
+        if (!file_exists($menuFile)) {
             $menuFile = menu_path($menuFile);
         }
 
@@ -58,7 +59,7 @@ trait Utilities
             return '';
         }
 
-        if (! $preAnswer || Str::endsWith($preAnswer, '*')) {
+        if (!$preAnswer || Str::endsWith($preAnswer, '*')) {
             $this->store->append('_answer', "{$answer}*");
         } else {
             $this->store->append('_answer', "*{$answer}*");
@@ -97,7 +98,10 @@ trait Utilities
             }
         }
 
-        throw new \Exception("Missing tag {$tagName}.");
+        $this->store->put('missing_tag', $tagName);
+        $this->store->put('missing_tag_fqcn', $fqcn);
+
+        throw new \Exception(Util::hydrate($this->store, trans('MissingTag')));
     }
 
     protected function instantiateTag(string $tagName, array $args = []): RenderableTag

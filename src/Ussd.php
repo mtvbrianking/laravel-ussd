@@ -3,9 +3,11 @@
 namespace Bmatovu\Ussd;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
+use Bmatovu\Ussd\Support\Util;
 use Bmatovu\Ussd\Traits\Utilities;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Support\Facades\App;
 
 class Ussd
 {
@@ -27,6 +29,8 @@ class Ussd
         $store = $config->get('ussd.cache.store', 'file');
         $ttl = $config->get('ussd.cache.ttl', 120);
         $this->store = new Store($store, $ttl, $sessionId);
+
+        App::setLocale($this->store->get('locale', 'en'));
 
         if ($this->sessionExists($sessionId)) {
             return;
@@ -139,7 +143,7 @@ class Ussd
         $breakpoints = (array) json_decode((string) $this->store->get('_breakpoints'), true);
 
         if (!$breakpoints || !isset($breakpoints[0][$exp])) {
-            throw new \Exception('Missing tag');
+            throw new \Exception(Util::hydrate($this->store, trans('MissingTag')));
         }
 
         $breakpoint = array_shift($breakpoints);

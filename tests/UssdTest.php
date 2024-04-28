@@ -10,11 +10,13 @@ class UssdTest extends TestCase
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Missing tag DummyTag.');
+        $this->expectExceptionMessage('MissingTag');
 
         $xpath = $this->xmlToXpath('<dummy/>');
 
         Ussd::new($xpath, 'ussd_wScXk')->entry('/*[1]')->handle();
+
+        // assert store has missing_tag Dummy
     }
 
     public function testExceptionExit()

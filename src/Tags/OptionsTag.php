@@ -18,19 +18,19 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $pos = 0;
         foreach ($children as $child) {
             ++$pos;
-            $body .= "\n{$pos}) " . $child->attributes->getNamedItem('text')->nodeValue;
+            $body .= "\n{$pos}) " . $this->readAttrText('text', '', $child);
         }
 
-        if (!$this->node->attributes->getNamedItem('noback')) {
-            $body .= "\n0) Back";
+        if (!$this->readAttrText('noback')) {
+            $body .= "\n0) " . trans('Back');
         }
 
         $this->store->put('_pre', $exp);
         $this->store->put('_exp', $this->incExp($exp));
 
         $header = $this->store->get('fails', 0)
-            ? $this->readAttr('error', 'Invalid choice. Try again:')
-            : $this->readAttr('header');
+            ? $this->readAttrText('error', 'InvalidChoice')
+            : $this->readAttrText('header');
 
         return "{$header}{$body}";
     }
@@ -38,7 +38,7 @@ class OptionsTag extends BaseTag implements AnswerableTag
     public function process(?string $answer): void
     {
         if ('' === $answer) {
-            throw new \Exception('Make a choice.');
+            throw new \Exception(trans('Make a choice.'));
         }
 
         $pre = $this->store->get('_pre');
@@ -49,7 +49,7 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $this->store->put('fails', $fails);
 
         if ('0' === $answer) {
-            if ($this->node->attributes->getNamedItem('noback')) {
+            if ($this->readAttr('noback')) {
                 $this->retry($pre, $fails);
 
                 return;
@@ -96,7 +96,7 @@ class OptionsTag extends BaseTag implements AnswerableTag
     protected function retry($pre, $fails)
     {
         if ($fails > $this->readAttr('retries', 1)) {
-            throw new \Exception('Invalid choice.');
+            throw new \Exception(trans('InvalidChoice'));
         }
 
         // repeat step

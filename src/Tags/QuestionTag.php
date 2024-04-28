@@ -18,8 +18,8 @@ class QuestionTag extends BaseTag implements AnswerableTag
         $fails = $this->store->get('fails', 0);
 
         return $fails
-            ? $this->readAttr('error', 'Validation failed. Try again:')
-            : $this->readAttr('text');
+            ? $this->readAttrText('error', 'ValidationErrorRetry')
+            : $this->readAttrText();
     }
 
     public function process(?string $answer): void
@@ -40,7 +40,7 @@ class QuestionTag extends BaseTag implements AnswerableTag
 
             if ($matched === 0) {
                 if ($fails > $this->readAttr('retries', 1)) {
-                    throw new \Exception($this->readAttr('error', 'Validation failed.'));
+                    throw new \Exception($this->readAttrText('error', 'ValidationError'));
                 }
 
                 // repeat step

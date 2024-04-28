@@ -6,6 +6,7 @@ use Bmatovu\Ussd\Contracts\Aggregator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
+use Illuminate\Support\Str;
 
 /**
  * Comviva HTTP Pull Flares API
@@ -47,15 +48,19 @@ class Comviva implements Aggregator
             if ($flow == 'FB') {
                 throw new \Exception($applicationResponse);
             }
-        } catch (RequestException $ex) {
-            $response = $ex->getResponse();
-            $body = (string) $response->getBody();
-            $message = $body ?? $response->getReasonPhrase();
-
-            throw new \Exception(sprintf('%s . %s', $message, $response->getStatusCode()));
-        } catch (TransferException $ex) {
-            throw new \Exception(sprintf('%s . %s', $ex->getMessage(), $ex->getCode()));
+        } catch (\Throwable $th) {
+            throw new \Exception(Str::limit($th->getMessage(), 120, '...'));
         }
+
+        // } catch (RequestException $ex) {
+        //     $response = $ex->getResponse();
+        //     $body = (string) $response->getBody();
+        //     $message = $body ?? $response->getReasonPhrase();
+
+        //     throw new \Exception(sprintf('%s . %s', $message, $response->getStatusCode()));
+        // } catch (TransferException $ex) {
+        //     throw new \Exception(sprintf('%s . %s', $ex->getMessage(), $ex->getCode()));
+        // }
 
         return $applicationResponse;
     }

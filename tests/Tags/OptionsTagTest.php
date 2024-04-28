@@ -115,7 +115,7 @@ XML;
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Invalid choice.');
+        $this->expectExceptionMessage('InvalidChoice');
 
         $node = $this->getNodeByTagName('<options header="Gender" retries="0"><option text="Male"/></options>', 'options');
 
@@ -130,7 +130,7 @@ XML;
 
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Invalid choice.');
+        $this->expectExceptionMessage('InvalidChoice');
 
         $node = $this->getNodeByTagName('<options header="Gender" noback="no"><option text="Male"/></options>', 'options');
 

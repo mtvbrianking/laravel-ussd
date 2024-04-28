@@ -2,6 +2,7 @@
 
 namespace Bmatovu\Ussd\Support;
 
+use Bmatovu\Ussd\Store;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -96,5 +97,27 @@ class Util
             default:
                 return $key == $value;
         }
+    }
+
+    /**
+     * @see https://stackoverflow.com/q/413071/2732184
+     * @see https://www.regextester.com/97707
+     */
+    public static function hydrate(Store $store, string $text, string $pattern = '/[^{{\}\}]+(?=}})/'): string
+    {
+        preg_match_all($pattern, $text, $matches);
+
+        if (0 === \count($matches[0])) {
+            return $text;
+        }
+
+        $replace_vars = [];
+
+        foreach ($matches[0] as $match) {
+            $var = Str::slug($match, '_');
+            $replace_vars["{{{$match}}}"] = $store->get($var, "{{$var}}");
+        }
+
+        return strtr($text, $replace_vars);
     }
 }

@@ -34,8 +34,8 @@ class ListTag extends BaseTag implements AnswerableTag
         $this->store->put('_exp', $this->incExp($exp));
 
         $header = $this->store->get('fails', 0)
-            ? $this->readAttr('error', 'Invalid choice. Try again:')
-            : $this->readAttr('header');
+            ? $this->readAttrText('error', 'InvalidChoice')
+            : $this->readAttrText('header');
 
         return "{$header}{$body}";
     }
@@ -55,7 +55,7 @@ class ListTag extends BaseTag implements AnswerableTag
             $this->store->put('fails', $fails);
 
             if ($fails > $this->readAttr('retries', 1)) {
-                throw new \Exception('Invalid choice.');
+                throw new \Exception(trans('InvalidChoice'));
             }
 
             // repeat step
@@ -87,7 +87,10 @@ class ListTag extends BaseTag implements AnswerableTag
             }
         }
 
-        throw new \Exception("Missing provider: {$providerName}.\nClass: {$fqcn}.");
+        $this->store->put('missing_provider', $providerName);
+        $this->store->put('missing_provider_fqcn', $fqcn);
+
+        throw new \Exception(trans('MissingProvider'));
     }
 
     protected function instantiateListProvider(string $providerName, array $args = []): ListProvider
@@ -99,6 +102,7 @@ class ListTag extends BaseTag implements AnswerableTag
         $provider = \call_user_func_array([new \ReflectionClass($fqcn), 'newInstance'], $args);
 
         if (!$provider instanceof ListProvider) {
+            // change this to a translation...
             throw new \Exception("'{$providerName}' must implement the 'ListProvider' interface.");
         }
 

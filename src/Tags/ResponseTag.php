@@ -6,7 +6,7 @@ class ResponseTag extends BaseTag
 {
     public function handle(): ?string
     {
-        $text = $this->readAttr('text');
+        $text = $this->readAttrText();
 
         throw new \Exception($text);
     }

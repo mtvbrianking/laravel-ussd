@@ -2,42 +2,39 @@
 
 namespace Bmatovu\Ussd\Traits;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use Bmatovu\Ussd\Support\Util;
+use DOMNode;
 
 trait Attributes
 {
-    /**
-     * @see https://stackoverflow.com/q/413071/2732184
-     * @see https://www.regextester.com/97707
-     */
-    public function hydrate(string $text, string $pattern = '/[^{{\}\}]+(?=}})/'): string
+    public function readAttr(string $name, $default = '', DOMNode $node = null)
     {
-        preg_match_all($pattern, $text, $matches);
-
-        if (0 === \count($matches[0])) {
-            return $text;
+        if (!$node) {
+            return $this->node->attributes->getNamedItem($name)->nodeValue ?? $default;
         }
 
-        $replace_vars = [];
-
-        foreach ($matches[0] as $match) {
-            $var = Str::slug($match, '_');
-            $replace_vars["{{{$match}}}"] = $this->store->get($var, "{{$var}}");
-        }
-
-        return strtr($text, $replace_vars);
+        return $node->attributes->getNamedItem($name)->nodeValue ?? $default;
     }
 
-    public function readAttr(string $name, $default = null)
+    public function readAttrHydrate(string $name = 'text', $default = '', DOMNode $node = null)
     {
-        $value = $this->node->attributes->getNamedItem($name)->nodeValue ?? $default;
+        $value = $this->readAttr($name, $default, $node);
 
         if (!$value) {
             return $value;
         }
 
-        return $this->hydrate(trans($value));
+        return Util::hydrate($this->store, $value);
+    }
+
+    public function readAttrText(string $name = 'text', $default = '', DOMNode $node = null)
+    {
+        $value = $this->readAttrHydrate($name, $default, $node);
+
+        if (!$value) {
+            return $value;
+        }
+
+        return trans($value);
     }
 }

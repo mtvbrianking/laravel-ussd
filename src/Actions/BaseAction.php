@@ -28,8 +28,8 @@ class BaseAction implements RenderableTag
         $fails = $this->store->get('fails', 0);
 
         return $fails
-            ? $this->readAttr('error', 'Something went wrong. Try again:')
-            : $this->readAttr('text');
+            ? $this->readAttrText('error', 'InternalError')
+            : $this->readAttrText();
     }
 
     protected function shiftCursor(): void

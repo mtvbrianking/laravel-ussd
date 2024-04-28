@@ -51,7 +51,7 @@ class ListTagTest extends TestCase
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Invalid choice.');
+        $this->expectExceptionMessage('InvalidChoice');
 
         $this->store->put('user_list', []);
 
@@ -121,7 +121,7 @@ class ListTagTest extends TestCase
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage("Missing provider: UnknownProvider.\nClass: Bmatovu\\Ussd\\Tests\\Tags\\UnknownProvider.");
+        $this->expectExceptionMessage('MissingProvider');
 
         $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\\Ussd\\Tests\\Tags']]);
 
@@ -134,6 +134,9 @@ class ListTagTest extends TestCase
         $tag = new ListTag($node, $this->store);
 
         $output = $tag->handle();
+
+        // assert store has missing_provider = UnknownProvider
+        // assert store has missing_provider_fqcn = Bmatovu\\Ussd\\Tests\\Tags\\UnknownProvider
     }
 }
 
