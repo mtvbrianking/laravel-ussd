@@ -57,7 +57,7 @@
     <xs:complexType name="actionType">
         <xs:sequence>
             <xs:element name="variable" type="variableType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+            <!-- <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" /> -->
         </xs:sequence>
         <xs:attribute name="name" type="key-str" use="required" />
         <xs:attribute name="text" type="value-str" use="optional" />
@@ -68,7 +68,7 @@
     <xs:complexType name="listType">
         <xs:sequence>
             <xs:element name="variable" type="variableType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+            <!-- <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" /> -->
         </xs:sequence>
         <xs:attribute name="header" type="value-str" use="optional" />
         <xs:attribute name="provider" type="key-str" use="required" />
