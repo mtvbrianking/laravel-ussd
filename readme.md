@@ -107,7 +107,7 @@ composer require bmatovu/laravel-ussd
 **Configurations**
 
 ```bash
-php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="ussd-config"
 ```
 
 ## Usage
@@ -159,7 +159,7 @@ See more examples in the [demo repo](https://github.com/mtvbrianking/ussd-demo/t
 Defaults to using the schema bundled within the package if none is present in your menus path, usually `menus/menu.xsd`.
 
 ```bash
-php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="schema"
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="ussd-schema"
 ```
 
 Validate your menu files against the schema
@@ -189,7 +189,7 @@ The package comes with a CLI USSD simulator supporting a handful of populator ag
 Publish the simulator config file to get started. Update the aggregator and the USSD service endpoint in the config file.
 
 ```bash
-php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="simulator"
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="ussd-simulator"
 ```
 Usage:
 

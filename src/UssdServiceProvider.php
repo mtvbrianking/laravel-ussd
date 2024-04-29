@@ -13,16 +13,16 @@ class UssdServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/ussd.php' => config_path('ussd.php'),
-            ], 'config');
+                __DIR__ . '/../config/ussd.php' => config_path('ussd.php'),
+            ], 'ussd-config');
 
             $this->publishes([
-                __DIR__.'/../menus/menu.xsd' => menu_path('menu.xsd'),
-            ], 'schema');
+                __DIR__ . '/../menus/menu.xsd' => menu_path('menu.xsd'),
+            ], 'ussd-schema');
 
             $this->publishes([
-                __DIR__.'/../bin/simulator.json' => base_path('simulator.json'),
-            ], 'simulator');
+                __DIR__ . '/../bin/simulator.json' => base_path('simulator.json'),
+            ], 'ussd-simulator');
 
             $this->commands([
                 Commands\Validate::class,
@@ -35,6 +35,6 @@ class UssdServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/ussd.php', 'ussd');
+        $this->mergeConfigFrom(__DIR__ . '/../config/ussd.php', 'ussd');
     }
 }
