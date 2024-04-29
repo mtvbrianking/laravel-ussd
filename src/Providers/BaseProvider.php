@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ussd\Providers;
+namespace Bmatovu\Ussd\Providers;
 
 use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Contracts\ListProvider;

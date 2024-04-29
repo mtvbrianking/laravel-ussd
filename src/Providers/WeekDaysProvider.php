@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ussd\Providers;
+namespace Bmatovu\Ussd\Providers;
 
 use Carbon\Carbon;
 
