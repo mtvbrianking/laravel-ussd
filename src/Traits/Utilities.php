@@ -72,13 +72,17 @@ trait Utilities
     {
         $tagName = $node->tagName;
 
-        if ('action' !== strtolower($tagName)) {
-            return Str::studly("{$tagName}Tag");
+        if ($tagName == 'action') {
+            $ActionName = $node->attributes->getNamedItem('name')->nodeValue;
+            return Util::toPath($ActionName, 'Action');
         }
 
-        $tagName = $node->attributes->getNamedItem('name')->nodeValue;
+        // if ($tagName == 'list') {
+        //     $providerName = $node->attributes->getNamedItem('provider')->nodeValue;
+        //     return Util::toPath($providerName, 'Provider');
+        // }
 
-        return Str::studly("{$tagName}Action");
+        return Util::toPath($tagName, 'Tag');
     }
 
     protected function resolveTagClass(string $tagName): string
@@ -86,14 +90,16 @@ trait Utilities
         $config = Container::getInstance()->make(ConfigRepository::class);
         $tagNs = $config->get('ussd.tag-ns', []);
         $actionNs = $config->get('ussd.action-ns', []);
+        // $providerNs = $config->get('ussd.provider-ns', []);
 
+        // $namespaces = array_merge($tagNs, $actionNs, $providerNs);
         $namespaces = array_merge($tagNs, $actionNs);
 
         $fqcn = $tagName;
 
         foreach ($namespaces as $ns) {
             $fqcn = "{$ns}\\{$tagName}";
-            if (class_exists($fqcn)) {
+            if (Util::classExists($fqcn)) {
                 return $fqcn;
             }
         }

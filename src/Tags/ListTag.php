@@ -4,10 +4,11 @@ namespace Bmatovu\Ussd\Tags;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Contracts\ListProvider;
+use Bmatovu\Ussd\Support\Util;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class ListTag extends BaseTag implements AnswerableTag
 {
@@ -15,7 +16,10 @@ class ListTag extends BaseTag implements AnswerableTag
     {
         $exp = $this->store->get('_exp');
 
-        $provider = $this->instantiateListProvider($this->readAttr('provider'), [$this->store]);
+        $providerName = Util::toPath($this->readAttr('provider'), 'Provider');
+
+        $provider = $this->instantiateListProvider($providerName, [$this->store]);
+
         $list = $provider->load();
 
         $this->validate($list);
@@ -82,7 +86,8 @@ class ListTag extends BaseTag implements AnswerableTag
 
         foreach ($providerNs as $ns) {
             $fqcn = "{$ns}\\{$providerName}";
-            if (class_exists($fqcn)) {
+            Log::debug("1. fqcn --> {$fqcn}");
+            if (Util::classExists($fqcn)) {
                 return $fqcn;
             }
         }
@@ -90,14 +95,16 @@ class ListTag extends BaseTag implements AnswerableTag
         $this->store->put('missing_provider', $providerName);
         $this->store->put('missing_provider_fqcn', $fqcn);
 
-        throw new \Exception(trans('MissingProvider'));
+        throw new \Exception(Util::hydrate($this->store, trans('MissingProvider')));
     }
 
     protected function instantiateListProvider(string $providerName, array $args = []): ListProvider
     {
-        $providerName = Str::studly("{$providerName}Provider");
+        // $providerName = Str::studly("{$providerName}Provider");
 
         $fqcn = $this->resolveProviderClass($providerName);
+
+        Log::debug("2. fqcn --> {$fqcn}");
 
         $provider = \call_user_func_array([new \ReflectionClass($fqcn), 'newInstance'], $args);
 

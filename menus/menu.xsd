@@ -6,6 +6,11 @@
 
     <xs:element name="menu" type="menuType" />
     <!-- +++++++++++++++++ Simple Types ++++++++++++++++ -->
+    <xs:simpleType name="path-str">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z0-9._\-\\/]{1,100}" />
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="key-str">
         <xs:restriction base="xs:string">
             <xs:pattern value="[A-Za-z0-9._-]{1,100}" />
@@ -59,7 +64,7 @@
             <xs:element name="variable" type="variableType" minOccurs="0" maxOccurs="unbounded" />
             <!-- <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" /> -->
         </xs:sequence>
-        <xs:attribute name="name" type="key-str" use="required" />
+        <xs:attribute name="name" type="path-str" use="required" />
         <xs:attribute name="text" type="value-str" use="optional" />
         <xs:attribute name="retries" type="xs:int" use="optional" />
         <xs:attribute name="error" type="xs:string" use="optional" />
@@ -71,7 +76,7 @@
             <!-- <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" /> -->
         </xs:sequence>
         <xs:attribute name="header" type="value-str" use="optional" />
-        <xs:attribute name="provider" type="key-str" use="required" />
+        <xs:attribute name="provider" type="path-str" use="required" />
         <xs:attribute name="prefix" type="key-str" use="required" />
         <xs:attribute name="retries" type="xs:int" use="optional" />
         <xs:attribute name="error" type="xs:string" use="optional" />

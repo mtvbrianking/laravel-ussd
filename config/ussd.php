@@ -9,8 +9,8 @@ return [
     ],
 
     'tag-ns' => [
-        'App\\Ussd\\Tags',
         'Bmatovu\\Ussd\\Tags',
+        'App\\Ussd\\Tags',
     ],
 
     'action-ns' => [

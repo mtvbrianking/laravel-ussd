@@ -12,6 +12,7 @@ class Util
     {
         return Str::startsWith($pattern, '/') ? $pattern : "/{$pattern}/";
     }
+
     public static function compare($key, $condition, $value): bool
     {
         switch ($condition) {
@@ -97,6 +98,31 @@ class Util
             default:
                 return $key == $value;
         }
+    }
+
+    /**
+     * Silence auto-loading warnings.
+     */
+    public static function classExists(string $class, bool $autoload = true): bool
+    {
+        try {
+            return class_exists($class, $autoload);
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public static function toPath(?string $name, string $suffix = 'Tag'): string
+    {
+        $parts = explode('/', str_replace('\\', '/', $name));
+
+        $parts = array_map(function ($part) {
+            return Str::studly($part);
+        }, $parts);
+
+        $path = implode('\\', $parts);
+
+        return  "{$path}{$suffix}";
     }
 
     /**
