@@ -58,6 +58,7 @@ class OptionsTag extends BaseTag implements AnswerableTag
             $exp = $this->goBack($pre, 2);
 
             $this->store->put('_exp', $exp);
+            $this->store->put('fails', 0);
 
             return;
         }
