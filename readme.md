@@ -481,6 +481,8 @@ return response('CON ' . $output);
 }
 ```
 
+Note: _To reduce logs, the FlowBreakException should not be reported by your application. [Ref](https://laravel.com/docs/11.x/errors#ignoring-exceptions-by-type)_
+
 ### Retries
 
 It's also possible to set the number of retries and a custom error message.
