@@ -2,6 +2,7 @@
 
 namespace Bmatovu\Ussd\Tests\Tags;
 
+use Bmatovu\Ussd\Exceptions\FlowBreakException;
 use Bmatovu\Ussd\Tags\ResponseTag;
 use Bmatovu\Ussd\Tests\TestCase;
 
@@ -9,7 +10,7 @@ class ResponseTagTest extends TestCase
 {
     public function testHandleResponse()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(FlowBreakException::class);
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage('Thank you.');
 
@@ -22,7 +23,7 @@ class ResponseTagTest extends TestCase
 
     public function testResponseTranslation()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(FlowBreakException::class);
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage('Hello John.');
 

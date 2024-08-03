@@ -25,6 +25,7 @@
   * [Action](#action)
   * [List](#list)
 - [Advanced](#advanced)
+  * [Exceptions](#exceptions)
   * [Retries](#retries)
   * [Comparisons](#comparisons)
   * [Localization](#localization)
@@ -127,6 +128,7 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 > app/Http/Controller/Api/UssdController
 
 ```php
+use Bmatovu\Ussd\Exceptions\FlowBreakException;
 use Bmatovu\Ussd\Ussd;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -141,8 +143,10 @@ class UssdController extends Controller
         try {
             $output = Ussd::make('menu.xml', $request->session_id)
                 ->handle($request->text);
-        } catch(\Exception $ex) {
+        } catch(FlowBreakException $ex) {
             return response('END ' . $ex->getMessage());
+        } catch(\Exception $ex) {
+            return response('END ' . get_class($ex));
         }
 
         return response('CON ' . $output);
@@ -445,6 +449,37 @@ Accessing the selected item on the list
 **Note**: Similar to actions, you can pass arguments to lists via attributes or as variables.
 
 ## Advanced
+
+### Exceptions
+
+The `<response>` tag throws a `FlowBreakException` which MUST be handled in your controller.
+
+Other exceptions can be caught and optionally translated to user friendly messages as shown below...
+
+```php
+try {
+    $output = Ussd::make('menu.xml', $request->session_id)
+        ->handle($request->text);
+} catch(FlowBreakException $ex) {
+    return response('END ' . $ex->getMessage());
+} catch(\Exception $ex) {
+    // return response('END ' . get_class($ex));
+    return response('END ' . trans(get_class($ex)));
+}
+
+return response('CON ' . $output);
+```
+
+> resources/lang/en.json
+
+```json
+{
+    "RequestException": "Sorry, we failed to process your request.",
+    "TimeoutException": "Your request has timeout.",
+    "AuthenticationException": "Invalid user credentials.",
+    "AuthorizationException": "You are not authorized to perform this action."
+}
+```
 
 ### Retries
 
