@@ -9,11 +9,10 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [Installation](#installation)
-  * [Configurations](#configurations)
+- [Getting started](#getting-started)
 - [Usage](#usage)
   * [Example](#example)
-  * [Validation](#validation)
+  * [Menu validation](#menu-validation)
   * [Simulator](#simulator)
 - [Constructs](#constructs)
   * [Variable](#variable)
@@ -99,8 +98,6 @@ Let's explore an example of a simple SACCO USSD application.
 
 **Installation**
 
-Install the package via the Composer.
-
 ```bash
 composer require bmatovu/laravel-ussd
 ```
@@ -156,25 +153,25 @@ class UssdController extends Controller
 
 See more examples in the [demo repo](https://github.com/mtvbrianking/ussd-demo/tree/master/app/Http/Controllers/Api)
 
-### Validation
+### Menu validation
 
-**Publish the menu schema**
+**The Schema**
 
-Defaults to using the schema bundled within the package if none is present in your menus path, usually `menus/menu.xsd`.
+You can publish the default schema with the following command:
 
 ```bash
 php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="ussd-schema"
 ```
 
-Validate your menu files against the schema
+To ensure your menu files conform to the schema, you can validate them with the following command:
 
 ```bash
 php artisan ussd:validate
 ```
 
-**VSCode**
+**VSCode integration**
 
-The [RedHat XML package](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml) is useful for realtime XSD validations and suggestions.
+For real-time XSD validations and suggestions, you can use the [RedHat XML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml) in Visual Studio Code. This extension provides helpful features for working with XML schemas, including syntax highlighting and validation.
 
 ```diff
 - <menu name="demo">
@@ -188,9 +185,9 @@ The [RedHat XML package](https://marketplace.visualstudio.com/items?itemName=red
 
 ### Simulator
 
-The package comes with a CLI USSD simulator supporting a handful of populator aggregators.
+The package includes a CLI USSD simulator that supports several popular aggregators.
 
-Publish the simulator config file to get started. Update the aggregator and the USSD service endpoint in the config file.
+To get started, publish the simulator configuration file and update it with your aggregator and USSD service endpoint.
 
 ```bash
 php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="ussd-simulator"
@@ -207,7 +204,7 @@ Usage:
 - Africastalking
 - Comviva (Airtel & MTN)
 
-_If you're an aggregator missing from the current list reachout to have you added. Or simply send a pull request_
+_If your aggregator is not listed, you can request its addition by contacting us or by submitting a pull request._
 
 ## Constructs
 
@@ -243,7 +240,7 @@ exit('Thank you for banking with us.');
 <response text="Thank you for banking with us."/>
 ```
 
-**Note**: this tag throws an exception to mark a break in the normal flow.
+**Note**: this tag throws a `FlowBreakException` to mark a break in the normal flow.
 
 ### Options
 
@@ -272,9 +269,9 @@ if($choice === 1) {
 
 **Disable backward navigation**
 
-By default `0) Back` option will be added to the options rendered. Use the attribute `noback` to disable this behavior.
+By default, a `0) Back` option is added to the rendered options. To disable this behaviour, use the `noback` attribute.
 
-This behavior may only be used for nested `<options>` tags.
+Note: _Top-level options should use the `noback` attribute as there’s no previous level to return to._
 
 ```xml
 <options header="Choose service" noback="no">
@@ -284,7 +281,7 @@ This behavior may only be used for nested `<options>` tags.
 
 ### If
 
-Can contain any other tags inclusive of the IF tag itself.
+It can contain any other tags, including nested `<if>` tags.
 
 ```php
 if($role == 'treasurer') {
@@ -300,7 +297,7 @@ if($role == 'treasurer') {
 
 ### Choose
 
-This construct should cover for `if-else`, `if-elseif-else`, and the native `switch`.
+This construct is intended to handle scenarios typically covered by `if`, `else if`, `else`, and `switch` statements.
 
 **Example #1**
 
@@ -380,7 +377,7 @@ switch ($role) {
 
 ### Action
 
-Action tags give you the ability to perform more customized operations.
+Action tags enable you to execute more tailored operations.
 
 ```php
 $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
@@ -388,7 +385,7 @@ $userInfo = \App\Ussd\Actions\GetUserInfoAction('256732000000');
 
 **Arguments**
 
-You can pass arguments to actions via attributes or as variables.
+You can provide arguments for these actions either through attributes or by defining variables.
 
 ```xml
 <!-- Read from cache -->
@@ -406,7 +403,7 @@ You can pass arguments to actions via attributes or as variables.
 
 **Getting user input**
 
-If the `text` attribute is set on an action, it will behave like the `<question>` tag waiting for user input
+When the `text` attribute is included in an action tag, it prompts the user for input in the same way that a `<question>` tag would.
 
 ```xml
 <!-- Approach #1 - user input handled by a qn tag -->
@@ -419,9 +416,9 @@ If the `text` attribute is set on an action, it will behave like the `<question>
 
 ### List
 
-Lists are used to display dynamic items.
+Lists are designed to show dynamic items.
 
-The provider must return a list of items, each containing an `id` and a `label`.
+To use this feature, your provider must supply a list where each item includes both an `id` (a unique identifier) and a `label` (the text displayed to the user).
 
 ```php
 $listItems = (new \App\Ussd\Providers\SavingAccountsProvider)->load();
@@ -452,9 +449,9 @@ Accessing the selected item on the list
 
 ### Exceptions
 
-The `<response>` tag throws a `FlowBreakException` which MUST be handled in your controller.
+The `<response>` tag throws a `FlowBreakException` which MUST be handled in your controller to manage the flow of the USSD interaction.
 
-Other exceptions can be caught and optionally translated to user friendly messages as shown below...
+Additionally, you can catch other exceptions and optionally translate them into user-friendly messages, as demonstrated below...
 
 ```php
 try {
@@ -475,17 +472,17 @@ return response('CON ' . $output);
 ```json
 {
     "RequestException": "Sorry, we failed to process your request.",
-    "TimeoutException": "Your request has timeout.",
+    "TimeoutException": "Your request has timed out.",
     "AuthenticationException": "Invalid user credentials.",
     "AuthorizationException": "You are not authorized to perform this action."
 }
 ```
 
-Note: _To reduce logs, the FlowBreakException should not be reported by your application. [Ref](https://laravel.com/docs/11.x/errors#ignoring-exceptions-by-type)_
+Note: _To minimize logging, the FlowBreakException should not be reported by your application. [Ref](https://laravel.com/docs/11.x/errors#ignoring-exceptions-by-type)_
 
 ### Retries
 
-It's also possible to set the number of retries and a custom error message.
+You can also configure the number of retry attempts and specify a custom error message.
 
 **Question**
 
@@ -502,7 +499,7 @@ Using regex patterns.
 
 **Options & Lists**
 
-Validation is against the possible list options.
+Validation can also be performed based on the available options in the list.
 
 ```diff
   <options
@@ -522,13 +519,13 @@ Validation is against the possible list options.
 +     error="Choose the correct number:"/>
 ```
 
-**Note**: Retries in `<action>` tags are discouraged because the action tags are not aware of tags preceeding them.
+**Note**: Using retries in `<action>` tags is not recommended because these tags do not have visibility into the context provided by preceding tags.
 
 ### Comparisons
 
-The `<if>` and `<when>` tags allow comparisions.
+The `<if>` and `<when>` tags support various types of comparisons.
 
-Falls back to `eq` if the `cond` is not set or it's unsupported.
+If a comparison condition (`cond`) is not specified or is unsupported, the default comparison is `eq` (equals)
 
 ```xml
 <if key="age" value="18">
@@ -546,7 +543,7 @@ Falls back to `eq` if the `cond` is not set or it's unsupported.
 
 ### [Localization](https://laravel.com/docs/11.x/localization)
 
-Create the translation files in your project and return keys in your menu files... See the example below
+Create translation files within your project and reference the keys in your menu files. Here’s an example:
 
 > menus/menu.xml
 
@@ -578,12 +575,12 @@ Boujour John
 ```
 
 **Note**:
-- use the `set_locale` action to change locale directly from the ussd menu, and
-- use `App::setLocale` to change locale in your controller
+- use the `set_locale` action to change locale directly from the USSD menu, and
+- use `App::setLocale` to change the locale from your controller
 
 ### Cache
 
-This package persists USSD session data in cache. Each key is prefixed with the `session_id` and it automatically expires after the configured `ttl`.
+This package stores USSD session data in the cache. Each key is prefixed with the `session_id` and will automatically expire based on the configured `ttl` (time-to-live).
 
 **Accessing variables**
 
@@ -609,7 +606,7 @@ Cache::store($driver)->get("{$sessionId}color"); // blue
 
 **Save default variables**
 
-Example for saving any variable from the incoming USSD request.
+Here's an example of how to save a variable from an incoming USSD request:
 
 ```php
 Ussd::make($menu, $request->session_id)
@@ -621,9 +618,9 @@ Ussd::make($menu, $request->session_id)
 
 **Use custom menu entry point**
 
-By default the parsing starts at the 1st element in your menu file, i.e `/menu/*[1]`.
+By default, parsing begins at the first element in your menu file, which corresponds to `/menu/*[1]`.
 
-If you wish to start from a different point or use a custom menu file structure. Here's how to go about it...
+If you want to start parsing from a different point or use a custom menu structure, you can specify the entry point in your code:
 
 ```php
 Ussd::make($menu, $request->session_id)
@@ -635,9 +632,9 @@ See: [xpath playground](http://xpather.com)
 
 ### Simulation
 
-You can extend the USSD simulator with your aggregator of choice by simply registering it in the simulator config file.
+You can enhance the USSD simulator by adding your preferred aggregator.
 
-The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
+To do this, register the aggregator in the simulator configuration file. Ensure that the provider class implements the `Bmatovu\Ussd\Contracts\Aggregator` interface.
 
 > simulator.json
 
@@ -645,7 +642,7 @@ The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
   {
 +     "aggregator": "africastalking",
       "aggregators": {
-+         "hubtel": {
++         "africastalking": {
 +             "provider": "App\\Ussd\\Simulator\\Africastalking",
 +             "uri": "http://localhost:8000/api/ussd/africastalking",
 +             "service_code": "*123#"
@@ -656,11 +653,11 @@ The provider class should implement `Bmatovu\Ussd\Contracts\Aggregator`.
 
 ### JSON
 
-**Why use XML 🥴 and not JSON 😉?**
+XML is often preferred for constructing configurations that resemble programming logic due to its robust schema validation capabilities and its clear, hierarchical structure. XML’s format is particularly useful for complex configurations and data structures, as it maintains readability and provides straightforward validation against defined schemas.
 
-XML is better suited for writing constructs resembling programming languages. It offers straightforward validation of schemas. Additionally, XML is both more compact and readable.
-
-**Compare the snippets below...**
+**Key differences**:
+- XML is more expressive for hierarchical data and supports attributes and nested structures in a way that's easy to read and validate.
+- JSON is compact and often preferred for simpler data structures but lacks some of the hierarchical expressiveness and validation features of XML.
 
 ```xml
 <menu name="demo">
@@ -692,18 +689,18 @@ composer test
 
 ## Security
 
-If you find any security related issues, please contact me directly at [mtvbrianking@gmail.com](mailto:mtvbrianking@gmail.com) to report it.
+If you discover any security-related issues, please report them directly to [mtvbrianking@gmail.com](mailto:mtvbrianking@gmail.com)
 
 ## Contribution
 
-If you wish to make any changes or improvements to the package, feel free to make a pull request.
+If you would like to contribute to the package by making changes or improvements, feel free to submit a pull request.
 
-Note: A contribution guide will be added soon.
+Note: _A detailed contribution guide may be added later._
 
 ## Alternatives
 
-- [sparors/laravel-ussd](https://github.com/sparors/laravel-ussd) takes a completely different approach on building USSD menus.
+- [sparors/laravel-ussd](https://github.com/sparors/laravel-ussd) offers a different approach to building USSD menus.
 
 ## License
 
-The MIT License (MIT). Please see [License file](license.txt) for more information.
+This package is licensed under the MIT License. For more details, please refer to the [License file](license.txt).
