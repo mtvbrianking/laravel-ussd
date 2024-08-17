@@ -31,9 +31,9 @@ class Generic implements Aggregator
             $body = json_decode((string) $response->getBody());
             $message = $body->message ?? $response->getReasonPhrase();
 
-            throw new \Exception(\sprintf('%s . %s', $message, $response->getStatusCode()));
+            throw new \Exception(sprintf('%s . %s', $message, $response->getStatusCode()));
         } catch (TransferException $ex) {
-            throw new \Exception(\sprintf('%s . %s', $ex->getMessage(), $ex->getCode()));
+            throw new \Exception(sprintf('%s . %s', $ex->getMessage(), $ex->getCode()));
         }
 
         return $body->data;

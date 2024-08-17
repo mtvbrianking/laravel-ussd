@@ -16,7 +16,7 @@ class Util
     public static function compare($key, $condition, $value): bool
     {
         switch ($condition) {
-            // -------------------- Numbers --------------------
+                // -------------------- Numbers --------------------
             case 'lt':
                 return $key < $value;
             case 'gt':
@@ -57,7 +57,7 @@ class Util
             case 'arr.not_in':
                 $values = explode(',', $value);
 
-                return ! \in_array($key, $values, true);
+                return !\in_array($key, $values, true);
                 // -------------------- Dates --------------------
             case 'date.equals':
                 // Format: Y-m-d
