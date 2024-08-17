@@ -31,7 +31,7 @@ class WeekDaysProvider extends BaseProvider
                 'id' => $day->format('Y-m-d'),
                 'label' => $day->format('D, jS M'),
             ];
-        } while (count($weekDays) < 5);
+        } while (\count($weekDays) < 5);
 
         return $weekDays;
     }

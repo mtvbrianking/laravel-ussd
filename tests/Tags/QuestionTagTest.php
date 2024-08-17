@@ -17,9 +17,9 @@ class QuestionTagTest extends TestCase
 
         $output = $tag->handle();
 
-        static::assertSame('Enter Username: ', $output);
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[2]', $this->store->get('_exp'));
+        self::assertSame('Enter Username: ', $output);
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[2]', $this->store->get('_exp'));
     }
 
     public function testProccessQuestion()
@@ -30,12 +30,12 @@ class QuestionTagTest extends TestCase
 
         $tag->process('jdoe');
 
-        static::assertSame('jdoe', $this->store->get('alias'));
+        self::assertSame('jdoe', $this->store->get('alias'));
     }
 
     public function testProccessQuestionValidation()
     {
-        $qn = <<<XML
+        $qn = <<<'XML'
 <question
     name="pin"
     text="Enter PIN: "
@@ -53,7 +53,7 @@ XML;
 
         $tag->process('524');
 
-        static::assertSame('/*[0]', $this->store->get('_pre'));
-        static::assertSame('/*[1]', $this->store->get('_exp'));
+        self::assertSame('/*[0]', $this->store->get('_pre'));
+        self::assertSame('/*[1]', $this->store->get('_exp'));
     }
 }

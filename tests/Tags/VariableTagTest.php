@@ -17,9 +17,9 @@ class VariableTagTest extends TestCase
 
         $output = $tag->handle();
 
-        static::assertEmpty($output);
-        static::assertSame('blue', $this->store->get('color'));
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[2]', $this->store->get('_exp'));
+        self::assertEmpty($output);
+        self::assertSame('blue', $this->store->get('color'));
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[2]', $this->store->get('_exp'));
     }
 }

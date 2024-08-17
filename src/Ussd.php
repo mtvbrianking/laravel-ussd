@@ -82,7 +82,7 @@ class Ussd
         if ($this->newSession) {
             $inquiry = $this->doParse();
 
-            if (!$answer) {
+            if (! $answer) {
                 return $inquiry;
             }
         }
@@ -103,13 +103,13 @@ class Ussd
         $exp = $this->store->get('_exp');
         $node = $this->xpath->query($exp)->item(0);
 
-        if (!$node) {
+        if (! $node) {
             $this->doBreak();
         }
 
         $inquiry = $this->doRender();
 
-        if (!$inquiry) {
+        if (! $inquiry) {
             return $this->doParse($answer);
         }
 
@@ -120,7 +120,7 @@ class Ussd
     {
         $pre = $this->store->get('_pre');
 
-        if (!$pre) {
+        if (! $pre) {
             return;
         }
 
@@ -129,7 +129,7 @@ class Ussd
         $tagName = $this->resolveTagName($preNode);
         $tag = $this->instantiateTag($tagName, [$preNode, $this->store]);
 
-        if (!$tag instanceof AnswerableTag) {
+        if (! $tag instanceof AnswerableTag) {
             return;
         }
 
@@ -142,7 +142,7 @@ class Ussd
 
         $breakpoints = (array) json_decode((string) $this->store->get('_breakpoints'), true);
 
-        if (!$breakpoints || !isset($breakpoints[0][$exp])) {
+        if (! $breakpoints || ! isset($breakpoints[0][$exp])) {
             throw new \Exception(Util::hydrate($this->store, trans('MissingTag')));
         }
 

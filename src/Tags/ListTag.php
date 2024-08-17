@@ -31,7 +31,7 @@ class ListTag extends BaseTag implements AnswerableTag
         $body = '';
         foreach ($list as $item) {
             ++$pos;
-            $body .= "\n{$pos}) " . $item['label'];
+            $body .= "\n{$pos}) ".$item['label'];
         }
 
         $this->store->put('_pre', $exp);
@@ -53,7 +53,7 @@ class ListTag extends BaseTag implements AnswerableTag
 
         $pre = $this->store->get('_pre');
 
-        if (!$item) {
+        if (! $item) {
             $fails = (int) $this->store->get('fails') + 1;
 
             $this->store->put('fails', $fails);
@@ -108,7 +108,7 @@ class ListTag extends BaseTag implements AnswerableTag
 
         $provider = \call_user_func_array([new \ReflectionClass($fqcn), 'newInstance'], $args);
 
-        if (!$provider instanceof ListProvider) {
+        if (! $provider instanceof ListProvider) {
             // change this to a translation...
             throw new \Exception("'{$providerName}' must implement the 'ListProvider' interface.");
         }

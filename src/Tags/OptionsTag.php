@@ -18,11 +18,11 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $pos = 0;
         foreach ($children as $child) {
             ++$pos;
-            $body .= "\n{$pos}) " . $this->readAttrText('text', '', $child);
+            $body .= "\n{$pos}) ".$this->readAttrText('text', '', $child);
         }
 
-        if (!$this->readAttrText('noback')) {
-            $body .= "\n0) " . trans('Back');
+        if (! $this->readAttrText('noback')) {
+            $body .= "\n0) ".trans('Back');
         }
 
         $this->store->put('_pre', $exp);
@@ -79,7 +79,7 @@ class OptionsTag extends BaseTag implements AnswerableTag
     {
         $count = 0;
 
-        $exp = preg_replace_callback("|(\\/\\*\\[\\d\\]){{$steps}}$|", function ($matches) {
+        $exp = preg_replace_callback("|(\\/\\*\\[\\d\\]){{$steps}}$|", static function ($matches) {
             return '';
         }, $exp, 1, $count);
 
@@ -87,12 +87,10 @@ class OptionsTag extends BaseTag implements AnswerableTag
     }
 
     /**
-     * Retry step
+     * Retry step.
      *
      * @param string $pre
      * @param int $fails
-     *
-     * @return void
      */
     protected function retry($pre, $fails)
     {
@@ -104,6 +102,5 @@ class OptionsTag extends BaseTag implements AnswerableTag
         $this->store->put('_pre', $this->decExp($pre));
         $this->store->put('_exp', $pre);
 
-        return;
     }
 }

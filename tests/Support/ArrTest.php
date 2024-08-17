@@ -19,15 +19,15 @@ class ArrTest extends TestCase
         $arr_5 = ['1' => 'a', '0' => 'b', '2' => 'c'];
         $arr_6 = ['a' => 'a', 'b' => 'b', 'c' => 'c'];
 
-        static::assertFalse(Arr::isAssoc([]));
+        self::assertFalse(Arr::isAssoc([]));
 
-        static::assertFalse(Arr::isAssoc($arr_1));
-        static::assertFalse(Arr::isAssoc($arr_2));
-        static::assertFalse(Arr::isAssoc($arr_3));
+        self::assertFalse(Arr::isAssoc($arr_1));
+        self::assertFalse(Arr::isAssoc($arr_2));
+        self::assertFalse(Arr::isAssoc($arr_3));
 
-        static::assertTrue(Arr::isAssoc($arr_4));
-        static::assertTrue(Arr::isAssoc($arr_5));
-        static::assertTrue(Arr::isAssoc($arr_6));
+        self::assertTrue(Arr::isAssoc($arr_4));
+        self::assertTrue(Arr::isAssoc($arr_5));
+        self::assertTrue(Arr::isAssoc($arr_6));
     }
 
     public function testGetMissingKeys()
@@ -36,10 +36,10 @@ class ArrTest extends TestCase
 
         $given = ['c', 'd', 'e'];
         $missing = Arr::keysDiff($required, $given);
-        static::assertSame($missing, ['a', 'b']);
+        self::assertSame($missing, ['a', 'b']);
 
         $given = ['c' => 3, 'd' => 4, 'e' => 5];
         $missing = Arr::keysDiff($required, $given);
-        static::assertSame($missing, ['a', 'b']);
+        self::assertSame($missing, ['a', 'b']);
     }
 }

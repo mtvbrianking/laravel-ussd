@@ -34,11 +34,11 @@ class QuestionTag extends BaseTag implements AnswerableTag
         if ($pattern = $this->readAttr('pattern')) {
             $matched = preg_match(Util::regex($pattern), $answer);
 
-            if ($matched === false) {
+            if (false === $matched) {
                 throw new \Exception('Validation exception');
             }
 
-            if ($matched === 0) {
+            if (0 === $matched) {
                 if ($fails > $this->readAttr('retries', 1)) {
                     throw new \Exception($this->readAttrText('error', 'ValidationError'));
                 }

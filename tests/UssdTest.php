@@ -47,8 +47,8 @@ XML;
 
         $output = $ussd->handle();
 
-        static::assertSame('Enter username: ', $output);
-        static::assertSame('John Doe', $ussd->store->get('name'));
+        self::assertSame('Enter username: ', $output);
+        self::assertSame('John Doe', $ussd->store->get('name'));
     }
 
     public function testReuseSession()
@@ -67,10 +67,10 @@ XML;
 
         $output = Ussd::make($xpath, 'ussd_wScXk')->handle();
 
-        static::assertSame('Enter username: ', $output);
-        static::assertSame('ussd_wScXk', $this->store->get('_session_id'));
-        static::assertSame('/menu/*[1]', $this->store->get('_pre'));
-        static::assertSame('/menu/*[2]', $this->store->get('_exp'));
+        self::assertSame('Enter username: ', $output);
+        self::assertSame('ussd_wScXk', $this->store->get('_session_id'));
+        self::assertSame('/menu/*[1]', $this->store->get('_pre'));
+        self::assertSame('/menu/*[2]', $this->store->get('_exp'));
     }
 
     public function testBreakpoints()
@@ -93,7 +93,7 @@ XML;
 
         $output = Ussd::make($xpath, 'ussd_wScXk')->handle();
 
-        static::assertSame('Say hi: ', $output);
+        self::assertSame('Say hi: ', $output);
     }
 
     public function testParseLongCode()
@@ -110,7 +110,7 @@ XML;
 
         $output = Ussd::make($xpath, 'ussd_wScXk')->handle('Mr*John');
 
-        static::assertSame('Enter last name: ', $output);
+        self::assertSame('Enter last name: ', $output);
     }
 
     public function testTracksAnswers()
@@ -137,7 +137,7 @@ XML;
 
         $ussd->handle('John*Doe');
 
-        static::assertSame('Mr.*John*Doe', $ussd->store->get('_answer'));
+        self::assertSame('Mr.*John*Doe', $ussd->store->get('_answer'));
     }
 
     public function testPathFromFile()
@@ -154,7 +154,7 @@ XML;
 
         $output = Ussd::make($menuFile, 'ussd_wScXk')->handle('');
 
-        static::assertSame('Enter username: ', $output);
+        self::assertSame('Enter username: ', $output);
 
         if (file_exists($menuFile)) {
             unlink($menuFile);
@@ -169,10 +169,11 @@ XML;
 
         $ussd = (new Ussd($xpath, 'ussd_wScXk'))
             ->entry('/*[1]')
-            ->save(['rand' => $rand]);
+            ->save(['rand' => $rand])
+        ;
 
         $ussd->handle();
 
-        static::assertSame($rand, $ussd->store->get('rand'));
+        self::assertSame($rand, $ussd->store->get('rand'));
     }
 }

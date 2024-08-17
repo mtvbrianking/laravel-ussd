@@ -10,7 +10,9 @@ use Bmatovu\Ussd\Traits\Variables;
 
 class BaseAction implements RenderableTag
 {
-    use Attributes, Expressions, Variables;
+    use Attributes;
+    use Expressions;
+    use Variables;
 
     protected \DOMNode $node;
     protected Store $store;

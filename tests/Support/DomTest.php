@@ -13,6 +13,6 @@ class DomTest extends TestCase
 
         $node = $this->getNodeByTagName($tag, 'variable');
 
-        static::assertSame($tag, Dom::render($node));
+        self::assertSame($tag, Dom::render($node));
     }
 }

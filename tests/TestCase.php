@@ -4,6 +4,7 @@ namespace Bmatovu\Ussd\Tests;
 
 use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\UssdServiceProvider;
+use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -24,7 +25,7 @@ abstract class TestCase extends Orchestra
     /**
      * Add package service provider.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      *
      * @return array
      */
@@ -38,7 +39,7 @@ abstract class TestCase extends Orchestra
     /**
      * Get package aliases.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      *
      * @return array
      */

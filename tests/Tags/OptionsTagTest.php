@@ -24,9 +24,9 @@ XML;
 
         $output = $tag->handle();
 
-        static::assertSame("Choose Gender: \n1) Male\n2) Female\n0) Back", $output);
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[2]', $this->store->get('_exp'));
+        self::assertSame("Choose Gender: \n1) Male\n2) Female\n0) Back", $output);
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[2]', $this->store->get('_exp'));
     }
 
     public function testHandleOptionsNoBack()
@@ -44,7 +44,7 @@ XML;
 
         $output = $tag->handle();
 
-        static::assertSame("Choose Gender: \n1) Male\n2) Female", $output);
+        self::assertSame("Choose Gender: \n1) Male\n2) Female", $output);
     }
 
     public function testProccessOptions()
@@ -64,8 +64,8 @@ XML;
 
         $tag->process('2');
 
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[1]/*[2]', $this->store->get('_exp'));
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[1]/*[2]', $this->store->get('_exp'));
     }
 
     public function testProcessOptionsBack()
@@ -94,8 +94,8 @@ XML;
 
         $tag->process(0);
 
-        static::assertSame('/*[1]/*[2]/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[1]', $this->store->get('_exp'));
+        self::assertSame('/*[1]/*[2]/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[1]', $this->store->get('_exp'));
     }
 
     public function testProccessOptionsValidationNoAnswer()
@@ -126,7 +126,7 @@ XML;
 
     public function testProccessOptionsValidationNoBack()
     {
-        $this->markTestSkipped('Change in impl');
+        self::markTestSkipped('Change in impl');
 
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);

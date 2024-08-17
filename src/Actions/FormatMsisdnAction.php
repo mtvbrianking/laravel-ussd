@@ -18,7 +18,7 @@ class FormatMsisdnAction extends BaseAction implements AnswerableTag
     {
         $msisdn = $this->readAttr('msisdn', $this->store->get('msisdn'));
 
-        if (!$msisdn) {
+        if (! $msisdn) {
             return;
         }
 

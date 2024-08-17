@@ -17,7 +17,7 @@ class Dom
 
     public static function getElements(\DOMNodeList $nodeList, ?string $nodeName): array
     {
-        $els = array_filter(iterator_to_array($nodeList), function ($node) use ($nodeName) {
+        $els = array_filter(iterator_to_array($nodeList), static function ($node) use ($nodeName) {
             if (! $node instanceof \DOMElement) {
                 return false;
             }

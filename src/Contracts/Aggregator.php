@@ -17,7 +17,6 @@ interface Aggregator
      *                       'input'         => (?string) Current user input
      *                       'answers'       => (?string) All the user's input for this session
      *                       ]
-     * @param OutputFormatterInterface $output
      *
      * @return null|string successful response
      */

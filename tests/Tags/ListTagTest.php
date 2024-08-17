@@ -11,7 +11,7 @@ class ListTagTest extends TestCase
 {
     public function testHandleListTag()
     {
-        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\\Ussd\\Tests\\Tags']]);
+        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\Ussd\Tests\Tags']]);
 
         // dd($this->app['config']->get('ussd.provider-ns'));
 
@@ -23,9 +23,9 @@ class ListTagTest extends TestCase
 
         $output = $tag->handle();
 
-        static::assertSame("Users\n1) 0108567654\n2) 0202984256", $output);
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[2]', $this->store->get('_exp'));
+        self::assertSame("Users\n1) 0108567654\n2) 0202984256", $output);
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[2]', $this->store->get('_exp'));
     }
 
     public function testProccessValidAnswer()
@@ -43,8 +43,8 @@ class ListTagTest extends TestCase
 
         $tag->process('1');
 
-        static::assertSame('536', $this->store->get('user_id'));
-        static::assertSame('0108567654', $this->store->get('user_label'));
+        self::assertSame('536', $this->store->get('user_id'));
+        self::assertSame('0108567654', $this->store->get('user_label'));
     }
 
     public function testProccessInvalidAnswer()
@@ -64,7 +64,7 @@ class ListTagTest extends TestCase
 
     public function testProccessNoAnswer()
     {
-        $this->markTestSkipped('Change in impl');
+        self::markTestSkipped('Change in impl');
 
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(0);
@@ -85,7 +85,7 @@ class ListTagTest extends TestCase
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage("'NonCompliantProvider' must implement the 'ListProvider' interface.");
 
-        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\\Ussd\\Tests\\Tags']]);
+        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\Ussd\Tests\Tags']]);
 
         // dd($this->app['config']->get('ussd.provider-ns'));
 
@@ -104,7 +104,7 @@ class ListTagTest extends TestCase
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage('{"0.id":["The 0.id field is required."],"0.label":["The 0.label field is required."],"1.label":["The 1.label field is required."]}');
 
-        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\\Ussd\\Tests\\Tags']]);
+        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\Ussd\Tests\Tags']]);
 
         // dd($this->app['config']->get('ussd.provider-ns'));
 
@@ -123,7 +123,7 @@ class ListTagTest extends TestCase
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage('MissingProvider');
 
-        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\\Ussd\\Tests\\Tags']]);
+        $this->app['config']->set(['ussd.provider-ns' => ['Bmatovu\Ussd\Tests\Tags']]);
 
         // dd($this->app['config']->get('ussd.provider-ns'));
 

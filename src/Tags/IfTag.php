@@ -14,11 +14,11 @@ class IfTag extends BaseTag
         $cond = $this->readAttr('cond', 'eq');
         $value = $this->readAttr('value');
 
-        if (!$var) {
+        if (! $var) {
             trigger_error("Undefined variable \${$key}.", E_USER_WARNING);
         }
 
-        if (!Util::compare($var, $cond, $value)) {
+        if (! Util::compare($var, $cond, $value)) {
             $exp = $this->store->get('_exp', $this->node->getNodePath());
 
             $this->store->put('_pre', $exp);

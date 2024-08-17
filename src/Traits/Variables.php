@@ -11,8 +11,9 @@ trait Variables
         $children = Dom::getElements($this->node->childNodes, $nodeName);
 
         foreach ($children as $child) {
-            if ($name == $this->readAttrText('name', '', $child))
+            if ($name === $this->readAttrText('name', '', $child)) {
                 return $this->readAttrText('value', $default, $child);
+            }
         }
 
         return $default;

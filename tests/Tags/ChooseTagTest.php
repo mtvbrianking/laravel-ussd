@@ -33,9 +33,9 @@ XML;
 
         $output = $tag->handle();
 
-        static::assertEmpty($output);
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[1]/*[2]', $this->store->get('_exp'));
+        self::assertEmpty($output);
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[1]/*[2]', $this->store->get('_exp'));
     }
 
     public function testHandleChooseOtherwise()
@@ -64,9 +64,9 @@ XML;
 
         $output = $tag->handle();
 
-        static::assertEmpty($output);
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[1]/*[3]', $this->store->get('_exp'));
+        self::assertEmpty($output);
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[1]/*[3]', $this->store->get('_exp'));
     }
 
     public function testHandleChooseNoMatch()
@@ -89,8 +89,8 @@ XML;
 
         $output = $tag->handle();
 
-        static::assertEmpty($output);
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[2]', $this->store->get('_exp'));
+        self::assertEmpty($output);
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[2]', $this->store->get('_exp'));
     }
 }

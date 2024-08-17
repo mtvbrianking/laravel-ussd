@@ -29,9 +29,9 @@ XML;
 
         $output = $tag->handle();
 
-        static::assertEmpty($output);
-        static::assertSame('/*[1]/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[1]/*[1]/*[1]', $this->store->get('_exp'));
-        static::assertSame('[{"\/*[1]\/*[1]\/*[2]":"\/*[2]"},{"break":"resume"}]', $this->store->get('_breakpoints'));
+        self::assertEmpty($output);
+        self::assertSame('/*[1]/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[1]/*[1]/*[1]', $this->store->get('_exp'));
+        self::assertSame('[{"\/*[1]\/*[1]\/*[2]":"\/*[2]"},{"break":"resume"}]', $this->store->get('_breakpoints'));
     }
 }

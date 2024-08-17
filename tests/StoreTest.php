@@ -10,7 +10,7 @@ class StoreTest extends TestCase
 
         $alias = $this->store->alias;
 
-        static::assertSame('jdoe', $alias);
+        self::assertSame('jdoe', $alias);
 
         // ....
 
@@ -18,6 +18,6 @@ class StoreTest extends TestCase
 
         $ttl = $this->store->ttl;
 
-        static::assertSame(60, $ttl);
+        self::assertSame(60, $ttl);
     }
 }

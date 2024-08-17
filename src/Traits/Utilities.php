@@ -22,7 +22,7 @@ trait Utilities
 
     protected function fileToXpath(string $menuFile): \DOMXPath
     {
-        if (!file_exists($menuFile)) {
+        if (! file_exists($menuFile)) {
             $menuFile = menu_path($menuFile);
         }
 
@@ -59,7 +59,7 @@ trait Utilities
             return '';
         }
 
-        if (!$preAnswer || Str::endsWith($preAnswer, '*')) {
+        if (! $preAnswer || Str::endsWith($preAnswer, '*')) {
             $this->store->append('_answer', "{$answer}*");
         } else {
             $this->store->append('_answer', "*{$answer}*");
@@ -72,8 +72,9 @@ trait Utilities
     {
         $tagName = $node->tagName;
 
-        if ($tagName == 'action') {
+        if ('action' === $tagName) {
             $ActionName = $node->attributes->getNamedItem('name')->nodeValue;
+
             return Util::toPath($ActionName, 'Action');
         }
 

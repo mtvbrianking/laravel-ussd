@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * ```xml
  * <log message="{{alias}}" context="{{fname}},{{lname}}" />
- * ```
+ * ```.
  */
 class LogTag extends BaseTag
 {

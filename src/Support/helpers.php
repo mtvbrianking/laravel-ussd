@@ -3,7 +3,7 @@
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
-if (!function_exists('menu_path')) {
+if (! function_exists('menu_path')) {
     /**
      * Get the path to the menus directory.
      */
@@ -15,8 +15,8 @@ if (!function_exists('menu_path')) {
 
         $menusDir = $config->get('ussd.menu-path');
 
-        $path = $path ? DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR) : $path;
+        $path = $path ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : $path;
 
-        return $app->basePath($menusDir . $path);
+        return $app->basePath($menusDir.$path);
     }
 }

@@ -18,7 +18,7 @@ class FormatMoneyAction extends BaseAction implements AnswerableTag
     {
         $amount = $this->readAttr('amount', $this->store->get('amount'));
 
-        if (!$amount) {
+        if (! $amount) {
             return;
         }
 

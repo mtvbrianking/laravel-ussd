@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 /**
  * Comviva HTTP Pull Flares API
- * Should work for MTN and Airtel
+ * Should work for MTN and Airtel.
  */
 class Comviva implements Aggregator
 {
@@ -45,7 +45,7 @@ class Comviva implements Aggregator
 
             $applicationResponse = $body->applicationResponse->__toString();
 
-            if ($flow == 'FB') {
+            if ('FB' === $flow) {
                 throw new \Exception($applicationResponse);
             }
         } catch (\Throwable $th) {
@@ -65,14 +65,14 @@ class Comviva implements Aggregator
         return $applicationResponse;
     }
 
-    protected function buildXml(string|array $root, array $elements): string
+    protected function buildXml(array|string $root, array $elements): string
     {
         $domDoc = new \DOMDocument('1.0', 'UTF-8');
         $domDoc->xmlStandalone = true;
         $domDoc->preserveWhiteSpace = false;
         $domDoc->formatOutput = true;
 
-        if (is_string($root)) {
+        if (\is_string($root)) {
             $rootEl = $domDoc->createElement($root);
         } else {
             $rootEl = $domDoc->createElement($root['name']);
@@ -82,7 +82,7 @@ class Comviva implements Aggregator
         }
 
         foreach ($elements as $key => $value) {
-            if (!is_array($value)) {
+            if (! \is_array($value)) {
                 $elem = $domDoc->createElement($key, (string) $value);
             } else {
                 $elem = $domDoc->createElement($key);

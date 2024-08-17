@@ -9,17 +9,17 @@ return [
     ],
 
     'tag-ns' => [
-        'Bmatovu\\Ussd\\Tags',
-        'App\\Ussd\\Tags',
+        'Bmatovu\Ussd\Tags',
+        'App\Ussd\Tags',
     ],
 
     'action-ns' => [
-        'App\\Ussd\\Actions',
-        'Bmatovu\\Ussd\\Actions',
+        'App\Ussd\Actions',
+        'Bmatovu\Ussd\Actions',
     ],
 
     'provider-ns' => [
-        'App\\Ussd\\Providers',
-        'Bmatovu\\Ussd\\Providers',
+        'App\Ussd\Providers',
+        'Bmatovu\Ussd\Providers',
     ],
 ];

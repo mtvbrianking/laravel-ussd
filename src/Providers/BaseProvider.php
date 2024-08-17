@@ -2,14 +2,15 @@
 
 namespace Bmatovu\Ussd\Providers;
 
-use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Contracts\ListProvider;
+use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Traits\Attributes;
 use Bmatovu\Ussd\Traits\Variables;
 
 abstract class BaseProvider implements ListProvider
 {
-    use Attributes, Variables;
+    use Attributes;
+    use Variables;
 
     protected Store $store;
 

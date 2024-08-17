@@ -19,10 +19,10 @@ class FormatMoneyActionTest extends TestCase
 
         $output = $tag->handle();
 
-        static::assertEmpty($output);
-        static::assertSame('UGX 12,500', $this->store->get('amount'));
-        static::assertSame('/*[1]', $this->store->get('_pre'));
-        static::assertSame('/*[2]', $this->store->get('_exp'));
+        self::assertEmpty($output);
+        self::assertSame('UGX 12,500', $this->store->get('amount'));
+        self::assertSame('/*[1]', $this->store->get('_pre'));
+        self::assertSame('/*[2]', $this->store->get('_exp'));
     }
 
     public function testHandleActionMissingAttr()
@@ -57,9 +57,7 @@ class FormatMoneyAction extends BaseAction
         return parent::handle();
     }
 
-    public function process(?string $answer): void
-    {
-    }
+    public function process(?string $answer): void {}
 
     protected function extractParameters(\DOMNode $node): void
     {

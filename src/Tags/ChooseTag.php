@@ -25,7 +25,7 @@ class ChooseTag extends BaseTag
 
             $var = $this->store->get($key);
 
-            if (!Util::compare($var, $cond, $val)) {
+            if (! Util::compare($var, $cond, $val)) {
                 continue;
             }
 
@@ -45,7 +45,7 @@ class ChooseTag extends BaseTag
 
         $otherwiseEls = Dom::getElements($this->node->childNodes, 'otherwise');
 
-        if (!isset($otherwiseEls[0])) {
+        if (! isset($otherwiseEls[0])) {
             $this->store->put('_exp', $this->incExp($exp));
 
             return '';
