@@ -655,10 +655,6 @@ To do this, register the aggregator in the simulator configuration file. Ensure 
 
 XML is often preferred for constructing configurations that resemble programming logic due to its robust schema validation capabilities and its clear, hierarchical structure. XML’s format is particularly useful for complex configurations and data structures, as it maintains readability and provides straightforward validation against defined schemas.
 
-**Key differences**:
-- XML is more expressive for hierarchical data and supports attributes and nested structures in a way that's easy to read and validate.
-- JSON is compact and often preferred for simpler data structures but lacks some of the hierarchical expressiveness and validation features of XML.
-
 ```xml
 <menu name="demo">
     <question name="guest" text="Enter Name: "/>
