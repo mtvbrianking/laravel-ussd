@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.0]
+        php: [^8.0]
     name: Docs P${{ matrix.php }}
 
     steps:

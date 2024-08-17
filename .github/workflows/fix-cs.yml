@@ -8,6 +8,10 @@ on:
 jobs:
   code-style:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [^8.0]
     name: CS PHP ^8.0
 
     steps:
