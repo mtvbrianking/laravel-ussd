@@ -4,6 +4,7 @@ namespace Bmatovu\Ussd\Actions;
 
 use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Contracts\RenderableTag;
+use Bmatovu\Ussd\Exceptions\FlowBreakException;
 use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Traits\Attributes;
 use Bmatovu\Ussd\Traits\Expressions;
@@ -37,7 +38,7 @@ class BaseAction implements RenderableTag, AnswerableTag
 
     public function process(?string $answer): void
     {
-        // silence is gold...
+        throw new FlowBreakException('Override this func...');
     }
 
     protected function shiftCursor(): void
