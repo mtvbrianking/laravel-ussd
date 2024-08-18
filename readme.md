@@ -45,50 +45,47 @@ Effortlessly construct intricate USSD menus with streamlined efficiency by repla
 Let's explore an example of a simple SACCO USSD application.
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<menu name="sacco"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="menu.xsd">
-    <action name="check_user"/>
+<menu name="sacco">
+    <action name="check_user" />
     <options header="SACCO Services" noback="no">
         <option text="Savings">
-            <list header="Saving Accounts" provider="saving_accounts" prefix="account"/>
+            <list header="Saving Accounts" provider="saving_accounts" prefix="account" />
             <options header="Savings">
                 <option text="Deposit">
                     <options header="Deposit From:">
                         <option text="My Number">
-                            <variable name="sender" value="{{phone_number}}"/>
+                            <variable name="sender" value="{{phone_number}}" />
                         </option>
                         <option text="Another Number">
-                            <question name="sender" text="Enter Phone Number: "/>
+                            <question name="sender" text="Enter Phone Number: " />
                         </option>
                     </options>
-                    <question name="amount" text="Enter Amount: "/>
-                    <action name="deposit"/>
+                    <question name="amount" text="Enter Amount: " />
+                    <action name="deposit" />
                 </option>
                 <option text="Withdraw">
                     <options header="Withdraw To:">
                         <option text="My Number">
-                            <variable name="receiver" value="{{phone_number}}"/>
+                            <variable name="receiver" value="{{phone_number}}" />
                         </option>
                         <option text="Another Number">
-                            <question name="receiver" text="Enter Phone Number: "/>
+                            <question name="receiver" text="Enter Phone Number: " />
                         </option>
                     </options>
-                    <question name="amount" text="Enter Amount: "/>
-                    <action name="withdraw"/>
+                    <question name="amount" text="Enter Amount: " />
+                    <action name="withdraw" />
                 </option>
                 <option text="Check Balance">
-                    <action name="check_balance" text="To see your balance, enter PIN: "/>
+                    <action name="check_balance" text="To see your balance, enter PIN: " />
                 </option>
                 <option text="Check Transaction">
-                    <question name="transaction_id" text="Enter Transaction ID: "/>
-                    <action name="check_transaction" text="To check transaction, enter PIN: "/>
+                    <question name="transaction_id" text="Enter Transaction ID: " />
+                    <action name="check_transaction" text="To check transaction, enter PIN: " />
                 </option>
             </options>
         </option>
         <option text="Loans">
-            <response text="Coming soon."/>
+            <response text="Coming soon." />
         </option>
     </options>
 </menu>
@@ -102,10 +99,10 @@ Let's explore an example of a simple SACCO USSD application.
 composer require bmatovu/laravel-ussd
 ```
 
-**Configurations**
+**Publishables**
 
 ```bash
-php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="ussd-config"
+php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider"
 ```
 
 ## Usage
@@ -115,16 +112,19 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider" --tag="
 > menus/menu.xml
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <menu name="demo">
-    <question name="guest" text="Enter Name: "/>
-    <response text="Hello {{guest}}."/>
+    <question name="guest" text="Enter Name: " />
+    <response text="Hello {{guest}}." />
 </menu>
 ```
 
 > app/Http/Controller/Api/UssdController
 
 ```php
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
 use Bmatovu\Ussd\Exceptions\FlowBreakException;
 use Bmatovu\Ussd\Ussd;
 use Illuminate\Http\Request;
@@ -138,8 +138,7 @@ class UssdController extends Controller
     public function __invoke(Request $request): Response
     {
         try {
-            $output = Ussd::make('menu.xml', $request->session_id)
-                ->handle($request->text);
+            $output = Ussd::make('menu.xml', $request->sessionId)->handle($request->text);
         } catch(FlowBreakException $ex) {
             return response('END ' . $ex->getMessage());
         } catch(\Exception $ex) {
@@ -149,6 +148,15 @@ class UssdController extends Controller
         return response('CON ' . $output);
     }
 }
+```
+
+> routes/api.php
+
+```php
+use App\Http\Controllers\Api\UssdController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('/ussd', [UssdController::class, '__invoke']);
 ```
 
 See more examples in the [demo repo](https://github.com/mtvbrianking/ussd-demo/tree/master/app/Http/Controllers/Api)
@@ -174,12 +182,13 @@ php artisan ussd:validate
 For real-time XSD validations and suggestions, you can use the [RedHat XML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-xml) in Visual Studio Code. This extension provides helpful features for working with XML schemas, including syntax highlighting and validation.
 
 ```diff
+<?xml version="1.0" encoding="UTF-8"?>
 - <menu name="demo">
 + <menu name="demo"
 +     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 +     xsi:noNamespaceSchemaLocation="menu.xsd">
-      <question name="guest" text="Enter Name: "/>
-      <response text="Hello {{guest}}."/>
+      <question name="guest" text="Enter Name: " />
+      <response text="Hello {{guest}}." />
   </menu>
 ```
 
