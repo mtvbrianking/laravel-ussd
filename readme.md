@@ -119,7 +119,7 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider"
 </menu>
 ```
 
-> app/Http/Controller/UssdController
+> app/Http/Controller/UssdController.php
 
 ```php
 namespace App\Http\Controllers;
@@ -152,7 +152,7 @@ class UssdController extends Controller
 > routes/api.php
 
 ```php
-use App\Http\Controllers\Api\UssdController;
+use App\Http\Controllers\UssdController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/ussd', [UssdController::class, '__invoke']);
