@@ -2,8 +2,6 @@
 
 namespace Bmatovu\Ussd\Actions;
 
-use Bmatovu\Ussd\Contracts\AnswerableTag;
-
 /**
  * Usage:
  *
@@ -12,13 +10,13 @@ use Bmatovu\Ussd\Contracts\AnswerableTag;
  * <response text="{{fmt_amount}}" /><!-- USD 15,600.51 -->
  * ```
  */
-class FormatMoneyAction extends BaseAction implements AnswerableTag
+class FormatMoneyAction extends BaseAction
 {
     public function process(?string $answer): void
     {
         $amount = $this->readAttr('amount', $this->store->get('amount'));
 
-        if (! $amount) {
+        if (!$amount) {
             return;
         }
 

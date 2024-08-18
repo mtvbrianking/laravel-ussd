@@ -2,13 +2,14 @@
 
 namespace Bmatovu\Ussd\Actions;
 
+use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Bmatovu\Ussd\Contracts\RenderableTag;
 use Bmatovu\Ussd\Store;
 use Bmatovu\Ussd\Traits\Attributes;
 use Bmatovu\Ussd\Traits\Expressions;
 use Bmatovu\Ussd\Traits\Variables;
 
-class BaseAction implements RenderableTag
+class BaseAction implements RenderableTag, AnswerableTag
 {
     use Attributes;
     use Expressions;
@@ -32,6 +33,11 @@ class BaseAction implements RenderableTag
         return $fails
             ? $this->readAttrText('error', 'InternalError')
             : $this->readAttrText();
+    }
+
+    public function process(?string $answer): void
+    {
+        // silence is gold...
     }
 
     protected function shiftCursor(): void

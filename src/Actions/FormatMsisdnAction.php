@@ -2,8 +2,6 @@
 
 namespace Bmatovu\Ussd\Actions;
 
-use Bmatovu\Ussd\Contracts\AnswerableTag;
-
 /**
  * Usage:
  *
@@ -12,13 +10,13 @@ use Bmatovu\Ussd\Contracts\AnswerableTag;
  * <response text="{{fmt_msisdn}}" /><!-- 256743876123 -->
  * ```
  */
-class FormatMsisdnAction extends BaseAction implements AnswerableTag
+class FormatMsisdnAction extends BaseAction
 {
     public function process(?string $answer): void
     {
         $msisdn = $this->readAttr('msisdn', $this->store->get('msisdn'));
 
-        if (! $msisdn) {
+        if (!$msisdn) {
             return;
         }
 

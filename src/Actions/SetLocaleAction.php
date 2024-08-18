@@ -2,7 +2,6 @@
 
 namespace Bmatovu\Ussd\Actions;
 
-use Bmatovu\Ussd\Contracts\AnswerableTag;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\App;
  * <response text="{{locale}}" /><!-- en -->
  * ```
  */
-class SetLocaleAction extends BaseAction implements AnswerableTag
+class SetLocaleAction extends BaseAction
 {
     public function process(?string $answer): void
     {

@@ -119,12 +119,11 @@ php artisan vendor:publish --provider="Bmatovu\Ussd\UssdServiceProvider"
 </menu>
 ```
 
-> app/Http/Controller/Api/UssdController
+> app/Http/Controller/UssdController
 
 ```php
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Bmatovu\Ussd\Exceptions\FlowBreakException;
 use Bmatovu\Ussd\Ussd;
 use Illuminate\Http\Request;
