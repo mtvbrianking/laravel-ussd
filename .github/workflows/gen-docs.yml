@@ -36,8 +36,6 @@ jobs:
 
             - name: Generate
               run: |
-                  pwd
-                  ls -lrth
                   php doctum.phar update doctum.php
 
             - name: Deploy 🚀
