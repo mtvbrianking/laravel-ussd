@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="request">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sessionId" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="transactionId" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="msisdn" type="xs:string" minOccurs="1" maxOccurs="1" />
+                <!-- <xs:element name="newRequest" type="xs:int" minOccurs="0" maxOccurs="1" /> -->
+                <xs:element name="newRequest" minOccurs="0" maxOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                            <xs:enumeration value="0" />
+                            <xs:enumeration value="1" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <!-- <xs:element name="flowState" type="xs:string" minOccurs="0" maxOccurs="1" /> -->
+                <xs:element name="flowState" minOccurs="0" maxOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="FD" />
+                            <xs:enumeration value="FE" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="subscriberInput" type="xs:string" minOccurs="0" maxOccurs="1" />
+            </xs:sequence>
+            <!-- <xs:attribute name="type" use="required" /> -->
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="pull" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="response">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="msisdn" type="xs:string" minOccurs="1" maxOccurs="1" />
+                <xs:element name="sessionId" type="xs:string" minOccurs="1" maxOccurs="1" />
+                <xs:element name="transactionId" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="freeflow" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <!-- <xs:element name="freeflowState" type="xs:string" minOccurs="1"
+                            maxOccurs="1" /> -->
+                            <xs:element name="freeflowState" minOccurs="1" maxOccurs="1">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="FB" />
+                                        <xs:enumeration value="FC" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="applicationResponse" type="xs:string" minOccurs="1" maxOccurs="1" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
