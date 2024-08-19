@@ -31,10 +31,14 @@ jobs:
             - name: Composer
               run: composer update --prefer-dist --no-interaction --no-progress
 
+            - name: Download
+              run: wget --quiet --show-progress --no-clobber https://github.com/code-lts/doctum/releases/download/v5.5.4/doctum.phar
+
             - name: Generate
               run: |
-                  wget --quiet --show-progress --no-clobber https://github.com/code-lts/doctum/releases/download/v5.5.4/doctum.phar
-                  php ../doctum.phar update doctum.php
+                  pwd
+                  ls -lrth
+                  php doctum.phar update doctum.php
 
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@3.7.1
