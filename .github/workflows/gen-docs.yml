@@ -34,7 +34,7 @@ jobs:
             - name: Generate
               run: |
                   wget --quiet --show-progress --no-clobber https://github.com/code-lts/doctum/releases/download/v5.5.4/doctum.phar
-                  php doctum.phar update doctum.php
+                  php ../doctum.phar update doctum.php
 
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@3.7.1
