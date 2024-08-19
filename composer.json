@@ -1,75 +1,76 @@
 {
-  "name": "bmatovu/laravel-ussd",
-  "description": "Laravel USSD Builder",
-  "homepage": "https://github.com/mtvbrianking/laravel-ussd",
-  "type": "library",
-  "license": "MIT",
-  "keywords": [
-    "laravel",
-    "lumen",
-    "package",
-    "xml",
-    "ussd",
-    "menu",
-    "builder"
-  ],
-  "authors": [
-    {
-      "name": "Brian Matovu",
-      "email": "mtvbrianking@gmail.com",
-      "homepage": "https://bmatovu.com",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": "^8.1",
-    "nesbot/carbon": "^2.3|^3.0",
-    "illuminate/container": "^10.0|^11.0",
-    "illuminate/contracts": "^10.0|^11.0",
-    "illuminate/support": "^10.0|^11.0"
-  },
-  "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.0",
-    "guzzlehttp/guzzle": "^7.5",
-    "orchestra/testbench": "^8.0|^9.0",
-    "phpunit/phpunit": "^10.0|^11.0",
-    "symfony/console": "^6.2|^7.0"
-  },
-  "bin": [
-    "bin/ussd"
-  ],
-  "autoload": {
-    "files": [
-      "src/Support/helpers.php"
+    "name": "bmatovu/laravel-ussd",
+    "description": "Laravel USSD Builder",
+    "homepage": "https://github.com/mtvbrianking/laravel-ussd",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "lumen",
+        "package",
+        "xml",
+        "ussd",
+        "menu",
+        "builder"
     ],
-    "psr-4": {
-      "Bmatovu\\Ussd\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Bmatovu\\Ussd\\Tests\\": "tests/"
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "scripts": {
-    "cs-fix": "php-cs-fixer fix",
-    "cs-lint": "php-cs-fixer fix --dry-run",
-    "test": "phpunit",
-    "test-coverage": "phpunit --coverage-html coverage"
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.x-dev"
+    "authors": [
+        {
+            "name": "Brian Matovu",
+            "email": "mtvbrianking@gmail.com",
+            "homepage": "https://bmatovu.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "nesbot/carbon": "^2.3|^3.0",
+        "illuminate/container": "^10.0|^11.0",
+        "illuminate/contracts": "^10.0|^11.0",
+        "illuminate/support": "^10.0|^11.0"
     },
-    "laravel": {
-      "providers": [
-        "Bmatovu\\Ussd\\UssdServiceProvider"
-      ]
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "guzzlehttp/guzzle": "^7.5",
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpunit/phpunit": "^10.0|^11.0",
+        "symfony/console": "^6.2|^7.0"
+    },
+    "bin": [
+        "bin/ussd"
+    ],
+    "autoload": {
+        "files": [
+            "src/Support/helpers.php"
+        ],
+        "psr-4": {
+            "Bmatovu\\Ussd\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bmatovu\\Ussd\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "cs-fix": "php-cs-fixer fix",
+        "cs-lint": "php-cs-fixer fix --dry-run",
+        "docs": "php doctum.phar update doctum.php",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Bmatovu\\Ussd\\UssdServiceProvider"
+            ]
+        }
     }
-  }
 }

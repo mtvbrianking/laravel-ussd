@@ -1,6 +1,7 @@
 .idea
 *.bak
 *.cache
+*.phar
 composer.lock
 coverage
 coverage.clover

@@ -33,10 +33,7 @@
   * [Simulation](#simulation)
   * [JSON](#json)
 - [Testing](#testing)
-- [Security](#security)
-- [Contribution](#contribution)
 - [Alternatives](#alternatives)
-- [License](#license)
 
 ## Overview
 
@@ -652,7 +649,7 @@ To do this, register the aggregator in the simulator configuration file. Ensure 
       "aggregators": {
 +         "africastalking": {
 +             "provider": "App\\Ussd\\Simulator\\Africastalking",
-+             "uri": "http://localhost:8000/api/ussd/africastalking",
++             "uri": "http://localhost:8000/api/ussd",
 +             "service_code": "*123#"
 +         }
       }
@@ -691,20 +688,6 @@ To run the package's unit tests, run the following command:
 composer test
 ```
 
-## Security
-
-If you discover any security-related issues, please report them directly to [mtvbrianking@gmail.com](mailto:mtvbrianking@gmail.com)
-
-## Contribution
-
-If you would like to contribute to the package by making changes or improvements, feel free to submit a pull request.
-
-Note: _A detailed contribution guide may be added later._
-
 ## Alternatives
 
 - [sparors/laravel-ussd](https://github.com/sparors/laravel-ussd) offers a different approach to building USSD menus.
-
-## License
-
-This package is licensed under the MIT License. For more details, please refer to the [License file](license.txt).
